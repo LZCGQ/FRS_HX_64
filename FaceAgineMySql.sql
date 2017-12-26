@@ -70,7 +70,7 @@ usr.quality_score as user_quality_score
 FROM 
 (`frsdb`.`hitrecord_detail` as detail
 left join `frsdb`.`hitrecord` as hit on detail.hit_record_id=hit.id) 
-left join `frsdb`.`user` as usr on detail.user_id = usr.id;
+left join `frsdb`.`person` as usr on detail.user_id = usr.id;
 
 
 create table `frsdb`.`person_dataset`
@@ -79,7 +79,7 @@ create table `frsdb`.`person_dataset`
 	`name` nvarchar(50) NOT NULL,
 	`type` nvarchar(50) NULL,
 	`source` nvarchar(50) NULL,
-	`create_time` datetime NOT NULL,
+	`create_time` datetime NULL,
 	`remark` nvarchar(50) NULL,
 	PRIMARY KEY (`id`),
 	UNIQUE KEY `datasetname` (`id`)
