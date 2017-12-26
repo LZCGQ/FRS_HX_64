@@ -1,0 +1,119 @@
+CREATE DATABASE `frsdb`;
+
+USE `frsdb`;
+
+create table `frsdb`.`person`--人员库
+(
+	`id` int(11) AUTO_INCREMENT,--人员id
+	`person_dataset_id` int(11) NULL,--对应人员库id
+	`name` nvarchar(50) NULL,--人员姓名
+	`gender` char(1) NULL,--人员性别
+	`card_id` varchar(50) NULL,--人员身份证id
+	`bitrhday` datetime NULL,--人员生日
+	`image_id` varchar(60) NULL,--人员图像id
+	`face_image_path` varchar(200) NOT NULL,--人员图像路径
+	`feature_data` LongBlob NOT NULL,--人员图像特征
+	`type` char NULL,--人员类型
+	`create_time` datetime NOT NULL,--注册时间
+	`modified_time` datetime NOT NULL,--更改时间
+	`quality_score` float,--图像质量
+	`remark` nvarchar(50) NULL,--备注
+	PRIMARY KEY (`id`),
+	UNIQUE KEY `id` (`id`)
+)ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+create table `frsdb`.`hitrecord`
+(
+	`id` int(11) AUTO_INCREMENT,--检索id
+	`face_query_image_path` varchar(200) NOT NULL,--检索图像路径
+	`threshold` float NOT NULL,--检索阈值
+	`occur_time` datetime NOT NULL,--检索时间
+	`task_id` int(11),--检索任务id
+	`remark` nvarchar(50) NULL,--备注
+	PRIMARY KEY (`id`),
+	UNIQUE KEY `id` (`id`)
+)ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+create table `frsdb`.`hitrecord_detail`
+(
+	`id` int(11) AUTO_INCREMENT,--检索详细信息id
+	`hit_record_id` int(11) NOT NULL,--对应检索id
+	`user_id` int(11) NOT NULL,--检索匹配人员id
+	`rank` int(11) NOT NULL,--检索等级
+	`score` float NOT NULL,--匹配分数
+	`remark` nvarchar(50) NULL,--备注
+	PRIMARY KEY (`id`),
+	UNIQUE KEY `id` (`id`)
+)ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+create view `frsdb`.`hitalert` as 
+select 
+hit.id,
+hit.face_query_image_path,
+hit.threshold,
+hit.occur_time,
+hit.task_id,
+detail.id as detail_id,
+detail.rank,
+detail.score,
+usr.id as user_id,
+usr.name as user_name,
+usr.gender as user_gender,
+usr.card_id as user_card_id,
+usr.person_dataset_id as user_person_dataset_id,
+usr.image_id as user_image_id,
+usr.face_image_path as user_face_image_path,
+usr.type as user_type,
+usr.create_time as user_create_time,
+usr.modified_time as user_modified_time,
+usr.quality_score as user_quality_score
+FROM 
+(`frsdb`.`hitrecord_detail` as detail
+left join `frsdb`.`hitrecord` as hit on detail.hit_record_id=hit.id) 
+left join `frsdb`.`user` as usr on detail.user_id = usr.id;
+
+
+create table `frsdb`.`person_dataset`--人员库详细信息
+(
+	`id` int(11) AUTO_INCREMENT,--人员库id
+	`name` nvarchar(50) NOT NULL,--数据库名称
+	`type` nvarchar(50) NULL,--类型
+	`source` nvarchar(50) NULL,--来源
+	`create_time` datetime NOT NULL,--创建时间
+	`remark` nvarchar(50) NULL,--备注
+	PRIMARY KEY (`id`),
+	UNIQUE KEY `datasetname` (`id`)
+)ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+create table `frsdb`.`device`
+(
+	`id` int(11) AUTO_INCREMENT,	
+	`name` nvarchar(50) NOT NULL,--数据库名称
+	`video_address` nvarchar(200) NOT NULL,--视频流地址
+	`departmentment_id` nvarchar(50) NULL,--公安部门ID
+	`longitude` double(5,2) NULL,--经度
+	`latitude` double(5,2) NULL,--纬度
+	`location_type` nvarchar(50) NULL,--区域类型，酒吧之类的
+	`type` nvarchar(50) NULL,--类型
+	`remark` nvarchar(50) NULL,--备注
+	PRIMARY KEY (`id`),
+	UNIQUE KEY `id` (`id`)
+)ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+create table `frsdb`.`surveillance_task`
+(
+	`id` int(11) AUTO_INCREMENT,--任务id
+	`name` nvarchar(50) NOT NULL,--名称
+	`person_dataset_id` int(11) NOT NULL,
+	`device_id` int(11) NOT NULL,
+	`type` nvarchar(50) NULL,	
+	`create_time` datetime NOT NULL,--创建时间
+	`start_time` datetime ,--开始时间
+	`end_time` datetime NULL,--结束时间
+	`remark` nvarchar(50) NULL,--备注
+	PRIMARY KEY (`id`),
+	UNIQUE KEY `id` (`id`)
+)ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+
+
