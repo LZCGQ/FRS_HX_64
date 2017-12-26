@@ -5,6 +5,7 @@
 *.jpg
 *.cache
 *.rar
+*.tmp
 feadb.db10
 feadb.db20
 feadb.db30
@@ -45,5 +46,6 @@ x64/
 FRSServer/obj/
 FRSServer/bin/
 Release/Logs/
-
+INF/Debug/
+INF/Release/
 
