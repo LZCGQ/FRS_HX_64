@@ -16,7 +16,7 @@ create table `frsdb`.`person`
 	`type` char NULL,
 	`create_time` datetime NOT NULL,
 	`modified_time` datetime NOT NULL,
-	`quality_score` float,
+	`quality_score` int(8),
 	`remark` nvarchar(50) NULL,
 	PRIMARY KEY (`id`),
 	UNIQUE KEY `id` (`id`)

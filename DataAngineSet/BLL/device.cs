@@ -87,7 +87,14 @@ namespace DataAngineSet.BLL
 			return dal.GetModel(id);
 		}
 
-		
+        /// <summary>
+        /// 获得数据列表
+        /// </summary>
+        public DataSet GetDevice(string name)
+        {
+            return dal.GetDevice(name);
+        }
+
 		/// <summary>
 		/// 获得数据列表
 		/// </summary>

@@ -266,7 +266,7 @@ void TestFeatureData()
 	
 	FeatureData ^fa = gcnew FeatureData();
 	//fa->RegisterInBulk(L"F:/»ú³¡ÕÕÆ¬test/temp");
-	fa->LoadData();
+	fa->LoadData(1);
 	
 	Image^ img= Image::FromFile(L"D:/3.jpg");
 	UserInfo ^uinfo = gcnew UserInfo();

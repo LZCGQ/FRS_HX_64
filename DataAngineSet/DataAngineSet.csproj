@@ -7,8 +7,8 @@
     <ProjectGuid>{1ECDBCAE-B563-4F2C-8259-96AAF1622BE3}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>DataAngine</RootNamespace>
-    <AssemblyName>DataAngine</AssemblyName>
+    <RootNamespace>DataAngineSet</RootNamespace>
+    <AssemblyName>DataAngineSet</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <TargetFrameworkProfile>

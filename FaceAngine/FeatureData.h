@@ -10,19 +10,22 @@ using namespace System::Collections::Generic;
 using namespace System::Data;
 using namespace System::Drawing;
 using namespace System::Text;
-using namespace DataAngine;
+//using namespace DataAngine;
+using namespace DataAngineSet;
 
 namespace FRS {
 	public value class UserInfo
 	{
 	public:
+		property int^ personDatasetId;
 		property String^ name;
-		property String^ peopleId;
 		property String^ gender;
 		property String^ cardId;
 		property String^ imageId;
 		property String^ imgPath;
 		property String^ type;
+		property DateTime^ createTime;
+		property DateTime^ modifiedTime;
 	};
 
 	public value class HitAlertDetail
@@ -310,11 +313,12 @@ namespace FRS {
 		}
 #pragma endregion
 
-		Int32 FeatureData::RegisterInBulk(String^ fileDirPath);
-		Int32 FeatureData::RegisterInBulk(String^ fileDirPath, short channelID);
-		Int32 FeatureData::RegisterInBulkFromFile(String^ filePath);
-		Int32 FeatureData::RegisterInBulk1(String^ fileDirPath);
-		Int32 FeatureData::RegisterInBulk1(String^ fileDirPath, String^ library);
+		//Int32 FeatureData::RegisterInBulk(String^ fileDirPath);
+		//Int32 FeatureData::RegisterInBulk(String^ fileDirPath, short channelID);
+		//Int32 FeatureData::RegisterInBulkFromFile(String^ filePath);
+		Int32 FeatureData::RegisterInBulkFromFile(String^ filePath, Int32^ libraryid);
+		//Int32 FeatureData::RegisterInBulk1(String^ fileDirPath);
+		Int32 FeatureData::RegisterInBulk1(String^ fileDirPath, Int32^ libraryid);
 		/** @brief  register a user;
 		*	@param filePath   the file path of source image
 		*	@param dataSavePath Path of the saving the feature data
@@ -338,12 +342,14 @@ namespace FRS {
 		*/
 		Int32 Unregister(String^ username);
 
+		Int32 Unregister(Int32^ userid);
+
 		/** @brief  load feature data from binary file;
 		*
 		*/
-		Int32 LoadData();
+		//Int32 LoadData();
 
-		Int32 LoadData(String^ libraryname);
+		Int32 LoadData(Int32^ libraryid);
 
 		/** @brief search the user
 		*	@param feat   the feature
@@ -407,13 +413,10 @@ namespace FRS {
 		*	@param username the user name
 		*/
 		Int32 Register(cv::Mat& image_color, UserInfo^ userInfo);
-		Int32 Register(cv::Mat& image_color, UserInfo^ userInfo, String^ library);
 		Int32 Register(cv::Mat& image_color, UserInfo^ userInfo, short channelID);
-		Int32 Register(cv::Mat& image_color, UserInfo^ userInfo, String^ library, short channelID);
-		Int32 FeatureData::Register(cv::Mat& img_color, Model::user ^ usr);
-		Int32 FeatureData::Register(cv::Mat& img_color, Model::user ^ usr, short channelID);
-		Int32 FeatureData::Register(cv::Mat& img_color, Model::user ^ usr, String^ library);
-		Int32 FeatureData::Register(cv::Mat& img_color, Model::user ^ usr, String^ library, short channelID);
+		Int32 FeatureData::Register(cv::Mat& img_color, Model::person ^ usr);
+		Int32 FeatureData::Register(cv::Mat& img_color, Model::person ^ usr, short channelID);
+
 
 
 		System::Drawing::Rectangle FeatureData::GetScaleFaceRect(int imgWidth, int imgHeight, RECT rectFacePos, float faceRectScale);
@@ -421,12 +424,14 @@ namespace FRS {
 	private:
 
 		BLL::hitrecord ^hitbll;
-		BLL::user ^usrbll;
+		BLL::person ^usrbll;
+		BLL::person_dataset ^persondatasetbll;
 		BLL::hitrecord_detail ^hdbll;
 		BLL::hitalert ^habll;
 		BLL::statistics ^stbll;
 		
-		List<Model::user^>^ allUsers = nullptr;
+		List<Model::person^>^ allUsers = nullptr;
+		Model::person_dataset^ dataset = nullptr;
 		/**
 		*   feature data path
 		*/

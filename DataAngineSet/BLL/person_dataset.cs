@@ -87,6 +87,15 @@ namespace DataAngineSet.BLL
 			return dal.GetModel(id);
 		}
 
+        /// <summary>
+        /// 得到一个对象实体
+        /// </summary>
+        public DataAngineSet.Model.person_dataset GetModel(string name)
+        {
+
+            return dal.GetModel(name);
+        }
+
 		/// <summary>
 		/// 获得数据列表
 		/// </summary>

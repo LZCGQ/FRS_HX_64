@@ -25,115 +25,135 @@ namespace DataAngineSet.BLL
 	/// </summary>
 	public partial class hitalert
 	{
-		private readonly DataAngineSet.DAL.hitalert dal=new DataAngineSet.DAL.hitalert();
-		public hitalert()
-		{}
-		#region  BasicMethod
+        private readonly DataAngineSet.DAL.hitalert dal = new DataAngineSet.DAL.hitalert();
+        #region  BasicMethod
+        /// <summary>
+        /// 添加一条数据
+        /// </summary>
+        /// <param name="model"></param>
+        /// <returns></returns>
+        public bool Add(DataAngineSet.Model.hitalert model)
+        {
+            return dal.Add(model);
 
-		/// <summary>
-		/// 增加一条数据
-		/// </summary>
-		public bool Add(DataAngineSet.Model.hitalert model)
-		{
-			return dal.Add(model);
-		}
+        }
 
-		/// <summary>
-		/// 更新一条数据
-		/// </summary>
-		public bool Update(DataAngineSet.Model.hitalert model)
-		{
-			return dal.Update(model);
-		}
+        /// <summary>
+        /// 更新一条数据
+        /// </summary>
+        /// <param name="model"></param>
+        /// <returns></returns>
+        public bool Update(DataAngineSet.Model.hitalert model)
+        {
+            return dal.Update(model);
 
-		/// <summary>
-		/// 删除一条数据
-		/// </summary>
-		public bool Delete()
-		{
-			//该表无主键信息，请自定义主键/条件字段
-			return dal.Delete();
-		}
+        }
+        /// <summary>
+        /// 获得数据列表
+        /// </summary>
+        public DataSet GetList(string strWhere)
+        {
+            return dal.GetList(strWhere);
+        }
+        /// <summary>
+        /// 获得数据列表
+        /// </summary>
+        public DataSet GetAllList()
+        {
+            return GetList("");
+        }
 
-		/// <summary>
-		/// 得到一个对象实体
-		/// </summary>
-		public DataAngineSet.Model.hitalert GetModel()
-		{
-			//该表无主键信息，请自定义主键/条件字段
-			return dal.GetModel();
-		}
+        /// <summary>
+        /// 分页获取数据列表
+        /// </summary>
+        public int GetRecordCount(string strWhere)
+        {
+            return dal.GetRecordCount(strWhere);
+        }
+        /// <summary>
+        /// 分页获取数据列表
+        /// </summary>
+        public DataSet GetListByPage(string strWhere, string orderby, int startIndex, int endIndex)
+        {
+            return dal.GetListByPage(strWhere, orderby, startIndex, endIndex);
+        }
+        /// <summary>
+        /// 分页获取数据列表
+        /// </summary>
+        //public DataSet GetList(int PageSize,int PageIndex,string strWhere)
+        //{
+        //return dal.GetList(PageSize,PageIndex,strWhere);
+        //}
+        public List<DataAngineSet.Model.hitalert> DataTableToList(DataTable table)
+        {
+            List<DataAngineSet.Model.hitalert> modelList = new List<Model.hitalert>();
+            List<DataTable> newTables = new List<DataTable>();
+            HashSet<int> groupIds = new HashSet<int>();
+            foreach (DataRow row in table.Rows)
+            {
+                int groupId = int.Parse(row["id"].ToString());
+                if (!groupIds.Contains(groupId))
+                {
+                    groupIds.Add(groupId);
+                    DataTable newTable = table.Clone();
+                    newTable.TableName = groupId.ToString();
+                    newTable.ImportRow(row);
+                    newTables.Add(newTable);
+                }
+                else
+                {
+                    DataTable newTable = newTables.Find(x => x.TableName == groupId.ToString());
+                    newTable.ImportRow(row);
+                }
+            }
 
-		/// <summary>
-		/// 获得数据列表
-		/// </summary>
-		public DataSet GetList(string strWhere)
-		{
-			return dal.GetList(strWhere);
-		}
-		/// <summary>
-		/// 获得数据列表
-		/// </summary>
-		public List<DataAngineSet.Model.hitalert> GetModelList(string strWhere)
-		{
-			DataSet ds = dal.GetList(strWhere);
-			return DataTableToList(ds.Tables[0]);
-		}
-		/// <summary>
-		/// 获得数据列表
-		/// </summary>
-		public List<DataAngineSet.Model.hitalert> DataTableToList(DataTable dt)
-		{
-			List<DataAngineSet.Model.hitalert> modelList = new List<DataAngineSet.Model.hitalert>();
-			int rowsCount = dt.Rows.Count;
-			if (rowsCount > 0)
-			{
-				DataAngineSet.Model.hitalert model;
-				for (int n = 0; n < rowsCount; n++)
-				{
-					model = dal.DataRowToModel(dt.Rows[n]);
-					if (model != null)
-					{
-						modelList.Add(model);
-					}
-				}
-			}
-			return modelList;
-		}
+            foreach (var tb in newTables)
+            {
+                modelList.Add(dal.DataTableToModel(tb));
+            }
+            return modelList;
+        }
 
-		/// <summary>
-		/// 获得数据列表
-		/// </summary>
-		public DataSet GetAllList()
-		{
-			return GetList("");
-		}
+        #endregion  BasicMethod
+		
+        #region  ExtensionMethod
+        /// <summary>
+        /// 通过时间得到对象实体
+        /// </summary>
+        public List<DataAngineSet.Model.hitalert> GetModelByTime(DateTime startTime, DateTime endTime)
+        {
+            DataSet ds = dal.GetModelByTime(startTime, endTime);
 
-		/// <summary>
-		/// 分页获取数据列表
-		/// </summary>
-		public int GetRecordCount(string strWhere)
-		{
-			return dal.GetRecordCount(strWhere);
-		}
-		/// <summary>
-		/// 分页获取数据列表
-		/// </summary>
-		public DataSet GetListByPage(string strWhere, string orderby, int startIndex, int endIndex)
-		{
-			return dal.GetListByPage( strWhere,  orderby,  startIndex,  endIndex);
-		}
-		/// <summary>
-		/// 分页获取数据列表
-		/// </summary>
-		//public DataSet GetList(int PageSize,int PageIndex,string strWhere)
-		//{
-			//return dal.GetList(PageSize,PageIndex,strWhere);
-		//}
+            return DataTableToList(ds.Tables[0]);
 
-		#endregion  BasicMethod
-		#region  ExtensionMethod
+        }
 
+        public DataSet GetListByTime(DateTime startTime, DateTime endTime)
+        {
+            string strWhere = string.Format("occur_time between '{0}' and '{1}'", startTime.ToString("yyyy-MM-dd HH:mm:ss"), endTime.ToString("yyyy-MM-dd HH:mm:ss"));
+            return dal.GetList(strWhere);
+        }
+
+        public DataSet GetListByTime(DateTime startTime, DateTime endTime, string libraryid)
+        {
+            string strWhere = string.Format("occur_time between '{0}' and '{1}'", startTime.ToString("yyyy-MM-dd HH:mm:ss"), endTime.ToString("yyyy-MM-dd HH:mm:ss"));
+            return dal.GetList(strWhere, libraryid);
+        }
+
+        //分页时间查询
+        public DataSet GetListByTime(DateTime startTime, DateTime endTime, int startIndex, int pageSize)
+        {
+            string strWhere = string.Format("occur_time between '{0}' and '{1}'", startTime.ToString("yyyy-MM-dd HH:mm:ss"), endTime.ToString("yyyy-MM-dd HH:mm:ss"));
+            return dal.GetList(strWhere, startIndex, pageSize);
+        }
+
+        //分页时间查询
+        public DataSet GetListByTime(DateTime startTime, DateTime endTime, int startIndex, int pageSize, string libraryid)
+        {
+            string strWhere = string.Format("occur_time between '{0}' and '{1}'", startTime.ToString("yyyy-MM-dd HH:mm:ss"), endTime.ToString("yyyy-MM-dd HH:mm:ss"));
+            return dal.GetList(strWhere, startIndex, pageSize, libraryid);
+        }  
+        
 		#endregion  ExtensionMethod
 	}
 }

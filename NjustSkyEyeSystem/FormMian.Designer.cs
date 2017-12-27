@@ -257,24 +257,24 @@
             this.panel17 = new System.Windows.Forms.Panel();
             this.picBox_MulityTask_task1 = new System.Windows.Forms.PictureBox();
             this.dgvHitResult_MulityTask_task1 = new System.Windows.Forms.DataGridView();
+            this.colTime1 = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.colLiveFace1 = new System.Windows.Forms.DataGridViewImageColumn();
+            this.colCandinate1 = new System.Windows.Forms.DataGridViewImageColumn();
+            this.colName1 = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.colScore1 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.txt_MulityTask_task1 = new System.Windows.Forms.TextBox();
             this.tableLayoutPanel16 = new System.Windows.Forms.TableLayoutPanel();
             this.rtxHitResult_MulityTask_task2 = new System.Windows.Forms.RichTextBox();
             this.panel18 = new System.Windows.Forms.Panel();
             this.picBox_MulityTask_task2 = new System.Windows.Forms.PictureBox();
             this.dgvHitResult_MulityTask_task2 = new System.Windows.Forms.DataGridView();
-            this.btn_MulityTask_task2 = new System.Windows.Forms.Button();
-            this.txt_MulityTask_task2 = new System.Windows.Forms.TextBox();
-            this.colTime1 = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.colLiveFace1 = new System.Windows.Forms.DataGridViewImageColumn();
-            this.colCandinate1 = new System.Windows.Forms.DataGridViewImageColumn();
-            this.colName1 = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.colScore1 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.colTime2 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.colLiveFace2 = new System.Windows.Forms.DataGridViewImageColumn();
             this.colCandinate2 = new System.Windows.Forms.DataGridViewImageColumn();
             this.colName2 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.colScore2 = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.btn_MulityTask_task2 = new System.Windows.Forms.Button();
+            this.txt_MulityTask_task2 = new System.Windows.Forms.TextBox();
             this.tabViewLibrary.SuspendLayout();
             this.tableLayoutPanel13.SuspendLayout();
             this.panel3.SuspendLayout();
@@ -3043,6 +3043,47 @@
             this.dgvHitResult_MulityTask_task1.Size = new System.Drawing.Size(652, 266);
             this.dgvHitResult_MulityTask_task1.TabIndex = 50;
             // 
+            // colTime1
+            // 
+            this.colTime1.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
+            this.colTime1.HeaderText = "时间";
+            this.colTime1.Name = "colTime1";
+            this.colTime1.ReadOnly = true;
+            this.colTime1.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
+            // 
+            // colLiveFace1
+            // 
+            this.colLiveFace1.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
+            this.colLiveFace1.HeaderText = "现场照";
+            this.colLiveFace1.ImageLayout = System.Windows.Forms.DataGridViewImageCellLayout.Zoom;
+            this.colLiveFace1.Name = "colLiveFace1";
+            this.colLiveFace1.ReadOnly = true;
+            this.colLiveFace1.Resizable = System.Windows.Forms.DataGridViewTriState.False;
+            // 
+            // colCandinate1
+            // 
+            this.colCandinate1.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
+            this.colCandinate1.HeaderText = "候选照";
+            this.colCandinate1.ImageLayout = System.Windows.Forms.DataGridViewImageCellLayout.Zoom;
+            this.colCandinate1.Name = "colCandinate1";
+            this.colCandinate1.ReadOnly = true;
+            this.colCandinate1.Resizable = System.Windows.Forms.DataGridViewTriState.False;
+            // 
+            // colName1
+            // 
+            this.colName1.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
+            this.colName1.HeaderText = "名称";
+            this.colName1.Name = "colName1";
+            this.colName1.ReadOnly = true;
+            this.colName1.Resizable = System.Windows.Forms.DataGridViewTriState.True;
+            this.colName1.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
+            // 
+            // colScore1
+            // 
+            this.colScore1.HeaderText = "分数";
+            this.colScore1.Name = "colScore1";
+            this.colScore1.ReadOnly = true;
+            // 
             // txt_MulityTask_task1
             // 
             this.txt_MulityTask_task1.Anchor = System.Windows.Forms.AnchorStyles.None;
@@ -3132,66 +3173,6 @@
             this.dgvHitResult_MulityTask_task2.Size = new System.Drawing.Size(652, 266);
             this.dgvHitResult_MulityTask_task2.TabIndex = 54;
             // 
-            // btn_MulityTask_task2
-            // 
-            this.btn_MulityTask_task2.Anchor = System.Windows.Forms.AnchorStyles.None;
-            this.btn_MulityTask_task2.Location = new System.Drawing.Point(417, 22);
-            this.btn_MulityTask_task2.Name = "btn_MulityTask_task2";
-            this.btn_MulityTask_task2.Size = new System.Drawing.Size(152, 23);
-            this.btn_MulityTask_task2.TabIndex = 55;
-            this.btn_MulityTask_task2.Text = "开始";
-            this.btn_MulityTask_task2.UseVisualStyleBackColor = true;
-            this.btn_MulityTask_task2.Click += new System.EventHandler(this.btn_MulityTask_task2_Click);
-            // 
-            // txt_MulityTask_task2
-            // 
-            this.txt_MulityTask_task2.Anchor = System.Windows.Forms.AnchorStyles.None;
-            this.txt_MulityTask_task2.Location = new System.Drawing.Point(71, 23);
-            this.txt_MulityTask_task2.Name = "txt_MulityTask_task2";
-            this.txt_MulityTask_task2.Size = new System.Drawing.Size(187, 21);
-            this.txt_MulityTask_task2.TabIndex = 52;
-            // 
-            // colTime1
-            // 
-            this.colTime1.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
-            this.colTime1.HeaderText = "时间";
-            this.colTime1.Name = "colTime1";
-            this.colTime1.ReadOnly = true;
-            this.colTime1.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
-            // 
-            // colLiveFace1
-            // 
-            this.colLiveFace1.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
-            this.colLiveFace1.HeaderText = "现场照";
-            this.colLiveFace1.ImageLayout = System.Windows.Forms.DataGridViewImageCellLayout.Zoom;
-            this.colLiveFace1.Name = "colLiveFace1";
-            this.colLiveFace1.ReadOnly = true;
-            this.colLiveFace1.Resizable = System.Windows.Forms.DataGridViewTriState.False;
-            // 
-            // colCandinate1
-            // 
-            this.colCandinate1.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
-            this.colCandinate1.HeaderText = "候选照";
-            this.colCandinate1.ImageLayout = System.Windows.Forms.DataGridViewImageCellLayout.Zoom;
-            this.colCandinate1.Name = "colCandinate1";
-            this.colCandinate1.ReadOnly = true;
-            this.colCandinate1.Resizable = System.Windows.Forms.DataGridViewTriState.False;
-            // 
-            // colName1
-            // 
-            this.colName1.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
-            this.colName1.HeaderText = "名称";
-            this.colName1.Name = "colName1";
-            this.colName1.ReadOnly = true;
-            this.colName1.Resizable = System.Windows.Forms.DataGridViewTriState.True;
-            this.colName1.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
-            // 
-            // colScore1
-            // 
-            this.colScore1.HeaderText = "分数";
-            this.colScore1.Name = "colScore1";
-            this.colScore1.ReadOnly = true;
-            // 
             // colTime2
             // 
             this.colTime2.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
@@ -3232,6 +3213,25 @@
             this.colScore2.HeaderText = "分数";
             this.colScore2.Name = "colScore2";
             this.colScore2.ReadOnly = true;
+            // 
+            // btn_MulityTask_task2
+            // 
+            this.btn_MulityTask_task2.Anchor = System.Windows.Forms.AnchorStyles.None;
+            this.btn_MulityTask_task2.Location = new System.Drawing.Point(417, 22);
+            this.btn_MulityTask_task2.Name = "btn_MulityTask_task2";
+            this.btn_MulityTask_task2.Size = new System.Drawing.Size(152, 23);
+            this.btn_MulityTask_task2.TabIndex = 55;
+            this.btn_MulityTask_task2.Text = "开始";
+            this.btn_MulityTask_task2.UseVisualStyleBackColor = true;
+            this.btn_MulityTask_task2.Click += new System.EventHandler(this.btn_MulityTask_task2_Click);
+            // 
+            // txt_MulityTask_task2
+            // 
+            this.txt_MulityTask_task2.Anchor = System.Windows.Forms.AnchorStyles.None;
+            this.txt_MulityTask_task2.Location = new System.Drawing.Point(71, 23);
+            this.txt_MulityTask_task2.Name = "txt_MulityTask_task2";
+            this.txt_MulityTask_task2.Size = new System.Drawing.Size(187, 21);
+            this.txt_MulityTask_task2.TabIndex = 52;
             // 
             // FormMian
             // 

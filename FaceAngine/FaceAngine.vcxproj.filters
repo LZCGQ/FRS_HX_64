@@ -39,9 +39,6 @@
     <ClInclude Include="BitmapConverter.h">
       <Filter>Header Files\Util</Filter>
     </ClInclude>
-    <ClInclude Include="Capture.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="ImageHelper.h">
       <Filter>Header Files\Util</Filter>
     </ClInclude>
@@ -53,6 +50,9 @@
     </ClInclude>
     <ClInclude Include="Common.h">
       <Filter>Header Files\Common</Filter>
+    </ClInclude>
+    <ClInclude Include="Capture.h">
+      <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -71,16 +71,16 @@
     <ClCompile Include="BitmapConverter.cpp">
       <Filter>Source Files\Util</Filter>
     </ClCompile>
-    <ClCompile Include="Capture.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="ImageHelper.cpp">
       <Filter>Source Files\Util</Filter>
     </ClCompile>
-    <ClCompile Include="Test.cpp">
+    <ClCompile Include="Vlcopencv.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Vlcopencv.cpp">
+    <ClCompile Include="Capture.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Test.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

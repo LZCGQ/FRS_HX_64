@@ -172,8 +172,8 @@
     <Reference Include="System.Windows.Forms" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\DataAngine\DataAngine.csproj">
-      <Project>{dea8e31e-a67f-40a2-900f-127517ced01b}</Project>
+    <ProjectReference Include="..\DataAngineSet\DataAngineSet.csproj">
+      <Project>{1ecdbcae-b563-4f2c-8259-96aaf1622be3}</Project>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

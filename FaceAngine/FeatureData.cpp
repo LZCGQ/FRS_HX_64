@@ -17,13 +17,14 @@ using namespace System::Windows::Forms;
 
 using namespace FRS;
 using namespace FRS::Util;
-using namespace DataAngine;
+//using namespace DataAngine;
+using namespace DataAngineSet;
 
 
 FeatureData::FeatureData()
 {
 	hitbll = gcnew BLL::hitrecord();
-	usrbll = gcnew BLL::user();
+	usrbll = gcnew BLL::person();
 	hdbll = gcnew BLL::hitrecord_detail();
 	habll = gcnew BLL::hitalert();
 	//stbll = gcnew BLL::statistics();
@@ -40,37 +41,6 @@ FeatureData::FeatureData()
 	{
 		Directory::CreateDirectory(queryProblemFaceDir);
 	}
-
-	
-	//recordHitUserMap = gcnew Dictionary<int, float>();
-	/*
-	String ^ server1RegDir = Path::Combine(server1Dir, regFaceDir);
-	String ^ server2RegDir = Path::Combine(server2Dir, regFaceDir);
-
-	if (!Directory::Exists(server1RegDir))
-	{
-		Directory::CreateDirectory(server1RegDir);
-	}
-
-	if (!Directory::Exists(server2RegDir))
-	{
-		Directory::CreateDirectory(server2RegDir);
-	}
-
-	String ^ server1QueryDir = Path::Combine(server1Dir, queryFaceDir);
-	String ^ server2QueryDir = Path::Combine(server2Dir, queryFaceDir);
-
-	if (!Directory::Exists(server1QueryDir))
-	{
-		Directory::CreateDirectory(server1QueryDir);
-	}
-
-	if (!Directory::Exists(server2QueryDir))
-	{
-		Directory::CreateDirectory(server2QueryDir);
-	}
-	*/
-	//LoadData();
 }
 FeatureData::~FeatureData()
 {
@@ -79,7 +49,6 @@ FeatureData::~FeatureData()
 
 FeatureData::!FeatureData()
 {
-	
 }
 
 bool FeatureData::SetDataPath(String^ dataPath)
@@ -104,122 +73,169 @@ bool FeatureData::SetDataPath(String^ dataPath)
 		{
 			Directory::CreateDirectory(trainingDataDir);
 		}
-
 		dataPathState = true;
 	}
 
 	catch (Exception^ ex)
 	{
-
 	}
 
 	return dataPathState;
-
 }
 
+#pragma region 文件夹录入--无通道无数据库
+//Int32 FeatureData::RegisterInBulk(String^ fileDirPath)
+//{
+//#if USE_EXPIRE
+//	if (IsExpired()) throw gcnew Exception("software has been expired");;
+//#endif
+//	
+//	if (Directory::Exists(fileDirPath)){
+//		return ReturnCode::DIR_NOT_EXITS;
+//	}
+//	if (allUsers == nullptr) allUsers = gcnew List<Model::person^>();
+//
+//	DirectoryInfo^ dir = gcnew DirectoryInfo(fileDirPath);
+//	array<FileInfo^>^files = dir->GetFiles();
+//	int count = 0;
+//	
+//		for (int i = 0; i < files->Length; i++)
+//		{		
+//			int status = -1;
+//			cv::Mat cvImg = cv::imread((char*)(void*)Marshal::StringToHGlobalAnsi(files[i]->FullName), 1);
+//			if (!cvImg.empty())
+//			{
+//				UserInfo^ userInfo = gcnew UserInfo();
+//				array<String^> ^items = files[i]->Name->Split('_');
+//				userInfo->name = items[0];
+//
+//				////
+//				////填入其他信息
+//				///
+//
+//				userInfo->name = System::IO::Path::GetFileNameWithoutExtension(files[i]->Name);
+//
+//				status = Register(cvImg, userInfo);
+//			}
+//
+//			count++;
+//
+//			try {
+//			RegisterOneFinisedEvent(count , files[i]->FullName + ": " + status);
+//			}
+//			catch (Exception ^e)
+//			{
+//				MessageBox::Show(e->Message);
+//			}
+//		}
+//	
+//	LoadData();
+//	return count;
+//}
+#pragma endregion
 
-Int32 FeatureData::RegisterInBulk(String^ fileDirPath)
+#pragma region 文件夹录入--无数据库
+//Int32 FeatureData::RegisterInBulk(String^ fileDirPath, short channelID)
+//{
+//#if USE_EXPIRE
+//	if (IsExpired()) throw gcnew Exception("software has been expired");;
+//#endif
+//
+//	if (allUsers == nullptr) allUsers = gcnew List<Model::person^>();
+//
+//	DirectoryInfo^ dir = gcnew DirectoryInfo(fileDirPath);
+//	array<FileInfo^>^files = dir->GetFiles();
+//	int count = 0;
+//
+//	for (int i = 0; i < files->Length; i++)
+//	{
+//		int status = -1;
+//		cv::Mat cvImg = cv::imread((char*)(void*)Marshal::StringToHGlobalAnsi(files[i]->FullName), 1);
+//		if (!cvImg.empty())
+//		{
+//			UserInfo^ userInfo = gcnew UserInfo();
+//			array<String^> ^items = files[i]->Name->Split('_');
+//			userInfo->name = items[0];
+//
+//			////
+//			////填入其他信息
+//			///
+//
+//			userInfo->name = System::IO::Path::GetFileNameWithoutExtension(files[i]->Name);
+//
+//			status = Register(cvImg, userInfo);
+//		}
+//
+//		count++;
+//
+//		try {
+//			RegisterOneFinisedEvent(count, files[i]->FullName + ": " + status);
+//		}
+//		catch (Exception ^e)
+//		{
+//			MessageBox::Show(e->Message);
+//		}
+//	}
+//
+//	return count;
+//}
+#pragma endregion
+
+#pragma region 文件录入--无通道我数据库
+//Int32 FeatureData::RegisterInBulkFromFile(String^ filePath)
+//{
+//#if USE_EXPIRE
+//	if (IsExpired()) throw gcnew Exception("software has been expired");;
+//#endif
+//
+//	if (allUsers == nullptr) allUsers = gcnew List<Model::person^>();
+//
+//	FileStream ^fs = gcnew FileStream(filePath, FileMode::Open, FileAccess::Read);
+//	StreamReader ^read = gcnew StreamReader(fs, Encoding::Default);
+//	String^ strReadline;
+//	int count = 0;
+//
+//	while ((strReadline = read->ReadLine()) != nullptr)
+//	{
+//		
+//		int status = ReturnCode::SUCCESS;
+//		array<String^>^ Items = strReadline->Split(',');
+//		cv::Mat cvImg = cv::imread((char*)(void*)Marshal::StringToHGlobalAnsi(Items[3]->Trim()), 1);
+//		if (!cvImg.empty())
+//		{
+//			UserInfo^ usr = gcnew UserInfo();			
+//			usr->imageId = Items[1]->Trim();
+//			usr->type = Items[2]->Trim();
+//			usr->createTime = DateTime::Now;
+//			usr->modifiedTime = DateTime::Now;
+//			status = Register(cvImg, usr);
+//		}
+//		count++;
+//		try {
+//			RegisterOneFinisedEvent(count, Items[3]->Trim() + ": " + status);
+//		}
+//		catch (Exception ^e)
+//		{
+//			MessageBox::Show(e->Message);
+//		}
+//
+//
+//	}
+//	fs->Close();
+//	read->Close();
+//	LoadData();
+//	return count;
+//}
+#pragma endregion
+
+#pragma region 文件录入--无通道
+Int32 FeatureData::RegisterInBulkFromFile(String^ filePath, Int32^ libraryid)
 {
 #if USE_EXPIRE
 	if (IsExpired()) throw gcnew Exception("software has been expired");;
 #endif
-	
-	if (Directory::Exists(fileDirPath)){
-		return ReturnCode::DIR_NOT_EXITS;
-	}
-	if (allUsers == nullptr) allUsers = gcnew List<Model::user^>();
 
-	DirectoryInfo^ dir = gcnew DirectoryInfo(fileDirPath);
-	array<FileInfo^>^files = dir->GetFiles();
-	int count = 0;
-	
-		for (int i = 0; i < files->Length; i++)
-		{		
-			int status = -1;
-			cv::Mat cvImg = cv::imread((char*)(void*)Marshal::StringToHGlobalAnsi(files[i]->FullName), 1);
-			if (!cvImg.empty())
-			{
-				UserInfo^ userInfo = gcnew UserInfo();
-				array<String^> ^items = files[i]->Name->Split('_');
-				userInfo->name = items[0];
-
-				////
-				////填入其他信息
-				///
-
-				userInfo->name = System::IO::Path::GetFileNameWithoutExtension(files[i]->Name);
-
-				status = Register(cvImg, userInfo);
-			}
-
-			count++;
-
-			try {
-			RegisterOneFinisedEvent(count , files[i]->FullName + ": " + status);
-			}
-			catch (Exception ^e)
-			{
-				MessageBox::Show(e->Message);
-			}
-		}
-	
-	LoadData();
-	return count;
-
-
-}
-
-Int32 FeatureData::RegisterInBulk(String^ fileDirPath, short channelID)
-{
-#if USE_EXPIRE
-	if (IsExpired()) throw gcnew Exception("software has been expired");;
-#endif
-
-	if (allUsers == nullptr) allUsers = gcnew List<Model::user^>();
-
-	DirectoryInfo^ dir = gcnew DirectoryInfo(fileDirPath);
-	array<FileInfo^>^files = dir->GetFiles();
-	int count = 0;
-
-	for (int i = 0; i < files->Length; i++)
-	{
-		int status = -1;
-		cv::Mat cvImg = cv::imread((char*)(void*)Marshal::StringToHGlobalAnsi(files[i]->FullName), 1);
-		if (!cvImg.empty())
-		{
-			UserInfo^ userInfo = gcnew UserInfo();
-			array<String^> ^items = files[i]->Name->Split('_');
-			userInfo->name = items[0];
-
-			////
-			////填入其他信息
-			///
-
-			userInfo->name = System::IO::Path::GetFileNameWithoutExtension(files[i]->Name);
-
-			status = Register(cvImg, userInfo);
-		}
-
-		count++;
-
-		try {
-			RegisterOneFinisedEvent(count, files[i]->FullName + ": " + status);
-		}
-		catch (Exception ^e)
-		{
-			MessageBox::Show(e->Message);
-		}
-	}
-
-	return count;
-}
-Int32 FeatureData::RegisterInBulkFromFile(String^ filePath)
-{
-#if USE_EXPIRE
-	if (IsExpired()) throw gcnew Exception("software has been expired");;
-#endif
-
-	if (allUsers == nullptr) allUsers = gcnew List<Model::user^>();
+	if (allUsers == nullptr) allUsers = gcnew List<Model::person^>();
 
 	FileStream ^fs = gcnew FileStream(filePath, FileMode::Open, FileAccess::Read);
 	StreamReader ^read = gcnew StreamReader(fs, Encoding::Default);
@@ -228,17 +244,18 @@ Int32 FeatureData::RegisterInBulkFromFile(String^ filePath)
 
 	while ((strReadline = read->ReadLine()) != nullptr)
 	{
-		
+
 		int status = ReturnCode::SUCCESS;
 		array<String^>^ Items = strReadline->Split(',');
 		cv::Mat cvImg = cv::imread((char*)(void*)Marshal::StringToHGlobalAnsi(Items[3]->Trim()), 1);
 		if (!cvImg.empty())
 		{
 			UserInfo^ usr = gcnew UserInfo();
-			usr->peopleId = Items[0]->Trim();
 			usr->imageId = Items[1]->Trim();
 			usr->type = Items[2]->Trim();
-
+			usr->createTime = DateTime::Now;
+			usr->modifiedTime = DateTime::Now;
+			usr->personDatasetId = libraryid;
 			status = Register(cvImg, usr);
 		}
 		count++;
@@ -254,18 +271,66 @@ Int32 FeatureData::RegisterInBulkFromFile(String^ filePath)
 	}
 	fs->Close();
 	read->Close();
-	LoadData();
+	LoadData(libraryid);
 	return count;
-
-
 }
-Int32 FeatureData::RegisterInBulk1(String^ fileDirPath)
+#pragma endregion
+
+#pragma region 文件夹录入1--无通道无数据库
+//Int32 FeatureData::RegisterInBulk1(String^ fileDirPath)
+//{
+//#if USE_EXPIRE
+//	if (IsExpired()) throw gcnew Exception("software has been expired");;
+//#endif
+//
+//	if (allUsers == nullptr) allUsers = gcnew List<Model::person^>();
+//
+//	DirectoryInfo^ dir = gcnew DirectoryInfo(fileDirPath);
+//	array<FileInfo^>^files = dir->GetFiles();
+//	int count = 0;
+//
+//	for (int i = 0; i < files->Length; i++)
+//	{
+//
+//		int status = -1;
+//		cv::Mat cvImg = cv::imread((char*)(void*)Marshal::StringToHGlobalAnsi(files[i]->FullName), 1);
+//		if (!cvImg.empty())
+//		{
+//			UserInfo^ userInfo = gcnew UserInfo();
+//			userInfo->name = System::IO::Path::GetFileNameWithoutExtension(files[i]->Name);//440100Z009992016120002_1
+//			userInfo->imageId = System::IO::Path::GetFileNameWithoutExtension(files[i]->Name);//440100Z009992016120002_1 
+//			userInfo->createTime = DateTime::Now;
+//			userInfo->modifiedTime = DateTime::Now;
+//			status = Register(cvImg, userInfo);
+//		}
+//
+//		count++;
+//
+//		try {
+//			RegisterOneFinisedEvent(count, files[i]->FullName + ": " + status);
+//		}
+//		catch (Exception ^e)
+//		{
+//			MessageBox::Show(e->Message);
+//		}
+//	}
+//
+//	LoadData();
+//	return count;
+//}
+#pragma endregion
+
+#pragma region 文件夹录入1--无通道
+Int32 FeatureData::RegisterInBulk1(String^ fileDirPath, Int32^ libraryid)
 {
 #if USE_EXPIRE
 	if (IsExpired()) throw gcnew Exception("software has been expired");;
 #endif
 
-	if (allUsers == nullptr) allUsers = gcnew List<Model::user^>();
+	if (!Directory::Exists(fileDirPath)){
+		return ReturnCode::DIR_NOT_EXITS;
+	}
+	if (allUsers == nullptr) allUsers = gcnew List<Model::person^>();
 
 	DirectoryInfo^ dir = gcnew DirectoryInfo(fileDirPath);
 	array<FileInfo^>^files = dir->GetFiles();
@@ -281,7 +346,9 @@ Int32 FeatureData::RegisterInBulk1(String^ fileDirPath)
 			UserInfo^ userInfo = gcnew UserInfo();
 			userInfo->name = System::IO::Path::GetFileNameWithoutExtension(files[i]->Name);//440100Z009992016120002_1
 			userInfo->imageId = System::IO::Path::GetFileNameWithoutExtension(files[i]->Name);//440100Z009992016120002_1 
-			userInfo->peopleId = System::IO::Path::GetFileNameWithoutExtension(files[i]->Name)->Split('_')[0];//440100Z009992016120002
+			userInfo->createTime = DateTime::Now;
+			userInfo->modifiedTime = DateTime::Now;
+			userInfo->personDatasetId = libraryid;
 			status = Register(cvImg, userInfo);
 		}
 
@@ -296,108 +363,145 @@ Int32 FeatureData::RegisterInBulk1(String^ fileDirPath)
 		}
 	}
 
-	LoadData();
+	LoadData(libraryid);
 	return count;
-
-
 }
+#pragma endregion
 
-Int32 FeatureData::RegisterInBulk1(String^ fileDirPath, String^ library)
+#pragma region 单图注册--录入图像特征，底库位置
+Int32 FeatureData::Register(cv::Mat& cvImg, Model::person ^ usr, short channelID)
 {
-#if USE_EXPIRE
-	if (IsExpired()) throw gcnew Exception("software has been expired");;
-#endif
-
-	if (!Directory::Exists(fileDirPath)){
-		return ReturnCode::DIR_NOT_EXITS;
-	}
-	if (allUsers == nullptr) allUsers = gcnew List<Model::user^>();
-
-	DirectoryInfo^ dir = gcnew DirectoryInfo(fileDirPath);
-	array<FileInfo^>^files = dir->GetFiles();
-	int count = 0;
-
-	for (int i = 0; i < files->Length; i++)
-	{
-
-		int status = -1;
-		cv::Mat cvImg = cv::imread((char*)(void*)Marshal::StringToHGlobalAnsi(files[i]->FullName), 1);
-		if (!cvImg.empty())
-		{
-			UserInfo^ userInfo = gcnew UserInfo();
-			userInfo->name = System::IO::Path::GetFileNameWithoutExtension(files[i]->Name);//440100Z009992016120002_1
-			userInfo->imageId = System::IO::Path::GetFileNameWithoutExtension(files[i]->Name);//440100Z009992016120002_1 
-			userInfo->peopleId = System::IO::Path::GetFileNameWithoutExtension(files[i]->Name)->Split('_')[0];//440100Z009992016120002
-			status = Register(cvImg, userInfo, library);
-		}
-
-		count++;
-
-		try {
-			RegisterOneFinisedEvent(count, files[i]->FullName + ": " + status);
-		}
-		catch (Exception ^e)
-		{
-			MessageBox::Show(e->Message);
-		}
-	}
-
-	LoadData(library);
-	return count;
-
-
-}
-
- Int32 FeatureData::Register(cv::Mat& cvImg, Model::user ^ usr)
-{
-	if (cvImg.channels() < 3) throw gcnew   ArgumentException("image must have more than 3 channels");		
+	if (cvImg.channels() < 3) throw gcnew   ArgumentException("image must have more than 3 channels");
 	try{
-		if (allUsers == nullptr) allUsers = gcnew List<Model::user^>();
+		if (allUsers == nullptr) allUsers = gcnew List<Model::person^>();
 
 		int nWidth = cvImg.cols;
 		int nHeight = cvImg.rows;
-	
+
 		if (nWidth < registerFaceWidthThresh || nHeight < registerFaceHeightThresh)
 		{
 			return ReturnCode::IMAGE_TOO_SMALL;
 		}
-		
-		/*
-		if (BlurrFaceEliminate(cvImg,1))
-		{
-			return -1;
-		}
-		*/
 
 		const int n = 1;
 		//face detect
 		THFI_FacePos ptfp1[n];
 		int k;
-		
-		int face_num = FaceImage::DetectFace(0, cvImg.data, 24, nWidth, nHeight, ptfp1, 1);
-		
+
+		int face_num = FaceImage::DetectFace(channelID, cvImg.data, 24, nWidth, nHeight, ptfp1, 1);
+
 		if (face_num <= 0)
 		{
 			return ReturnCode::NO_FACE;
 		}
-		if (abs(ptfp1[0].fAngle.pitch)> registerFaceYawThresh || abs(ptfp1[0].fAngle.roll)>registerFaceRollThresh || abs(ptfp1[0].fAngle.yaw)>registerFaceYawThresh){
+		if (abs(ptfp1[0].fAngle.pitch) > registerFaceYawThresh || abs(ptfp1[0].fAngle.roll) > registerFaceRollThresh || abs(ptfp1[0].fAngle.yaw) > registerFaceYawThresh){
 			return ReturnCode::ILLEGAL_FACE_ANGLE;
 		}
 		if (registerFaceQualityThresh > ptfp1[0].nQuality)
 			return ReturnCode::ILLEGAL_FACE_QUALITY;
-		
-		if (abs(ptfp1[0].rcFace.bottom - ptfp1[0].rcFace.top) < registerFaceHeightThresh || abs(ptfp1[0].rcFace.right - ptfp1[0].rcFace.left)<registerFaceWidthThresh)
+
+		if (abs(ptfp1[0].rcFace.bottom - ptfp1[0].rcFace.top) < registerFaceHeightThresh || abs(ptfp1[0].rcFace.right - ptfp1[0].rcFace.left) < registerFaceWidthThresh)
 			return ReturnCode::ILLEGAL_FACE_SIZE;
-	
+
+		//BYTE* pFeature1 = new BYTE[EF_Size()];
+		array<BYTE>^ pFeature = gcnew array<BYTE>(Feature::Size());
+		//only extract the first face(max size face)
+		int ret = Feature::Extract(channelID, cvImg, nWidth, nHeight, 3, (THFI_FacePos*)&ptfp1[0], pFeature);
+		usr->feature_data = pFeature;
+		usr->quality_score = ptfp1[0].nQuality;
+
+		String^ fileName = System::Guid::NewGuid().ToString() + L".jpg";
+
+		String ^savePath = Path::Combine(regFaceDir, fileName);
+
+		usr->face_image_path = savePath;
+
+		allUsers->Add(usr);
+		cv::Rect rect_face(ptfp1[0].rcFace.left, ptfp1[0].rcFace.top, ptfp1[0].rcFace.right - ptfp1[0].rcFace.left, ptfp1[0].rcFace.bottom - ptfp1[0].rcFace.top);
+
+#pragma region 扩大人脸区域
+		double pad_times = 1.5;
+		double center_x = (rect_face.x + rect_face.width) / 2.0;
+		double center_y = (rect_face.y + rect_face.height) / 2.0;
+		int max_times = pad_times;
+		pad_times = std::min(pad_times, center_x / (rect_face.width / 2.0));
+		pad_times = std::min(pad_times, center_y / (rect_face.height / 2.0));
+
+		pad_times = std::min(pad_times, rect_face.width - center_x / (rect_face.width / 2.0));
+		pad_times = std::min(pad_times, rect_face.height - center_y / (rect_face.height / 2.0));
+
+		int pad_face_x = rect_face.x - (int)(rect_face.width*(pad_times - 1) / 2);
+		int pad_face_y = rect_face.y - (int)(rect_face.height*(pad_times - 1) / 2);
+		cv::Rect rect_face_pad(pad_face_x, pad_face_y, pad_times*rect_face.width, rect_face.height*pad_times);
+#pragma  endregion
+		//缩放
+		cv::Mat Registerface;
+		cv::resize(cvImg, Registerface, cv::Size(100, cvImg.rows * 100 / cvImg.cols));
+
+		if (usrbll->Add(usr))
+		{
+			cv::imwrite(((char*)(void*)Marshal::StringToHGlobalAnsi(savePath)), Registerface);
+			return ReturnCode::SUCCESS;
+		}
+		else
+		{
+			return ReturnCode::WRITE_TO_DATABASE_FAILED;
+		}
+	}
+	catch (Exception ^e)
+	{
+		ShowMsgEvent("Register Error:", e);
+		Console::WriteLine(e->Message + "," + System::Environment::CommandLine);
+		return ReturnCode::UNKOWN_EXCEPTION;
+	}
+	return ReturnCode::SUCCESS;
+}
+#pragma endregion
+
+#pragma region 单图注册--录入图像特征，底库位置--无通道
+Int32 FeatureData::Register(cv::Mat& cvImg, Model::person ^ usr)
+{
+	if (cvImg.channels() < 3) throw gcnew   ArgumentException("image must have more than 3 channels");
+	try{
+		if (allUsers == nullptr) allUsers = gcnew List<Model::person^>();
+
+		int nWidth = cvImg.cols;
+		int nHeight = cvImg.rows;
+
+		if (nWidth < registerFaceWidthThresh || nHeight < registerFaceHeightThresh)
+		{
+			return ReturnCode::IMAGE_TOO_SMALL;
+		}
+
+		const int n = 1;
+		//face detect
+		THFI_FacePos ptfp1[n];
+		int k;
+
+		int face_num = FaceImage::DetectFace(0, cvImg.data, 24, nWidth, nHeight, ptfp1, 1);
+
+		if (face_num <= 0)
+		{
+			return ReturnCode::NO_FACE;
+		}
+		if (abs(ptfp1[0].fAngle.pitch) > registerFaceYawThresh || abs(ptfp1[0].fAngle.roll) > registerFaceRollThresh || abs(ptfp1[0].fAngle.yaw) > registerFaceYawThresh){
+			return ReturnCode::ILLEGAL_FACE_ANGLE;
+		}
+		if (registerFaceQualityThresh > ptfp1[0].nQuality)
+			return ReturnCode::ILLEGAL_FACE_QUALITY;
+
+		if (abs(ptfp1[0].rcFace.bottom - ptfp1[0].rcFace.top) < registerFaceHeightThresh || abs(ptfp1[0].rcFace.right - ptfp1[0].rcFace.left) < registerFaceWidthThresh)
+			return ReturnCode::ILLEGAL_FACE_SIZE;
+
 		//BYTE* pFeature1 = new BYTE[EF_Size()];
 		array<BYTE>^ pFeature = gcnew array<BYTE>(Feature::Size());
 		//only extract the first face(max size face)
 		int ret = Feature::Extract(0, cvImg, nWidth, nHeight, 3, (THFI_FacePos*)&ptfp1[0], pFeature);
 		usr->feature_data = pFeature;
 		usr->quality_score = ptfp1[0].nQuality;
-		
+
 		String^ fileName = System::Guid::NewGuid().ToString() + L".jpg";
-		
+
 		String ^savePath = Path::Combine(regFaceDir, fileName);
 
 		usr->face_image_path = savePath;
@@ -423,9 +527,9 @@ Int32 FeatureData::RegisterInBulk1(String^ fileDirPath, String^ library)
 		//缩放
 		cv::Mat Registerface;
 		cv::resize(cvImg, Registerface, cv::Size(100, cvImg.rows * 100 / cvImg.cols));
-		
+
 		if (usrbll->Add(usr))
-		{	
+		{
 			cv::imwrite(((char*)(void*)Marshal::StringToHGlobalAnsi(savePath)), Registerface);
 			return ReturnCode::SUCCESS;
 		}
@@ -436,379 +540,31 @@ Int32 FeatureData::RegisterInBulk1(String^ fileDirPath, String^ library)
 	}
 	catch (Exception ^e)
 	{
-		ShowMsgEvent("Register Error:",e);
-		Console::WriteLine(e->Message+","+System::Environment::CommandLine);
+		ShowMsgEvent("Register Error:", e);
+		Console::WriteLine(e->Message + "," + System::Environment::CommandLine);
 		return ReturnCode::UNKOWN_EXCEPTION;
 	}
 	return ReturnCode::SUCCESS;
-	
 }
+#pragma endregion
 
- Int32 FeatureData::Register(cv::Mat& cvImg, Model::user ^ usr, short channelID)
- {
-	 if (cvImg.channels() < 3) throw gcnew   ArgumentException("image must have more than 3 channels");
-	 try{
-		 if (allUsers == nullptr) allUsers = gcnew List<Model::user^>();
+#pragma region 文件录入（带姓名）--无通道
+Int32 FeatureData::Register(String^ filePath, String^ username)
+{
+#if USE_EXPIRE
+	if (IsExpired()) throw gcnew Exception("software has been expired");
+#endif
+	cv::Mat cvImg = cv::imread((char*)(void*)Marshal::StringToHGlobalAnsi(filePath), 1);
+	if (cvImg.data == nullptr)  {
+		Console::WriteLine("Load{0} image error!", filePath);
+		return ReturnCode::IMAGE_RAED_FAILED;
+	}
 
-		 int nWidth = cvImg.cols;
-		 int nHeight = cvImg.rows;
+	UserInfo^ userInfo = gcnew UserInfo();
+	userInfo->name = username;
 
-		 if (nWidth < registerFaceWidthThresh || nHeight < registerFaceHeightThresh)
-		 {
-			 return ReturnCode::IMAGE_TOO_SMALL;
-		 }
-
-		 /*
-		 if (BlurrFaceEliminate(cvImg,1))
-		 {
-		 return -1;
-		 }
-		 */
-
-		 const int n = 1;
-		 //face detect
-		 THFI_FacePos ptfp1[n];
-		 int k;
-
-		 int face_num = FaceImage::DetectFace(channelID, cvImg.data, 24, nWidth, nHeight, ptfp1, 1);
-
-		 if (face_num <= 0)
-		 {
-			 return ReturnCode::NO_FACE;
-		 }
-		 if (abs(ptfp1[0].fAngle.pitch) > registerFaceYawThresh || abs(ptfp1[0].fAngle.roll) > registerFaceRollThresh || abs(ptfp1[0].fAngle.yaw) > registerFaceYawThresh){
-			 return ReturnCode::ILLEGAL_FACE_ANGLE;
-		 }
-		 if (registerFaceQualityThresh > ptfp1[0].nQuality)
-			 return ReturnCode::ILLEGAL_FACE_QUALITY;
-
-		 if (abs(ptfp1[0].rcFace.bottom - ptfp1[0].rcFace.top) < registerFaceHeightThresh || abs(ptfp1[0].rcFace.right - ptfp1[0].rcFace.left) < registerFaceWidthThresh)
-			 return ReturnCode::ILLEGAL_FACE_SIZE;
-
-		 //BYTE* pFeature1 = new BYTE[EF_Size()];
-		 array<BYTE>^ pFeature = gcnew array<BYTE>(Feature::Size());
-		 //only extract the first face(max size face)
-		 int ret = Feature::Extract(channelID, cvImg, nWidth, nHeight, 3, (THFI_FacePos*)&ptfp1[0], pFeature);
-		 usr->feature_data = pFeature;
-		 usr->quality_score = ptfp1[0].nQuality;
-
-		 String^ fileName = System::Guid::NewGuid().ToString() + L".jpg";
-
-		 String ^savePath = Path::Combine(regFaceDir, fileName);
-
-		 usr->face_image_path = savePath;
-
-		 allUsers->Add(usr);
-		 cv::Rect rect_face(ptfp1[0].rcFace.left, ptfp1[0].rcFace.top, ptfp1[0].rcFace.right - ptfp1[0].rcFace.left, ptfp1[0].rcFace.bottom - ptfp1[0].rcFace.top);
-
-#pragma region 扩大人脸区域
-		 double pad_times = 1.5;
-		 double center_x = (rect_face.x + rect_face.width) / 2.0;
-		 double center_y = (rect_face.y + rect_face.height) / 2.0;
-		 int max_times = pad_times;
-		 pad_times = std::min(pad_times, center_x / (rect_face.width / 2.0));
-		 pad_times = std::min(pad_times, center_y / (rect_face.height / 2.0));
-
-		 pad_times = std::min(pad_times, rect_face.width - center_x / (rect_face.width / 2.0));
-		 pad_times = std::min(pad_times, rect_face.height - center_y / (rect_face.height / 2.0));
-
-		 int pad_face_x = rect_face.x - (int)(rect_face.width*(pad_times - 1) / 2);
-		 int pad_face_y = rect_face.y - (int)(rect_face.height*(pad_times - 1) / 2);
-		 cv::Rect rect_face_pad(pad_face_x, pad_face_y, pad_times*rect_face.width, rect_face.height*pad_times);
-#pragma  endregion
-		 //缩放
-		 cv::Mat Registerface;
-		 cv::resize(cvImg, Registerface, cv::Size(100, cvImg.rows * 100 / cvImg.cols));
-
-		 if (usrbll->Add(usr))
-		 {
-			 cv::imwrite(((char*)(void*)Marshal::StringToHGlobalAnsi(savePath)), Registerface);
-			 return ReturnCode::SUCCESS;
-		 }
-		 else
-		 {
-			 return ReturnCode::WRITE_TO_DATABASE_FAILED;
-		 }
-	 }
-	 catch (Exception ^e)
-	 {
-		 ShowMsgEvent("Register Error:", e);
-		 Console::WriteLine(e->Message + "," + System::Environment::CommandLine);
-		 return ReturnCode::UNKOWN_EXCEPTION;
-	 }
-	 return ReturnCode::SUCCESS;
-
- }
-
- Int32 FeatureData::Register(cv::Mat& cvImg, Model::user ^ usr,String^ library)
- {
-	 if (cvImg.channels() < 3) throw gcnew   ArgumentException("image must have more than 3 channels");		
-	 try{
-		 if (allUsers == nullptr) allUsers = gcnew List<Model::user^>();
-
-		 int nWidth = cvImg.cols;
-		 int nHeight = cvImg.rows;
-
-		 if (nWidth < registerFaceWidthThresh || nHeight < registerFaceHeightThresh)
-		 {
-			 return ReturnCode::IMAGE_TOO_SMALL;
-		 }
-
-		 /*
-		 if (BlurrFaceEliminate(cvImg,1))
-		 {
-		 return -1;
-		 }
-		 */
-
-		 const int n = 1;
-		 //face detect
-		 THFI_FacePos ptfp1[n];
-		 int k;
-
-		 int face_num = FaceImage::DetectFace(0, cvImg.data, 24, nWidth, nHeight, ptfp1, 1);
-
-		 if (face_num <= 0)
-		 {
-			 return ReturnCode::NO_FACE;
-		 }
-		 if (abs(ptfp1[0].fAngle.pitch)> registerFaceYawThresh || abs(ptfp1[0].fAngle.roll)>registerFaceRollThresh || abs(ptfp1[0].fAngle.yaw)>registerFaceYawThresh){
-			 return ReturnCode::ILLEGAL_FACE_ANGLE;
-		 }
-		 if (registerFaceQualityThresh > ptfp1[0].nQuality)
-			 return ReturnCode::ILLEGAL_FACE_QUALITY;
-
-		 if (abs(ptfp1[0].rcFace.bottom - ptfp1[0].rcFace.top) < registerFaceHeightThresh || abs(ptfp1[0].rcFace.right - ptfp1[0].rcFace.left)<registerFaceWidthThresh)
-			 return ReturnCode::ILLEGAL_FACE_SIZE;
-
-		 //BYTE* pFeature1 = new BYTE[EF_Size()];
-		 array<BYTE>^ pFeature = gcnew array<BYTE>(Feature::Size());
-		 //only extract the first face(max size face)
-		 int ret = Feature::Extract(0, cvImg, nWidth, nHeight, 3, (THFI_FacePos*)&ptfp1[0], pFeature);
-		 usr->feature_data = pFeature;
-		 usr->quality_score = ptfp1[0].nQuality;
-
-		 String^ fileName = System::Guid::NewGuid().ToString() + L".jpg";
-
-		 String ^savePath = Path::Combine(regFaceDir, fileName);
-
-		 usr->face_image_path = savePath;
-
-		 //缩放
-		 cv::Mat Registerface;
-		 cv::resize(cvImg, Registerface, cv::Size(100, cvImg.rows * 100 / cvImg.cols));
-
-		 if (usrbll->Add(usr,library))
-		 {
-			 cv::imwrite(((char*)(void*)Marshal::StringToHGlobalAnsi(savePath)), Registerface);
-			 return ReturnCode::SUCCESS;
-		 }
-		 else
-		 {
-			 return ReturnCode::WRITE_TO_DATABASE_FAILED;
-		 }
-	 }
-	 catch (Exception ^e)
-	 {
-		 ShowMsgEvent("Register Error:", e);
-		 Console::WriteLine(e->Message + "," + System::Environment::CommandLine);
-		 return ReturnCode::UNKOWN_EXCEPTION;
-	 }
-	 return ReturnCode::SUCCESS;
-
+	return Register(cvImg, userInfo);
 }
-
- Int32 FeatureData::Register(cv::Mat& cvImg, Model::user ^ usr, String^ library, short channelID)
- {
-	 if (cvImg.channels() < 3) throw gcnew   ArgumentException("image must have more than 3 channels");		
-	 try{
-		 if (allUsers == nullptr) allUsers = gcnew List<Model::user^>();
-
-		 int nWidth = cvImg.cols;
-		 int nHeight = cvImg.rows;
-
-		 if (nWidth < registerFaceWidthThresh || nHeight < registerFaceHeightThresh)
-		 {
-			 return ReturnCode::IMAGE_TOO_SMALL;
-		 }
-
-		 /*
-		 if (BlurrFaceEliminate(cvImg,1))
-		 {
-		 return -1;
-		 }
-		 */
-
-		 const int n = 1;
-		 //face detect
-		 THFI_FacePos ptfp1[n];
-		 int k;
-
-		 int face_num = FaceImage::DetectFace(channelID, cvImg.data, 24, nWidth, nHeight, ptfp1, 1);
-
-		 if (face_num <= 0)
-		 {
-			 return ReturnCode::NO_FACE;
-		 }
-		 if (abs(ptfp1[0].fAngle.pitch)> registerFaceYawThresh || abs(ptfp1[0].fAngle.roll)>registerFaceRollThresh || abs(ptfp1[0].fAngle.yaw)>registerFaceYawThresh){
-			 return ReturnCode::ILLEGAL_FACE_ANGLE;
-		 }
-		 if (registerFaceQualityThresh > ptfp1[0].nQuality)
-			 return ReturnCode::ILLEGAL_FACE_QUALITY;
-
-		 if (abs(ptfp1[0].rcFace.bottom - ptfp1[0].rcFace.top) < registerFaceHeightThresh || abs(ptfp1[0].rcFace.right - ptfp1[0].rcFace.left)<registerFaceWidthThresh)
-			 return ReturnCode::ILLEGAL_FACE_SIZE;
-
-		 //BYTE* pFeature1 = new BYTE[EF_Size()];
-		 array<BYTE>^ pFeature = gcnew array<BYTE>(Feature::Size());
-		 //only extract the first face(max size face)
-		 int ret = Feature::Extract(channelID, cvImg, nWidth, nHeight, 3, (THFI_FacePos*)&ptfp1[0], pFeature);
-		 usr->feature_data = pFeature;
-		 usr->quality_score = ptfp1[0].nQuality;
-
-		 String^ fileName = System::Guid::NewGuid().ToString() + L".jpg";
-
-		 String ^savePath = Path::Combine(regFaceDir, fileName);
-
-		 usr->face_image_path = savePath;
-
-		 //缩放
-		 cv::Mat Registerface;
-		 cv::resize(cvImg, Registerface, cv::Size(100, cvImg.rows * 100 / cvImg.cols));
-
-		 if (usrbll->Add(usr, library))
-		 {
-			 cv::imwrite(((char*)(void*)Marshal::StringToHGlobalAnsi(savePath)), Registerface);
-			 return ReturnCode::SUCCESS;
-		 }
-		 else
-		 {
-			 return ReturnCode::WRITE_TO_DATABASE_FAILED;
-		 }
-	 }
-	 catch (Exception ^e)
-	 {
-		 ShowMsgEvent("Register Error:", e);
-		 Console::WriteLine(e->Message + "," + System::Environment::CommandLine);
-		 return ReturnCode::UNKOWN_EXCEPTION;
-	 }
-	 return ReturnCode::SUCCESS;
-
-}
-
-
- Int32 FeatureData::Register(String^ filePath, String^ username)
- {
-#if USE_EXPIRE
-	 if (IsExpired()) throw gcnew Exception("software has been expired");
-#endif
-	 cv::Mat cvImg = cv::imread((char*)(void*)Marshal::StringToHGlobalAnsi(filePath), 1);
-	 if (cvImg.data == nullptr)  {
-		 Console::WriteLine("Load{0} image error!", filePath);
-		 return ReturnCode::IMAGE_RAED_FAILED;
-	 }
-
-	 UserInfo^ userInfo = gcnew UserInfo();
-	 userInfo->name = username;
-
-	 return Register(cvImg, userInfo);
-
- }
-
- Int32 FeatureData::Register(String^ filePath, String^ username, short channelID)
- {
-#if USE_EXPIRE
-	 if (IsExpired()) throw gcnew Exception("software has been expired");
-#endif
-	 cv::Mat cvImg = cv::imread((char*)(void*)Marshal::StringToHGlobalAnsi(filePath), 1);
-	 if (cvImg.data == nullptr)  {
-		 Console::WriteLine("Load{0} image error!", filePath);
-		 return ReturnCode::IMAGE_RAED_FAILED;
-	 }
-
-	 UserInfo^ userInfo = gcnew UserInfo();
-	 userInfo->name = username;
-
-	 return Register(cvImg, userInfo, channelID);
-
- }
-
-
- Int32 FeatureData::Register(cv::Mat& cvImg, UserInfo^ userInfo)
- {
-	 Model::user ^usr = gcnew Model::user();
-	 usr->name = userInfo->name;
-	 usr->gender = userInfo->gender;
-	 usr->card_id = userInfo->cardId;
-	 usr->people_id = userInfo->peopleId;
-	 usr->image_id = userInfo->imageId;
-	 usr->type = userInfo->type;
-	
-	 return Register(cvImg, usr);
- }
-
- Int32 FeatureData::Register(cv::Mat& cvImg, UserInfo^ userInfo, short channelID)
- {
-	 Model::user ^usr = gcnew Model::user();
-	 usr->name = userInfo->name;
-	 usr->gender = userInfo->gender;
-	 usr->card_id = userInfo->cardId;
-	 usr->people_id = userInfo->peopleId;
-	 usr->image_id = userInfo->imageId;
-	 usr->type = userInfo->type;
-
-	 return Register(cvImg, usr, channelID);
- }
-
-
- Int32 FeatureData::Register(cv::Mat& cvImg, UserInfo^ userInfo, String^ library)
- {
-	 Model::user ^usr = gcnew Model::user();
-	 usr->name = userInfo->name;
-	 usr->gender = userInfo->gender;
-	 usr->card_id = userInfo->cardId;
-	 usr->people_id = userInfo->peopleId;
-	 usr->image_id = userInfo->imageId;
-	 usr->type = userInfo->type;
-
-	 return Register(cvImg, usr, library);
- }
-
- Int32 FeatureData::Register(cv::Mat& cvImg, UserInfo^ userInfo, String^ library, short channelID)
- {
-	 Model::user ^usr = gcnew Model::user();
-	 usr->name = userInfo->name;
-	 usr->gender = userInfo->gender;
-	 usr->card_id = userInfo->cardId;
-	 usr->people_id = userInfo->peopleId;
-	 usr->image_id = userInfo->imageId;
-	 usr->type = userInfo->type;
-
-	 return Register(cvImg, usr, library, channelID);
- }
-
-
- Int32 FeatureData::Register(Image^ img, UserInfo^ userInfo)
- {
-#if USE_EXPIRE
-	 if (IsExpired()) throw gcnew Exception("software has been expired");;
-#endif
-	 cv::Mat cvImg=BitmapConverter::ToMat(img);
-	 /*imshow("demo", cvImg);
-	 cv::waitKey(-1);*/
-	 return Register(cvImg, userInfo);
- }
-
- Int32 FeatureData::Register(Image^ img, UserInfo^ userInfo, short channelID)
- {
-#if USE_EXPIRE
-	 if (IsExpired()) throw gcnew Exception("software has been expired");;
-#endif
-	 cv::Mat cvImg = BitmapConverter::ToMat(img);
-	 /*imshow("demo", cvImg);
-	 cv::waitKey(-1);*/
-	 return Register(cvImg, userInfo, channelID);
- }
 
 Int32 FeatureData::Register(String^ filePath)
 {
@@ -818,14 +574,61 @@ Int32 FeatureData::Register(String^ filePath)
 	FileInfo ^file = gcnew FileInfo(filePath);
 	return Register(filePath, System::IO::Path::GetFileNameWithoutExtension(file->Name));
 }
+#pragma endregion
 
- Int32 FeatureData::Register(String^ filePath, short channelID)
+#pragma region 文件录入（带姓名）
+Int32 FeatureData::Register(String^ filePath, String^ username, short channelID)
+{
+#if USE_EXPIRE
+	if (IsExpired()) throw gcnew Exception("software has been expired");
+#endif
+	cv::Mat cvImg = cv::imread((char*)(void*)Marshal::StringToHGlobalAnsi(filePath), 1);
+	if (cvImg.data == nullptr)  {
+		Console::WriteLine("Load{0} image error!", filePath);
+		return ReturnCode::IMAGE_RAED_FAILED;
+	}
+
+	UserInfo^ userInfo = gcnew UserInfo();
+	userInfo->name = username;
+
+	return Register(cvImg, userInfo, channelID);
+}
+
+Int32 FeatureData::Register(String^ filePath, short channelID)
 {
 #if USE_EXPIRE
 	if (IsExpired()) throw gcnew Exception("software has been expired");;
 #endif
 	FileInfo ^file = gcnew FileInfo(filePath);
-	return Register(filePath, System::IO::Path::GetFileNameWithoutExtension(file->Name),  channelID);
+	return Register(filePath, System::IO::Path::GetFileNameWithoutExtension(file->Name), channelID);
+}
+#pragma endregion
+
+#pragma region 单图注册（带详细信息）--无通道
+Int32 FeatureData::Register(cv::Mat& cvImg, UserInfo^ userInfo)
+{
+	Model::person ^usr = gcnew Model::person();
+	usr->person_dataset_id = (Int32)(userInfo->personDatasetId);
+	usr->name = userInfo->name;
+	usr->gender = userInfo->gender;
+	usr->card_id = userInfo->cardId;
+	usr->image_id = userInfo->imageId;
+	usr->type = userInfo->type;
+	usr->create_time = DateTime::Now;
+	usr->modified_time = DateTime::Now;
+
+	return Register(cvImg, usr);
+}
+
+Int32 FeatureData::Register(Image^ img, UserInfo^ userInfo)
+{
+#if USE_EXPIRE
+	if (IsExpired()) throw gcnew Exception("software has been expired");;
+#endif
+	cv::Mat cvImg = BitmapConverter::ToMat(img);
+	/*imshow("demo", cvImg);
+	cv::waitKey(-1);*/
+	return Register(cvImg, userInfo);
 }
 
 Int32 FeatureData::Register(String^ filePath, UserInfo^ userInfo)
@@ -838,6 +641,34 @@ Int32 FeatureData::Register(String^ filePath, UserInfo^ userInfo)
 
 	return  Register(cvImg, userInfo);
 }
+#pragma endregion
+
+#pragma region  单图注册（带详细信息）
+Int32 FeatureData::Register(cv::Mat& cvImg, UserInfo^ userInfo, short channelID)
+{
+	Model::person ^usr = gcnew Model::person();
+	usr->person_dataset_id = (Int32)userInfo->personDatasetId;
+	usr->name = userInfo->name;
+	usr->gender = userInfo->gender;
+	usr->card_id = userInfo->cardId;
+	usr->image_id = userInfo->imageId;
+	usr->type = userInfo->type;
+	usr->create_time = DateTime::Now;
+	usr->modified_time = DateTime::Now;
+
+	return Register(cvImg, usr, channelID);
+}
+
+Int32 FeatureData::Register(Image^ img, UserInfo^ userInfo, short channelID)
+{
+#if USE_EXPIRE
+	if (IsExpired()) throw gcnew Exception("software has been expired");;
+#endif
+	cv::Mat cvImg = BitmapConverter::ToMat(img);
+	/*imshow("demo", cvImg);
+	cv::waitKey(-1);*/
+	return Register(cvImg, userInfo, channelID);
+}
 
 Int32 FeatureData::Register(String^ filePath, UserInfo^ userInfo, short channelID)
 {
@@ -849,7 +680,9 @@ Int32 FeatureData::Register(String^ filePath, UserInfo^ userInfo, short channelI
 
 	return  Register(cvImg, userInfo, channelID);
 }
+#pragma endregion
 
+#pragma region 按姓名删除
 Int32 FeatureData::Unregister(String^ name)
 {
 #if USE_EXPIRE
@@ -860,47 +693,62 @@ Int32 FeatureData::Unregister(String^ name)
 		return ReturnCode::SUCCESS;
 	else
 		return ReturnCode::UNKOWN_EXCEPTION;
-
 }
+#pragma endregion
+
+#pragma region 按id删除
+Int32 FeatureData::Unregister(Int32^ id)
+{
+#if USE_EXPIRE
+	if (IsExpired()) throw gcnew Exception("software has been expired");;
+#endif
+	if (allUsers == nullptr) return -1;
+	if (usrbll->Delete((Int32)(id)))
+		return ReturnCode::SUCCESS;
+	else
+		return ReturnCode::UNKOWN_EXCEPTION;
+}
+#pragma endregion
 
 #pragma region Load data into stack
 
-Int32 FeatureData::LoadData()
-{
-#if USE_EXPIRE
-	if (IsExpired()) throw gcnew Exception("software has been expired");;
-#endif
-
-	try{
-		allUsers = usrbll->GetAllUser();		
-	}
-	catch (Exception ^e){
-		MessageBox::Show("GetAllUser Error:" + e->Message);
-		return ReturnCode::UNKOWN_EXCEPTION;
-	}
-	return ReturnCode::SUCCESS;
-}
-
-Int32 FeatureData::LoadData(String^ libraryname)
-{
-#if USE_EXPIRE
-	if (IsExpired()) throw gcnew Exception("software has been expired");;
-#endif
-
-	try{
-		allUsers = usrbll->GetAllUser(libraryname);
-	}
-	catch (Exception ^e){
-		MessageBox::Show("GetAllUser Error:" + e->Message);
-		return ReturnCode::UNKOWN_EXCEPTION;
-	}
-	return ReturnCode::SUCCESS;
-}
-
+#pragma region 数据载入--无数据库
+//Int32 FeatureData::LoadData()
+//{
+//#if USE_EXPIRE
+//	if (IsExpired()) throw gcnew Exception("software has been expired");;
+//#endif
+//
+//	try{
+//		allUsers = usrbll->GetAllUser();		
+//	}
+//	catch (Exception ^e){
+//		MessageBox::Show("GetAllUser Error:" + e->Message);
+//		return ReturnCode::UNKOWN_EXCEPTION;
+//	}
+//	return ReturnCode::SUCCESS;
+//}
 #pragma endregion
 
+#pragma region 数据载入
+Int32 FeatureData::LoadData(Int32^ libraryid)
+{
+#if USE_EXPIRE
+	if (IsExpired()) throw gcnew Exception("software has been expired");;
+#endif
 
+	try{
+		allUsers = usrbll->GetAllUser(libraryid->ToString());
+	}
+	catch (Exception ^e){
+		MessageBox::Show("GetAllUser Error:" + e->Message);
+		return ReturnCode::UNKOWN_EXCEPTION;
+	}
+	return ReturnCode::SUCCESS;
+}
+#pragma endregion
 
+#pragma region 按特征搜索
 array<HitAlertDetail>^ FeatureData::Search(array<BYTE> ^feats)
 {
 #if USE_EXPIRE
@@ -908,43 +756,48 @@ array<HitAlertDetail>^ FeatureData::Search(array<BYTE> ^feats)
 #endif
 	pin_ptr<BYTE> feat_src = &(feats[0]);
 	return Search(feat_src);
-
 }
+#pragma endregion
+
+
+#pragma region 按图搜索-image--无通道
 array<HitAlert^>^ FeatureData::Search(Image^ image)
 {
 #if USE_EXPIRE
 	if (IsExpired()) throw gcnew Exception("software has been expired");;
 #endif
 	if (allUsers == nullptr) return nullptr;
-	System::Drawing::Bitmap ^ _image = safe_cast< System::Drawing::Bitmap ^ >(image);
+	System::Drawing::Bitmap ^ _image = safe_cast<System::Drawing::Bitmap ^>(image);
 	cv::Mat cvImg = BitmapConverter::ToMat(_image);
 	return this->Search(cvImg);
-
 }
+#pragma endregion
 
+#pragma region 按图搜索-image
 array<HitAlert^>^ FeatureData::Search(Image^ image, short channelID)
 {
 #if USE_EXPIRE
 	if (IsExpired()) throw gcnew Exception("software has been expired");;
 #endif
 	if (allUsers == nullptr) return nullptr;
-	System::Drawing::Bitmap ^ _image = safe_cast< System::Drawing::Bitmap ^ >(image);
+	System::Drawing::Bitmap ^ _image = safe_cast<System::Drawing::Bitmap ^>(image);
 	cv::Mat cvImg = BitmapConverter::ToMat(_image);
 	return this->Search(cvImg, channelID);
 
 }
+#pragma endregion
 
+#pragma region 按图搜索-cvmat--无通道
 array<HitAlert^>^ FeatureData::Search(cv::Mat& cvImg)
 {
 #if USE_EXPIRE
 	if (IsExpired()) throw gcnew Exception("software has been expired");;
 #endif
-	if (cvImg.empty()&&allUsers == nullptr)
+	if (cvImg.empty() && allUsers == nullptr)
 	{
 		MessageBox::Show("allUsers == nullptr");
 		return nullptr;
 	}
-	
 
 	if (cvImg.channels() < 3)
 	{
@@ -955,219 +808,215 @@ array<HitAlert^>^ FeatureData::Search(cv::Mat& cvImg)
 	//Bitmap ^srcImage = gcnew System::Drawing::Bitmap(cvImg.cols, cvImg.rows, cvImg.step, System::Drawing::Imaging::PixelFormat::Format24bppRgb, (System::IntPtr) cvImg.data);
 	Bitmap ^srcImage = BitmapConverter::ToBitmap(&cvImg);
 
-	
+	int nWidth = cvImg.cols;
+	int nHeight = cvImg.rows;
 
-		int nWidth = cvImg.cols;
-		int nHeight = cvImg.rows;
+	// Detect faces
 
-		// Detect faces
+	THFI_FacePos *faces = new THFI_FacePos[maxPersonNum];
 
-		THFI_FacePos *faces = new THFI_FacePos[maxPersonNum];
+	int face_num = FaceImage::DetectFace(0, cvImg.data, 24, cvImg.cols, cvImg.rows, faces, maxPersonNum);
 
-		int face_num = FaceImage::DetectFace(0, cvImg.data, 24, cvImg.cols, cvImg.rows, faces, maxPersonNum);
-		
-		if (face_num <= 0)
-		{
-			return nullptr;
-		}
+	if (face_num <= 0)
+	{
+		return nullptr;
+	}
 
 #pragma region CS架构主界面下侧显示抓拍人脸
 
-		List < Image^>^ facesimg = gcnew  List<Image^>();
-		
-		for (int i = 0; i < MIN(maxPersonNum, face_num); i++)
+	List < Image^>^ facesimg = gcnew  List<Image^>();
+
+	for (int i = 0; i < MIN(maxPersonNum, face_num); i++)
+	{
+		if (searchFaceQualityThresh > faces[i].nQuality){
+			ShowMsgEvent("searchFaceQualityThresh:" + faces[i].nQuality, nullptr);
+			continue;
+		}
+		if (abs(faces[i].fAngle.yaw) > searchFaceYawThresh || abs(faces[i].fAngle.pitch) > searchFacePitchThresh || abs(faces[i].fAngle.roll) > searchFaceRollThresh)
 		{
-			if (searchFaceQualityThresh > faces[i].nQuality){
-				ShowMsgEvent("searchFaceQualityThresh:" + faces[i].nQuality, nullptr);
-				continue;
-			}
-			if (abs(faces[i].fAngle.yaw) > searchFaceYawThresh || abs(faces[i].fAngle.pitch) > searchFacePitchThresh || abs(faces[i].fAngle.roll) > searchFaceRollThresh)
-			{
-				ShowMsgEvent("angle" + faces[i].fAngle.yaw + ",roll:" + faces[i].fAngle.roll + ",pitch:" + faces[i].fAngle.pitch, nullptr);
-				continue;
-			}
-			if (faces[i].rcFace.bottom - faces[i].rcFace.top < searchFaceHeightThresh || faces[i].rcFace.right - faces[i].rcFace.left < searchFaceWidthThresh)
-			{
-				ShowMsgEvent("size,height:" + (faces[i].rcFace.bottom - faces[i].rcFace.top) + ",width:" + (faces[i].rcFace.bottom - faces[i].rcFace.top), nullptr);
-				continue;
-			}
-
-			System::Drawing::Rectangle retFaceRect = GetScaleFaceRect(nWidth, nHeight, faces[i].rcFace, faceRectScale);
-
-			Image^ imgFace = srcImage->Clone(retFaceRect, srcImage->PixelFormat);
-
-			facesimg->Add(imgFace);
-
-			/*cv::Rect rect(faces[i].rcFace.left, faces[i].rcFace.top, faces[i].rcFace.right - faces[i].rcFace.left, faces[i].rcFace.bottom - faces[i].rcFace.top);
-			cv::Mat faceimg = cvImg(rect);
-			facesimg->Add((Image^)BitmapConverter::ToBitmap(&faceimg));		*/
-
+			ShowMsgEvent("angle" + faces[i].fAngle.yaw + ",roll:" + faces[i].fAngle.roll + ",pitch:" + faces[i].fAngle.pitch, nullptr);
+			continue;
+		}
+		if (faces[i].rcFace.bottom - faces[i].rcFace.top < searchFaceHeightThresh || faces[i].rcFace.right - faces[i].rcFace.left < searchFaceWidthThresh)
+		{
+			ShowMsgEvent("size,height:" + (faces[i].rcFace.bottom - faces[i].rcFace.top) + ",width:" + (faces[i].rcFace.bottom - faces[i].rcFace.top), nullptr);
+			continue;
 		}
 
-		if (facesimg->Count > 0)
-			FaceDetectedEvent(facesimg->ToArray());
+		System::Drawing::Rectangle retFaceRect = GetScaleFaceRect(nWidth, nHeight, faces[i].rcFace, faceRectScale);
+
+		Image^ imgFace = srcImage->Clone(retFaceRect, srcImage->PixelFormat);
+
+		facesimg->Add(imgFace);
+
+		/*cv::Rect rect(faces[i].rcFace.left, faces[i].rcFace.top, faces[i].rcFace.right - faces[i].rcFace.left, faces[i].rcFace.bottom - faces[i].rcFace.top);
+		cv::Mat faceimg = cvImg(rect);
+		facesimg->Add((Image^)BitmapConverter::ToBitmap(&faceimg));		*/
+
+	}
+
+	if (facesimg->Count > 0)
+		FaceDetectedEvent(facesimg->ToArray());
 #pragma endregion
 
-		//array<HitAlert^>^ resultNoThresh = gcnew array<HitAlert^> (MIN(maxPersonNum, face_num));
-		List<HitAlert^>^ result = gcnew List<HitAlert^>();
-		for (int i = 0; i < MIN(maxPersonNum, face_num); i++)
+	//array<HitAlert^>^ resultNoThresh = gcnew array<HitAlert^> (MIN(maxPersonNum, face_num));
+	List<HitAlert^>^ result = gcnew List<HitAlert^>();
+	for (int i = 0; i < MIN(maxPersonNum, face_num); i++)
+	{
+		if (searchFaceQualityThresh > faces[i].nQuality){
+			ShowMsgEvent("searchFaceQualityThresh:" + faces[i].nQuality, nullptr);
+			continue;
+		}
+		if (abs(faces[i].fAngle.yaw) > searchFaceYawThresh || abs(faces[i].fAngle.pitch) > searchFacePitchThresh || abs(faces[i].fAngle.roll) > searchFaceRollThresh)
 		{
-			if (searchFaceQualityThresh > faces[i].nQuality){
-				ShowMsgEvent("searchFaceQualityThresh:" + faces[i].nQuality, nullptr);
-				continue;
-			}
-			if (abs(faces[i].fAngle.yaw) > searchFaceYawThresh || abs(faces[i].fAngle.pitch) > searchFacePitchThresh || abs(faces[i].fAngle.roll) > searchFaceRollThresh)
-			{
-				ShowMsgEvent("angle" + faces[i].fAngle.yaw + ",roll:" + faces[i].fAngle.roll + ",pitch:" + faces[i].fAngle.pitch, nullptr);
-				continue;
-			}
-			if (faces[i].rcFace.bottom - faces[i].rcFace.top < searchFaceHeightThresh || faces[i].rcFace.right - faces[i].rcFace.left < searchFaceWidthThresh)
-			{
-				ShowMsgEvent("size,height:" + (faces[i].rcFace.bottom - faces[i].rcFace.top) + ",width:" + (faces[i].rcFace.bottom - faces[i].rcFace.top), nullptr);
-				continue;
-			}
-
-			HitAlert ^hit = gcnew HitAlert();
-			array<HitAlertDetail>^ details = nullptr;
-
-			/* extract features */
-			BYTE* feats = new BYTE[Feature::Size()];
-			//array<BYTE>^ pFeature = gcnew array<BYTE>(Feature::Size());
-			//only extract the first face(max size face)
-
-			int ret = Feature::Extract(0, cvImg.data, cvImg.cols, cvImg.rows, 3, (THFI_FacePos*)&faces[i], feats);
-
-			details = Search(feats);
-
-			//std::cout << faces[i].bbox.x<<"," << faces[i].bbox.y <<","<< faces[i].bbox.width <<","<< faces[i].bbox.height << std::endl;
-	
-			//printf("%d\n", details->Length);
-			System::Drawing::Rectangle retFaceRect = GetScaleFaceRect(nWidth, nHeight, faces[i].rcFace, faceRectScale);
-			Image^ imgFace = srcImage->Clone(retFaceRect, srcImage->PixelFormat);
-
-			//缩放
-			Int32 width = 100;
-			Int32 height = imgFace->Height * 100 / imgFace->Width;
-			Bitmap^ faceBitmap = gcnew Bitmap(width, height);
-			Graphics^ g = Graphics::FromImage(faceBitmap);
-			g->DrawImage(imgFace, System::Drawing::Rectangle(0, 0, width, height), System::Drawing::Rectangle(0, 0, imgFace->Width, imgFace->Height), GraphicsUnit::Pixel);
-			
-
-			hit->QueryFace = faceBitmap;
-			hit->OccurTime = DateTime::Now;
-			hit->Details = details;
-			hit->Threshold = scoreThresh;
-			result->Add(hit);
-			SafeDeleteArray(feats);
-			
+			ShowMsgEvent("angle" + faces[i].fAngle.yaw + ",roll:" + faces[i].fAngle.roll + ",pitch:" + faces[i].fAngle.pitch, nullptr);
+			continue;
+		}
+		if (faces[i].rcFace.bottom - faces[i].rcFace.top < searchFaceHeightThresh || faces[i].rcFace.right - faces[i].rcFace.left < searchFaceWidthThresh)
+		{
+			ShowMsgEvent("size,height:" + (faces[i].rcFace.bottom - faces[i].rcFace.top) + ",width:" + (faces[i].rcFace.bottom - faces[i].rcFace.top), nullptr);
+			continue;
 		}
 
+		HitAlert ^hit = gcnew HitAlert();
+		array<HitAlertDetail>^ details = nullptr;
+
+		/* extract features */
+		BYTE* feats = new BYTE[Feature::Size()];
+		//array<BYTE>^ pFeature = gcnew array<BYTE>(Feature::Size());
+		//only extract the first face(max size face)
+
+		int ret = Feature::Extract(0, cvImg.data, cvImg.cols, cvImg.rows, 3, (THFI_FacePos*)&faces[i], feats);
+
+		details = Search(feats);
+
+		//std::cout << faces[i].bbox.x<<"," << faces[i].bbox.y <<","<< faces[i].bbox.width <<","<< faces[i].bbox.height << std::endl;
+
+		//printf("%d\n", details->Length);
+		System::Drawing::Rectangle retFaceRect = GetScaleFaceRect(nWidth, nHeight, faces[i].rcFace, faceRectScale);
+		Image^ imgFace = srcImage->Clone(retFaceRect, srcImage->PixelFormat);
+
+		//缩放
+		Int32 width = 100;
+		Int32 height = imgFace->Height * 100 / imgFace->Width;
+		Bitmap^ faceBitmap = gcnew Bitmap(width, height);
+		Graphics^ g = Graphics::FromImage(faceBitmap);
+		g->DrawImage(imgFace, System::Drawing::Rectangle(0, 0, width, height), System::Drawing::Rectangle(0, 0, imgFace->Width, imgFace->Height), GraphicsUnit::Pixel);
+
+
+		hit->QueryFace = faceBitmap;
+		hit->OccurTime = DateTime::Now;
+		hit->Details = details;
+		hit->Threshold = scoreThresh;
+		result->Add(hit);
+		SafeDeleteArray(feats);
+	}
 
 #pragma region 保存至数据库
-			for (int n = 0; n < result->Count; n++){
-				HitAlert ^frsha = result[n];
-				Model::hitalert ^ha = gcnew Model::hitalert();
-				ha->details = gcnew array<Model::hitrecord_detail^>(frsha->Details->Length);
-				String ^savePath = queryFaceDir + System::Guid::NewGuid().ToString() + L".jpg";
-				frsha->QueryFace->Save(savePath);
+	for (int n = 0; n < result->Count; n++){
+		HitAlert ^frsha = result[n];
+		Model::hitalert ^ha = gcnew Model::hitalert();
+		ha->details = gcnew array<Model::hitrecord_detail^>(frsha->Details->Length);
+		String ^savePath = queryFaceDir + System::Guid::NewGuid().ToString() + L".jpg";
+		frsha->QueryFace->Save(savePath);
 
-				frsha->QueryFacePath = savePath;
-		
-				ha->hit = gcnew Model::hitrecord();
-				ha->hit->face_query_image_path = savePath;
-				ha->hit->occur_time = DateTime::Now;
-				ha->hit->threshold = scoreThresh;
-		
-				for (int i = 0; i < frsha->Details->Length; i++)
-				{
-					Model::hitrecord_detail ^hd = gcnew Model::hitrecord_detail();
-					hd->rank = i;
-					hd->score = safe_cast<HitAlertDetail^>(frsha->Details[i])->Score;
-					hd->user_id = safe_cast<HitAlertDetail^>(frsha->Details[i])->UserId;
-					ha->details[i] = hd;
-				}
-		
-				habll->Add(ha);
-			}
-		
+		frsha->QueryFacePath = savePath;
+
+		ha->hit = gcnew Model::hitrecord();
+		ha->hit->face_query_image_path = savePath;
+		ha->hit->occur_time = DateTime::Now;
+		ha->hit->threshold = (Decimal)scoreThresh;
+
+		for (int i = 0; i < frsha->Details->Length; i++)
+		{
+			Model::hitrecord_detail ^hd = gcnew Model::hitrecord_detail();
+			hd->rank = i;
+			hd->score = (Decimal)(safe_cast<HitAlertDetail^>(frsha->Details[i])->Score);
+			hd->user_id = safe_cast<HitAlertDetail^>(frsha->Details[i])->UserId;
+			ha->details[i] = hd;
+		}
+
+		habll->Add(ha);
+	}
 #pragma endregion
 
 #pragma region 上传至云平台
-		//	int sequenceCode = 0;
-		//	for each(Image^ im in faceImgSet)
-		//	{
-		//		String^ faceFileName = String::Format("{0}_{1}_{2}_face.jpg", cameraCode, DateTime::Now.ToString("yyyy_MM_dd_HH_mm_ss"), sequenceCode);
-		//		//inf4->SendAsync(defenseCode, cameraCode, INF4::SaveImageType::SaveImageType_Normal_Face, faceFileName, ImageHelper::ImageToBytes(im));
-		//	}
-		//	for each(auto hit in result){
-		//		if (nullptr != hit->Details&&hit->Details->Length > 0){
-		//			long sequenceNumber = 0;
-		//			String^ faceFileName = String::Format("{0}_{1}_{2}_alarm_face.jpg", cameraCode, DateTime::Now.ToString("yyyy_MM_dd_HH_mm_ss"), 1);
-		//			//inf4->SendAsync(defenseCode, cameraCode, INF4::SaveImageType::SaveImageType_Alarm_Face, faceFileName, ImageHelper::ImageToBytes(hit->QueryFace));
-		//			String^ captFileName = String::Format("{0}_{1}_{2}_alarm_capt.jpg", cameraCode, DateTime::Now.ToString("yyyy_MM_dd_HH_mm_ss"), 1);
-		//			//inf4->SendAsync(defenseCode, cameraCode, INF4::SaveImageType::SaveImageType_Alarm_CapturedImage, captFileName, ImageHelper::ImageToBytes(faceImgSet[0]));
-		//
-		//			/*inf5->ReportAlarmAsync(
-		//			DateTime::Now.ToString("yyyy-MM-dd HH:mm:ss"),
-		//			captFileName, String::Empty, faceFileName,
-		//			safe_cast<HitAlertDetail>(hit->Details[0]).peopleId,
-		//			safe_cast<HitAlertDetail>(hit->Details[0]).imageId,
-		//			safe_cast<HitAlertDetail>(hit->Details[0]).Score.ToString("F4"));*/
-		//			ShowMsgEvent(
-		//				"capture_Time:" + DateTime::Now.ToString("yyyy-MM-dd HH:mm:ss") +
-		//				" capture_image:" + captFileName +
-		//				" capture_video：" + String::Empty +
-		//				" face_image:" + faceFileName +
-		//				" people_id：" + safe_cast<HitAlertDetail>(hit->Details[0]).peopleId +
-		//				" image_id:" + safe_cast<HitAlertDetail>(hit->Details[0]).imageId +
-		//				" match_degree：" + safe_cast<HitAlertDetail>(hit->Details[0]).Score.ToString("F4"), nullptr);
-		//}
-		//
-		//	}
+	//	int sequenceCode = 0;
+	//	for each(Image^ im in faceImgSet)
+	//	{
+	//		String^ faceFileName = String::Format("{0}_{1}_{2}_face.jpg", cameraCode, DateTime::Now.ToString("yyyy_MM_dd_HH_mm_ss"), sequenceCode);
+	//		//inf4->SendAsync(defenseCode, cameraCode, INF4::SaveImageType::SaveImageType_Normal_Face, faceFileName, ImageHelper::ImageToBytes(im));
+	//	}
+	//	for each(auto hit in result){
+	//		if (nullptr != hit->Details&&hit->Details->Length > 0){
+	//			long sequenceNumber = 0;
+	//			String^ faceFileName = String::Format("{0}_{1}_{2}_alarm_face.jpg", cameraCode, DateTime::Now.ToString("yyyy_MM_dd_HH_mm_ss"), 1);
+	//			//inf4->SendAsync(defenseCode, cameraCode, INF4::SaveImageType::SaveImageType_Alarm_Face, faceFileName, ImageHelper::ImageToBytes(hit->QueryFace));
+	//			String^ captFileName = String::Format("{0}_{1}_{2}_alarm_capt.jpg", cameraCode, DateTime::Now.ToString("yyyy_MM_dd_HH_mm_ss"), 1);
+	//			//inf4->SendAsync(defenseCode, cameraCode, INF4::SaveImageType::SaveImageType_Alarm_CapturedImage, captFileName, ImageHelper::ImageToBytes(faceImgSet[0]));
+	//
+	//			/*inf5->ReportAlarmAsync(
+	//			DateTime::Now.ToString("yyyy-MM-dd HH:mm:ss"),
+	//			captFileName, String::Empty, faceFileName,
+	//			safe_cast<HitAlertDetail>(hit->Details[0]).peopleId,
+	//			safe_cast<HitAlertDetail>(hit->Details[0]).imageId,
+	//			safe_cast<HitAlertDetail>(hit->Details[0]).Score.ToString("F4"));*/
+	//			ShowMsgEvent(
+	//				"capture_Time:" + DateTime::Now.ToString("yyyy-MM-dd HH:mm:ss") +
+	//				" capture_image:" + captFileName +
+	//				" capture_video：" + String::Empty +
+	//				" face_image:" + faceFileName +
+	//				" people_id：" + safe_cast<HitAlertDetail>(hit->Details[0]).peopleId +
+	//				" image_id:" + safe_cast<HitAlertDetail>(hit->Details[0]).imageId +
+	//				" match_degree：" + safe_cast<HitAlertDetail>(hit->Details[0]).Score.ToString("F4"), nullptr);
+	//}
+	//
+	//	}
 #pragma endregion
 
 #pragma region 保存识别数据C版本 
-		//String^ GenDir = "record\\";
-		////std::cout << "Record_hitResult=" << hitResult->Count << std::endl;
-		//for each(auto hit in result){
-		//	if (nullptr != hit->Details&&hit->Details->Length > 0){
-		//		String^ FileName = safe_cast<HitAlertDetail>(hit->Details[0]).peopleId;
-		//		float score = safe_cast<HitAlertDetail>(hit->Details[0]).Score;
-		//		std::string dir = msclr::interop::marshal_as<std::string>(GenDir + FileName);
-		//		std::cout << dir << std::endl;
-		//		if (_access(dir.c_str(), 0)){
-		//			_mkdir(dir.c_str()); /*这是在程序所在当前文件夹下创建*/
-		//		}
-		//		//detect face
-		//		system(("dir /b /s /a-d G:\\新街口\\FRS_new\\FaceAngineNew\\FaceAngine\\" + dir + "\\*.* | find /c \":\" >D:\\nfiles.txt").c_str());
-		//		//读文件d:\\nfiles.txt的内容即d:\\mydir目录下的文件数
-		//		std::ifstream in;
-		//		std::string str;
-		//		in.open("D:\\nfiles.txt");
-		//		if (!in.is_open())
-		//		{
-		//			std::cout << "Error opening file"; exit(1);
-		//		}
-		//		else
-		//		{
-		//			std::copy(std::istream_iterator<unsigned char>(in), std::istream_iterator<unsigned char>(), back_inserter(str));
-		//		}
-		//		std::stringstream ss;
-		//		ss << score;
-		//		std::string t;
-		//		ss >> t;
-		//		cv::imwrite(dir + "\\ptoto_" + str + "_" + t + ".jpg", copy);
-		//	}
-		//}
+	//String^ GenDir = "record\\";
+	////std::cout << "Record_hitResult=" << hitResult->Count << std::endl;
+	//for each(auto hit in result){
+	//	if (nullptr != hit->Details&&hit->Details->Length > 0){
+	//		String^ FileName = safe_cast<HitAlertDetail>(hit->Details[0]).peopleId;
+	//		float score = safe_cast<HitAlertDetail>(hit->Details[0]).Score;
+	//		std::string dir = msclr::interop::marshal_as<std::string>(GenDir + FileName);
+	//		std::cout << dir << std::endl;
+	//		if (_access(dir.c_str(), 0)){
+	//			_mkdir(dir.c_str()); /*这是在程序所在当前文件夹下创建*/
+	//		}
+	//		//detect face
+	//		system(("dir /b /s /a-d G:\\新街口\\FRS_new\\FaceAngineNew\\FaceAngine\\" + dir + "\\*.* | find /c \":\" >D:\\nfiles.txt").c_str());
+	//		//读文件d:\\nfiles.txt的内容即d:\\mydir目录下的文件数
+	//		std::ifstream in;
+	//		std::string str;
+	//		in.open("D:\\nfiles.txt");
+	//		if (!in.is_open())
+	//		{
+	//			std::cout << "Error opening file"; exit(1);
+	//		}
+	//		else
+	//		{
+	//			std::copy(std::istream_iterator<unsigned char>(in), std::istream_iterator<unsigned char>(), back_inserter(str));
+	//		}
+	//		std::stringstream ss;
+	//		ss << score;
+	//		std::string t;
+	//		ss >> t;
+	//		cv::imwrite(dir + "\\ptoto_" + str + "_" + t + ".jpg", copy);
+	//	}
+	//}
 #pragma endregion
-		//保存识别数据
-		CollectTrainData(result);
-		System::GC::Collect();
-		SafeDeleteArray(faces);
-		return result->ToArray();
-	
+	//保存识别数据
+	CollectTrainData(result);
+	System::GC::Collect();
+	SafeDeleteArray(faces);
+	return result->ToArray();
 }
+#pragma endregion
 
+#pragma region 按图搜索-cvmat
 array<HitAlert^>^ FeatureData::Search(cv::Mat& cvImg, short channelID)
 {
 #if USE_EXPIRE
@@ -1309,13 +1158,13 @@ array<HitAlert^>^ FeatureData::Search(cv::Mat& cvImg, short channelID)
 		ha->hit = gcnew Model::hitrecord();
 		ha->hit->face_query_image_path = savePath;
 		ha->hit->occur_time = DateTime::Now;
-		ha->hit->threshold = scoreThresh;
+		ha->hit->threshold = (Decimal)scoreThresh;
 
 		for (int i = 0; i < frsha->Details->Length; i++)
 		{
 			Model::hitrecord_detail ^hd = gcnew Model::hitrecord_detail();
 			hd->rank = i;
-			hd->score = safe_cast<HitAlertDetail^>(frsha->Details[i])->Score;
+			hd->score = (Decimal)(safe_cast<HitAlertDetail^>(frsha->Details[i])->Score);
 			hd->user_id = safe_cast<HitAlertDetail^>(frsha->Details[i])->UserId;
 			ha->details[i] = hd;
 		}
@@ -1400,7 +1249,7 @@ array<HitAlert^>^ FeatureData::Search(cv::Mat& cvImg, short channelID)
 	return result->ToArray();
 
 }
-
+#pragma endregion
 
 
 #pragma region 保存识别数据
@@ -1476,7 +1325,8 @@ bool FeatureData::CollectTrainData(List<HitAlert^>^ result)
 }
 #pragma endregion
 
-array<HitAlertDetail>^ FeatureData::Search (BYTE* feat_src)
+#pragma region 按特征搜索
+array<HitAlertDetail>^ FeatureData::Search(BYTE* feat_src)
 {
 #if USE_EXPIRE
 	if (IsExpired()) throw gcnew Exception("software has been expired");;
@@ -1499,7 +1349,6 @@ array<HitAlertDetail>^ FeatureData::Search (BYTE* feat_src)
 		detail.gender = user->gender;
 		detail.imgPath = user->face_image_path;
 		detail.imageId = user->image_id;
-		detail.peopleId = user->people_id;
 		detail.cardId = user->card_id;
 		for (int i = 0; i < details->Count; i++)
 		{
@@ -1510,7 +1359,7 @@ array<HitAlertDetail>^ FeatureData::Search (BYTE* feat_src)
 				detail = tmp;
 			}
 		}
-		if (details->Count <MIN(topK, allUsers->Count))
+		if (details->Count < MIN(topK, allUsers->Count))
 		{
 			details->Add(detail);
 		}
@@ -1518,7 +1367,9 @@ array<HitAlertDetail>^ FeatureData::Search (BYTE* feat_src)
 	//printf("%d\n", details->Count);
 	return details->ToArray();
 }
+#pragma endregion
 
+#pragma region 不同搜索策略
 //HitAlert^ FeatureData::SearchBulk(List<Image^>^ imgs, float scoreThresh, float qualityThresh, float faceRectScale, int topk, Int32 maxPersonNum, int detectChannel)
 //{
 //	HitAlert ^hit = gcnew HitAlert();
@@ -1674,15 +1525,16 @@ array<HitAlertDetail>^ FeatureData::Search (BYTE* feat_src)
 //#pragma endregion
 //	return hit;
 //}
+#pragma endregion
 
 float FeatureData::Compare(Image^ src_image, Image^ dst_image)
 {
 #if USE_EXPIRE
 	if (IsExpired()) throw gcnew Exception("software has been expired");;
 #endif
-	System::Drawing::Bitmap ^ _src_image = safe_cast< System::Drawing::Bitmap ^ >(src_image);
+	System::Drawing::Bitmap ^ _src_image = safe_cast<System::Drawing::Bitmap ^>(src_image);
 	cv::Mat src_img = BitmapConverter::ToMat(_src_image);
-	System::Drawing::Bitmap ^ _dst_image = safe_cast< System::Drawing::Bitmap ^ >(dst_image);
+	System::Drawing::Bitmap ^ _dst_image = safe_cast<System::Drawing::Bitmap ^>(dst_image);
 	cv::Mat dst_img = BitmapConverter::ToMat(_dst_image);
 	return this->Compare(src_img, dst_img);
 }
@@ -1766,10 +1618,8 @@ HitAlert^ FeatureData::SearchBulk(List<Image^>^ imgs)
 	Dictionary<int, CountScore^>^ allres = gcnew Dictionary<int, CountScore^>();
 	for each (auto img in imgs)
 	{
-
 		array<HitAlert^>^res = Search(img);
-
-		if (res != nullptr && res[0] != nullptr && res->Length>1)
+		if (res != nullptr && res[0] != nullptr && res->Length > 1)
 		{
 			//若返回的结果大于两个，比较这两个之间是否大于times倍,小于的话清空Details，直接返回
 			if (res[0]->Details != nullptr&&res[0]->Details->Length >= 2)
@@ -1781,7 +1631,7 @@ HitAlert^ FeatureData::SearchBulk(List<Image^>^ imgs)
 				}
 
 			}
-			if (res[0]->Details != nullptr && res[0]->Details->Length>1)
+			if (res[0]->Details != nullptr && res[0]->Details->Length > 1)
 			{
 
 				HitAlertDetail minDetail = safe_cast<HitAlertDetail>(res[0]->Details[0]);
@@ -1794,24 +1644,21 @@ HitAlert^ FeatureData::SearchBulk(List<Image^>^ imgs)
 						minDetail = tmp;
 					}
 				}
-				if (details->Count<topK)
+				if (details->Count < topK)
 					details->Add(minDetail);
 			}
-
 		}
-
 	}
 #pragma endregion
 	hit->Details = details->ToArray();
 	return hit;
-
-
 }
+
 LocateFaceInfo^ FeatureData::LocateFace(cv::Mat& cvImg)
 {
 	LocateFaceInfo ^lfi = gcnew LocateFaceInfo();
 
-	if (cvImg.channels() != 3 )
+	if (cvImg.channels() != 3)
 	{
 		return nullptr;
 	}
@@ -1822,12 +1669,12 @@ LocateFaceInfo^ FeatureData::LocateFace(cv::Mat& cvImg)
 
 
 	THFI_FacePos *faces = new THFI_FacePos[maxPersonNum];
-	
-	int faceNum = FaceImage::DetectFace(0,cvImg.data, 24, nWidth, nHeight, faces, maxPersonNum);
+
+	int faceNum = FaceImage::DetectFace(0, cvImg.data, 24, nWidth, nHeight, faces, maxPersonNum);
 	if (faceNum <= 0)
 	{
-//		String ^savePath = queryProblemFaceDir + System::Guid::NewGuid().ToString() + L".jpg";
-//		cv::imwrite(((char*)(void*)Marshal::StringToHGlobalAnsi(savePath)), cvImg);
+		//		String ^savePath = queryProblemFaceDir + System::Guid::NewGuid().ToString() + L".jpg";
+		//		cv::imwrite(((char*)(void*)Marshal::StringToHGlobalAnsi(savePath)), cvImg);
 
 		return nullptr;
 	}
@@ -1851,11 +1698,11 @@ LocateFaceInfo^ FeatureData::LocateFace(cv::Mat& cvImg)
 		Image^ blurrFace = srcImage->Clone(blurrFaceRect, srcImage->PixelFormat);
 		if (BlurrFaceEliminate(blurrFace))
 		{
-			continue;
+		continue;
 		}
 		*/
 
-	
+
 		Drawing::Rectangle retFaceRect = GetScaleFaceRect(nWidth, nHeight, face.rcFace, faceRectScale);
 		if (retFaceRect.IsEmpty)
 		{
@@ -1884,7 +1731,6 @@ LocateFaceInfo^ FeatureData::LocateFace(cv::Mat& cvImg)
 	return lfi;
 }
 
-
 void FeatureData::TagFacePos(cv::Mat& cvImg)
 {
 	if (cvImg.channels() != 3) return;
@@ -1893,8 +1739,8 @@ void FeatureData::TagFacePos(cv::Mat& cvImg)
 	int nHeight = cvImg.rows;
 
 	THFI_FacePos *faces = new THFI_FacePos[maxPersonNum];
-	
-	int faceNum = FaceImage::DetectFace(0,cvImg.data, 24, nWidth, nHeight, faces, maxPersonNum);
+
+	int faceNum = FaceImage::DetectFace(0, cvImg.data, 24, nWidth, nHeight, faces, maxPersonNum);
 
 	if (faceNum <= 0)
 	{
@@ -1914,7 +1760,7 @@ void FeatureData::TagFacePos(cv::Mat& cvImg)
 		rectangle(cvImg, rectFaceImg, lineColor);
 	}
 
-	
+
 }
 
 bool FeatureData::BlurrFaceEliminate(Image^ image)
@@ -1938,7 +1784,7 @@ bool FeatureData::BlurrFaceEliminate(cv::Mat& cvImg)
 
 	if (stddev_pxl >= blurrThresh)
 	{
-//		MessageBox::Show("stddev_pxl >= blurrThresh:" + stddev_pxl);
+		//		MessageBox::Show("stddev_pxl >= blurrThresh:" + stddev_pxl);
 		eliminate = false;
 	}
 
@@ -1963,46 +1809,46 @@ void FeatureData::RecordHitInfo(array<HitAlert^>^ hitArray)
 		ha->details = gcnew array<Model::hitrecord_detail^>(1);
 
 		String^ fileName = System::Guid::NewGuid().ToString() + L".jpg";
-		
+
 		String ^savePath = Path::Combine(queryFaceDir, fileName);
-		
+
 		Image^ queryImg = (Image^)hit->QueryFace->Clone();
 		queryImg->Save(savePath);
 
 		ha->hit = gcnew Model::hitrecord();
 		ha->hit->face_query_image_path = savePath;
 		ha->hit->occur_time = DateTime::Now;
-		ha->hit->threshold = scoreThresh;
+		ha->hit->threshold = (Decimal)scoreThresh;
 
 		HitAlertDetail^ hitDetail = safe_cast<HitAlertDetail^>(hit->Details[0]);
 
 		Model::hitrecord_detail ^hd = gcnew Model::hitrecord_detail();
 		hd->rank = 0;
-		hd->score = hitDetail->Score;
+		hd->score = (Decimal)hitDetail->Score;
 		hd->user_id = hitDetail->UserId;
 		ha->details[0] = hd;
 		habll->Add(ha);
 
 		/*if (recordHitUserMap->ContainsKey(hitDetail->UserId))
 		{
-			float hitScore = recordHitUserMap[hitDetail->UserId];
+		float hitScore = recordHitUserMap[hitDetail->UserId];
 
-			if (hitScore >= hitDetail->Score)
-			{
-				return;
-			}
-			else
-			{
-				recordHitUserMap[hitDetail->UserId] = hitDetail->Score;
-			}
+		if (hitScore >= hitDetail->Score)
+		{
+		return;
 		}
 		else
 		{
-			recordHitUserMap->Add(hitDetail->UserId, hitDetail->Score);
+		recordHitUserMap[hitDetail->UserId] = hitDetail->Score;
+		}
+		}
+		else
+		{
+		recordHitUserMap->Add(hitDetail->UserId, hitDetail->Score);
 
-			habll->Add(ha);
+		habll->Add(ha);
 		}*/
-	
+
 
 		//String ^ localFilePath = Path::GetFullPath(savePath);
 
@@ -2051,7 +1897,7 @@ Drawing::Rectangle FeatureData::GetScaleFaceRect(int imgWidth, int imgHeight, RE
 	{
 		retFaceRect = Rectangle::Empty;
 	}
-		
+
 	return retFaceRect;
 }
 

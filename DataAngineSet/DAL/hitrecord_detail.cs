@@ -17,7 +17,10 @@
 using System;
 using System.Data;
 using System.Text;
+using System.Collections.Generic;
 using MySql.Data.MySqlClient;
+using System.Data.OracleClient;
+
 using DataAngineSet.DBUtility;//Please add references
 namespace DataAngineSet.DAL
 {
@@ -194,6 +197,60 @@ namespace DataAngineSet.DAL
 				return null;
 			}
 		}
+
+        /// <summary>
+        /// 根据HitrecordId 获得 hitrecord_detail
+        /// </summary>
+        /// <param name="HitrecordId"></param>
+        /// <returns></returns>
+        public List<DataAngineSet.Model.hitrecord_detail> GetModelByHitrecordId(int HitrecordId)
+        {
+            List<DataAngineSet.Model.hitrecord_detail> modelList = new List<Model.hitrecord_detail>();
+            StringBuilder strSql = new StringBuilder();
+            strSql.Append("select id,hit_record_id,user_id,rank,score from hitrecord_detail ");
+            strSql.Append(" where hit_record_id=@hit_record_id");
+            MySqlParameter[] parameters = {
+					new MySqlParameter("@hit_record_id", MySqlDbType.Int32)
+			};
+            parameters[0].Value = HitrecordId;
+
+            DataAngineSet.Model.hitrecord_detail model = new DataAngineSet.Model.hitrecord_detail();
+            DataSet ds = DbHelperMySQL.Query(strSql.ToString(), parameters);
+            foreach (var row in ds.Tables[0].Rows)
+            {
+                modelList.Add(DataRowToModel((DataRow)row));
+            }
+            return modelList;
+
+        }
+
+
+        /// <summary>
+        /// 根据HitrecordId 获得 hitrecord_detail
+        /// </summary>
+        /// <param name="HitrecordId"></param>
+        /// <returns></returns>
+        public List<DataAngineSet.Model.hitrecord_detail> GetModelByHitUserId(int hitUserId)
+        {
+            List<DataAngineSet.Model.hitrecord_detail> modelList = new List<Model.hitrecord_detail>();
+            StringBuilder strSql = new StringBuilder();
+            strSql.Append("select id,hit_record_id,user_id,rank,score from hitrecord_detail ");
+            strSql.Append(" where user_id=@user_id");
+            OracleParameter[] parameters = {
+					new OracleParameter("@user_id", OracleType.Int32)
+			};
+            parameters[0].Value = hitUserId;
+
+            DataAngineSet.Model.hitrecord_detail model = new DataAngineSet.Model.hitrecord_detail();
+            DataSet ds = DbHelperOracle.ExecuteDataSet(CommandType.Text, strSql.ToString(), parameters);
+            foreach (var row in ds.Tables[0].Rows)
+            {
+                modelList.Add(DataRowToModel((DataRow)row));
+            }
+            return modelList;
+
+        }
+
 
 
 		/// <summary>

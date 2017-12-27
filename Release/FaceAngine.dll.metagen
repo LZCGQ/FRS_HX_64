@@ -3,7 +3,7 @@ Assembly FaceAngine, Version=0.0.*, Culture=Invariant Language (Invariant Countr
 	hash=SHA1, flags=PublicKey
 Assembly mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089: 
 	hash=None, flags=None
-Assembly DataAngine, Version=1.0.*, Culture=Invariant Language (Invariant Country): 
+Assembly DataAngineSet, Version=1.0.*, Culture=Invariant Language (Invariant Country): 
 	hash=None, flags=None
 Assembly MySql.Data, Version=6.8.3.0, Culture=neutral, PublicKeyToken=c5687fc88969c44d: 
 	hash=None, flags=None
@@ -86,18 +86,20 @@ Class FRS.Feature: AutoLayout, AnsiClass, Class, Public, BeforeFieldInit
 Struct FRS.UserInfo: AutoLayout, AnsiClass, Class, Public, SequentialLayout, Sealed, BeforeFieldInit
   :System.ValueType
   Properties:
+    System.ValueType modifiedTime 'get set' DateTime IsBoxed : 
+    System.ValueType createTime 'get set' DateTime IsBoxed : 
     System.String type 'get set' : 
     System.String imgPath 'get set' : 
     System.String imageId 'get set' : 
     System.String cardId 'get set' : 
     System.String gender 'get set' : 
-    System.String peopleId 'get set' : 
     System.String name 'get set' : 
+    System.ValueType personDatasetId 'get set' Int32 IsBoxed : 
   Methods:
+    get_personDatasetId(): PrivateScope, Public, HideBySig, SpecialName
+    set_personDatasetId(ValueType Int32 IsBoxed): PrivateScope, Public, HideBySig, SpecialName
     get_name(): PrivateScope, Public, HideBySig, SpecialName
     set_name(String): PrivateScope, Public, HideBySig, SpecialName
-    get_peopleId(): PrivateScope, Public, HideBySig, SpecialName
-    set_peopleId(String): PrivateScope, Public, HideBySig, SpecialName
     get_gender(): PrivateScope, Public, HideBySig, SpecialName
     set_gender(String): PrivateScope, Public, HideBySig, SpecialName
     get_cardId(): PrivateScope, Public, HideBySig, SpecialName
@@ -108,6 +110,10 @@ Struct FRS.UserInfo: AutoLayout, AnsiClass, Class, Public, SequentialLayout, Sea
     set_imgPath(String): PrivateScope, Public, HideBySig, SpecialName
     get_type(): PrivateScope, Public, HideBySig, SpecialName
     set_type(String): PrivateScope, Public, HideBySig, SpecialName
+    get_createTime(): PrivateScope, Public, HideBySig, SpecialName
+    set_createTime(ValueType DateTime IsBoxed): PrivateScope, Public, HideBySig, SpecialName
+    get_modifiedTime(): PrivateScope, Public, HideBySig, SpecialName
+    set_modifiedTime(ValueType DateTime IsBoxed): PrivateScope, Public, HideBySig, SpecialName
 Struct FRS.HitAlertDetail: AutoLayout, AnsiClass, Class, Public, SequentialLayout, Sealed, BeforeFieldInit
   :System.ValueType
   Properties:
@@ -200,7 +206,6 @@ Class FRS.FeatureData: AutoLayout, AnsiClass, Class, Public, BeforeFieldInit
     ShowMsgCallback ShowMsgEvent: SpecialName
     RegisterOneFinisedCallback RegisterOneFinisedEvent: SpecialName
   Methods:
-    Dispose(): PrivateScope, Public, Final, Virtual, HideBySig
     get_SearchFaceWidthThresh(): PrivateScope, Public, HideBySig, SpecialName
     set_SearchFaceWidthThresh(Int32): PrivateScope, Public, HideBySig, SpecialName
     get_SearchFaceHeightThresh(): PrivateScope, Public, HideBySig, SpecialName
@@ -233,11 +238,8 @@ Class FRS.FeatureData: AutoLayout, AnsiClass, Class, Public, BeforeFieldInit
     set_RegisterFaceRollThresh(Int32): PrivateScope, Public, HideBySig, SpecialName
     get_RegisterFaceQualityThresh(): PrivateScope, Public, HideBySig, SpecialName
     set_RegisterFaceQualityThresh(Int32): PrivateScope, Public, HideBySig, SpecialName
-    RegisterInBulk(String, Int16): PrivateScope, Public, HideBySig
-    RegisterInBulk(String): PrivateScope, Public, HideBySig
-    RegisterInBulkFromFile(String): PrivateScope, Public, HideBySig
-    RegisterInBulk1(String, String): PrivateScope, Public, HideBySig
-    RegisterInBulk1(String): PrivateScope, Public, HideBySig
+    RegisterInBulkFromFile(String, ValueType Int32 IsBoxed): PrivateScope, Public, HideBySig
+    RegisterInBulk1(String, ValueType Int32 IsBoxed): PrivateScope, Public, HideBySig
     Register(String, Int16): PrivateScope, Public, HideBySig
     Register(String): PrivateScope, Public, HideBySig
     Register(String, ValueType UserInfo IsBoxed, Int16): PrivateScope, Public, HideBySig
@@ -246,9 +248,9 @@ Class FRS.FeatureData: AutoLayout, AnsiClass, Class, Public, BeforeFieldInit
     Register(Image, ValueType UserInfo IsBoxed): PrivateScope, Public, HideBySig
     Register(String, String, Int16): PrivateScope, Public, HideBySig
     Register(String, String): PrivateScope, Public, HideBySig
+    Unregister(ValueType Int32 IsBoxed): PrivateScope, Public, HideBySig
     Unregister(String): PrivateScope, Public, HideBySig
-    LoadData(String): PrivateScope, Public, HideBySig
-    LoadData(): PrivateScope, Public, HideBySig
+    LoadData(ValueType Int32 IsBoxed): PrivateScope, Public, HideBySig
     Search(Image, Int16): PrivateScope, Public, HideBySig
     Search(Image): PrivateScope, Public, HideBySig
     Search(Byte[]): PrivateScope, Public, HideBySig
@@ -267,6 +269,7 @@ Class FRS.FeatureData: AutoLayout, AnsiClass, Class, Public, BeforeFieldInit
     remove_FaceDetectedEvent(FaceDetectedCallback): PrivateScope, Public, HideBySig, SpecialName
     SetDataPath(String): PrivateScope, Public, HideBySig
     CollectTrainData(List`1): PrivateScope, Public, HideBySig
+    Dispose(): PrivateScope, Public, Final, Virtual, HideBySig
 Class FRS.FeatureData+RegisterOneFinisedCallback: AutoLayout, AnsiClass, Class, NestedPublic, Sealed, BeforeFieldInit
   :System.MulticastDelegate
     Void .ctor(System.Object, IntPtr): PrivateScope, Public, SpecialName, RTSpecialName

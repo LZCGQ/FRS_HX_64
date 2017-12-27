@@ -196,6 +196,33 @@ namespace DataAngineSet.DAL
 		}
 
 
+        /// <summary>
+        /// 得到一个对象实体
+        /// </summary>
+        public DataAngineSet.Model.person_dataset GetModel(string name)
+        {
+
+            StringBuilder strSql = new StringBuilder();
+            strSql.Append("select id,name,type,source,create_time,remark from person_dataset ");
+            strSql.Append(" where name=@name");
+            MySqlParameter[] parameters = {
+					new MySqlParameter("@name", MySqlDbType.String)
+			};
+            parameters[0].Value = name;
+
+            DataAngineSet.Model.person_dataset model = new DataAngineSet.Model.person_dataset();
+            DataSet ds = DbHelperMySQL.Query(strSql.ToString(), parameters);
+            if (ds.Tables[0].Rows.Count > 0)
+            {
+                return DataRowToModel(ds.Tables[0].Rows[0]);
+            }
+            else
+            {
+                return null;
+            }
+        }
+
+
 		/// <summary>
 		/// 得到一个对象实体
 		/// </summary>

@@ -38,7 +38,7 @@ namespace DataAngineSet.Model
 		private string _type;
 		private DateTime _create_time;
 		private DateTime _modified_time;
-		private decimal? _quality_score;
+		private int? _quality_score;
 		private string _remark;
 		/// <summary>
 		/// auto_increment
@@ -139,7 +139,7 @@ namespace DataAngineSet.Model
 		/// <summary>
 		/// 
 		/// </summary>
-		public decimal? quality_score
+		public int? quality_score
 		{
 			set{ _quality_score=value;}
 			get{return _quality_score;}

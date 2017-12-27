@@ -210,6 +210,17 @@ namespace DataAngineSet.DAL
 			}
 		}
 
+        public DataSet GetDevice(string name)
+        {
+
+            StringBuilder strSql = new StringBuilder();
+            strSql.Append("select id,name,video_address,departmentment_id,longitude,latitude,location_type,remark ");
+            strSql.Append(" FROM device ");
+            strSql.Append(" where name='" + name + "'");
+
+            return DbHelperMySQL.Query(strSql.ToString());
+        }
+
 
 		/// <summary>
 		/// 得到一个对象实体

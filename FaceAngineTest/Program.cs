@@ -32,15 +32,15 @@ namespace FaceAngineTest
             InitFRS();
             FeatureData fa = new FeatureData();
             fa.RegisterOneFinisedEvent += new FeatureData.RegisterOneFinisedCallback(RegisterOneFinised);
-            Image image=Image.FromFile("D:/3.jpg");
+            Image image=Image.FromFile("G:/科研项目/新街口/三逃底库/NGL/njust14.jpg");
             UserInfo userinfo=new UserInfo ();
             userinfo.cardId="321342";
 
-            userinfo.imgPath = "D:/3.jpg";
-            userinfo.name="sun";
-            userinfo.gender = "男";
-            userinfo.peopleId = "1";
+            userinfo.imgPath = "G:/科研项目/新街口/三逃底库/NGL/njust14.jpg";
+            userinfo.name="pkj";
+            userinfo.gender = "M";
             userinfo.type = "2";
+            userinfo.personDatasetId = 1;
             fa.Register(image, userinfo);
             
         }
@@ -48,10 +48,10 @@ namespace FaceAngineTest
         {
             InitFRS();
             FeatureData fa = new FeatureData();
-            fa.LoadData("hello");
-            Image image = Image.FromFile("D:/Users/McLarry/Downloads/测试库3(IDCF)/测试库3(IDCF)/测试库/0b214fdcd6afb9d1d7683e72e0e81c21.jpg");
+            fa.LoadData(1);
+            Image image = Image.FromFile("G:/科研项目/新街口/三逃底库/NGL/njust14.jpg");
             HitAlert[] hits = fa.Search(image);
-            Console.WriteLine("here"+hits.Length);
+            Console.WriteLine("find result:"+hits.Length);
             //getPath("D:/Users/McLarry/Downloads/测试库1(101)/测试库1(100)/测试图像");
             //foreach (string filename in list)
             //{

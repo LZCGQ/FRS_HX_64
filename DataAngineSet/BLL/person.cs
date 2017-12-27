@@ -70,6 +70,14 @@ namespace DataAngineSet.BLL
 			
 			return dal.Delete(id);
 		}
+
+        /// <summary>
+        /// 删除一条数据
+        /// </summary>
+        public bool DeleteByName(string name)
+        {
+            return dal.DeleteByName(name);
+        }
 		/// <summary>
 		/// 删除一条数据
 		/// </summary>
@@ -87,12 +95,37 @@ namespace DataAngineSet.BLL
 			return dal.GetModel(id);
 		}
 
+        public List<Model.person> GetAllUser()
+        {
+
+            DataSet ds = dal.GetList(string.Empty);
+            List<Model.person> allUsers;
+            DataTable dt = ds.Tables[0];
+
+            allUsers = DataTableToList(dt);
+
+            return allUsers;
+        }
+
+
+        public List<Model.person> GetAllUser(string libraryid)
+        {
+
+            DataSet ds = dal.GetList(libraryid);
+            List<Model.person> allUsers;
+            DataTable dt = ds.Tables[0];
+
+            allUsers = DataTableToList(dt);
+
+            return allUsers;
+        }
+
 		/// <summary>
 		/// 获得数据列表
 		/// </summary>
-		public DataSet GetList(string strWhere)
+        public DataSet GetList(string libraryid)
 		{
-			return dal.GetList(strWhere);
+            return dal.GetList(libraryid);
 		}
 		/// <summary>
 		/// 获得数据列表
@@ -149,10 +182,10 @@ namespace DataAngineSet.BLL
 		/// <summary>
 		/// 分页获取数据列表
 		/// </summary>
-		//public DataSet GetList(int PageSize,int PageIndex,string strWhere)
-		//{
-			//return dal.GetList(PageSize,PageIndex,strWhere);
-		//}
+        public DataSet GetList(int PageSize, int PageIndex, string libraryid)
+        {
+            return dal.GetList(PageSize, PageIndex, libraryid);
+        }
 
 		#endregion  BasicMethod
 		#region  ExtensionMethod

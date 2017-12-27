@@ -189,6 +189,32 @@ namespace DataAngineSet.DAL
 				return false;
 			}
 		}
+        /// <summary>
+        /// 按名字删除
+        /// </summary>
+        /// <param name="name"></param>
+        /// <returns></returns>
+        public bool DeleteByName(string name)
+        {
+
+            StringBuilder strSql = new StringBuilder();
+            strSql.Append("delete from person ");
+            strSql.Append(" where name=@name");
+            MySqlParameter[] parameters = {
+					new MySqlParameter("@name", MySqlDbType.Int32)
+			};
+            parameters[0].Value = name;
+
+            int rows = DbHelperMySQL.ExecuteSql(strSql.ToString(), parameters);
+            if (rows > 0)
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
 		/// <summary>
 		/// 批量删除数据
 		/// </summary>
@@ -291,8 +317,12 @@ namespace DataAngineSet.DAL
 				}
 				if(row["quality_score"]!=null && row["quality_score"].ToString()!="")
 				{
-					model.quality_score=decimal.Parse(row["quality_score"].ToString());
+					model.quality_score=int.Parse(row["quality_score"].ToString());
 				}
+                if (row["feature_data"] != null && row["feature_data"] != System.DBNull.Value)
+                {
+                    model.feature_data = (byte[])row["feature_data"];
+                }
 				if(row["remark"]!=null)
 				{
 					model.remark=row["remark"].ToString();
@@ -304,14 +334,15 @@ namespace DataAngineSet.DAL
 		/// <summary>
 		/// 获得数据列表
 		/// </summary>
-		public DataSet GetList(string strWhere)
+        public DataSet GetList(string libraryid)
 		{
 			StringBuilder strSql=new StringBuilder();
 			strSql.Append("select id,person_dataset_id,name,gender,card_id,bitrhday,image_id,face_image_path,feature_data,type,create_time,modified_time,quality_score,remark ");
 			strSql.Append(" FROM person ");
-			if(strWhere.Trim()!="")
+            if (libraryid.Trim() != "")
 			{
-				strSql.Append(" where "+strWhere);
+
+                strSql.Append(" where person_dataset_id = " + libraryid);
 			}
 			return DbHelperMySQL.Query(strSql.ToString());
 		}
@@ -363,30 +394,21 @@ namespace DataAngineSet.DAL
 			return DbHelperMySQL.Query(strSql.ToString());
 		}
 
-		/*
+		
 		/// <summary>
 		/// 分页获取数据列表
 		/// </summary>
-		public DataSet GetList(int PageSize,int PageIndex,string strWhere)
+        public DataSet GetList(int PageIndex, int PageSize, string libraryid)
 		{
-			MySqlParameter[] parameters = {
-					new MySqlParameter("@tblName", MySqlDbType.VarChar, 255),
-					new MySqlParameter("@fldName", MySqlDbType.VarChar, 255),
-					new MySqlParameter("@PageSize", MySqlDbType.Int32),
-					new MySqlParameter("@PageIndex", MySqlDbType.Int32),
-					new MySqlParameter("@IsReCount", MySqlDbType.Bit),
-					new MySqlParameter("@OrderType", MySqlDbType.Bit),
-					new MySqlParameter("@strWhere", MySqlDbType.VarChar,1000),
-					};
-			parameters[0].Value = "person";
-			parameters[1].Value = "id";
-			parameters[2].Value = PageSize;
-			parameters[3].Value = PageIndex;
-			parameters[4].Value = 0;
-			parameters[5].Value = 0;
-			parameters[6].Value = strWhere;	
-			return DbHelperMySQL.RunProcedure("UP_GetRecordByPage",parameters,"ds");
-		}*/
+            StringBuilder strSql = new StringBuilder();
+
+            strSql.Append("select id,person_dataset_id,name,gender,card_id,bitrhday,image_id,face_image_path,feature_data,type,create_time,modified_time,quality_score,remark ");
+            strSql.Append(" FROM person ");
+            strSql.Append(" where person_dataset_id = " + libraryid);
+            strSql.Append(" limit " + PageIndex + ", " + PageSize);
+
+            return DbHelperMySQL.Query(strSql.ToString());
+		}
 
 		#endregion  BasicMethod
 		#region  ExtensionMethod

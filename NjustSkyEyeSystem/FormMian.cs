@@ -11,8 +11,9 @@ using System.Threading;
 using System.IO;
 using System.Configuration;
 using FRS;
-using DataAngine;
-using DataAngine_Set;
+//using DataAngine;
+//using DataAngine_Set;
+using DataAngineSet;
 
 namespace NjustSkyEyeSystem
 {
@@ -38,7 +39,7 @@ namespace NjustSkyEyeSystem
 
         private SettingFRS settingFRS = null;//初始化·参数设置
 
-        private string libraryname = "";//当前操作数据库
+        private int libraryid = 0;//当前操作数据库
         private string devicename = "";//当前操作摄像头
         private string loginrtsp = "";//当前操作rtsp流
 
@@ -47,10 +48,10 @@ namespace NjustSkyEyeSystem
         private Image imageCompare1;//证件比对图片
         private Image imageCompare2;//证件比对图片
         private Image image_Library_Compare;//底库比对图片
-        readonly DataAngine.BLL.hitalert hitbll = new DataAngine.BLL.hitalert();
-        readonly DataAngine.BLL.user user = new DataAngine.BLL.user();
-        readonly DataAngine_Set.BLL.dataset dataset = new DataAngine_Set.BLL.dataset();
-        readonly DataAngine_Set.BLL.device device = new DataAngine_Set.BLL.device();
+        readonly DataAngineSet.BLL.hitalert hitbll = new DataAngineSet.BLL.hitalert();
+        readonly DataAngineSet.BLL.person personbll = new DataAngineSet.BLL.person();
+        readonly DataAngineSet.BLL.person_dataset person_datasetbll = new DataAngineSet.BLL.person_dataset();
+        readonly DataAngineSet.BLL.device devicebll = new DataAngineSet.BLL.device();
 
         private class LocationType
         {
@@ -686,7 +687,7 @@ namespace NjustSkyEyeSystem
         private void btn_MulityTask_task1_Click(object sender, EventArgs e)
         {
 
-            fa.LoadData(libraryname);
+            fa.LoadData(libraryid);
             if (!cap1.IsRun)
             {
                 cap1.Interval = (int)nudInterval.Value;
@@ -840,7 +841,7 @@ namespace NjustSkyEyeSystem
 
         private void btn_MulityTask_task2_Click(object sender, EventArgs e)
         {
-            fa.LoadData(libraryname);
+            fa.LoadData(libraryid);
             if (!cap2.IsRun)
             {
                 cap2.Interval = (int)nudInterval.Value;
@@ -1025,7 +1026,7 @@ namespace NjustSkyEyeSystem
                 return;
             }
 
-            fa.LoadData(libraryname);
+            fa.LoadData(libraryid);
             if (rdb_CameraCHC.Checked)
             {
                 startCaptureCHC();
@@ -1180,7 +1181,7 @@ namespace NjustSkyEyeSystem
             picRegisterFace.Image = faceBitmap;
             if (0 == fa.Register(picRegister.Image, hitUserInfo))
             {
-                fa.LoadData(libraryname);
+                fa.LoadData(libraryid);
                 MessageBox.Show("注册成功");
             }
             else
@@ -1236,11 +1237,10 @@ namespace NjustSkyEyeSystem
         private void bwRegisterInBulk_DoWork(object sender, DoWorkEventArgs e)
         {
             if (registerType == REG_IN_BUILK_FROM_DIR)//从文件夹中注册
-                //fa.RegisterInBulk1(txtRegisterDir.Text);
-                fa.RegisterInBulk1(txtRegisterDir.Text, libraryname);
+                fa.RegisterInBulk1(txtRegisterDir.Text, libraryid);
             else if (registerType == REG_IN_BUILK_FROM_FILE)//从文件中注册
             {
-                fa.RegisterInBulkFromFile(txtRegisterFile.Text);
+                fa.RegisterInBulkFromFile(txtRegisterFile.Text, libraryid);
             }
 
         }
@@ -1369,9 +1369,8 @@ namespace NjustSkyEyeSystem
             }
         }
         private void btnRetriew_Click(object sender, EventArgs e)
-        {
-                   
-            DataSet ds = hitbll.GetListByTime(dtpStart.Value, dtpend.Value, libraryname);
+        { 
+            DataSet ds = hitbll.GetListByTime(dtpStart.Value, dtpend.Value, libraryid.ToString());
 
             if (0 == ds.Tables.Count)
             {
@@ -1387,7 +1386,7 @@ namespace NjustSkyEyeSystem
 
             try
             {
-                ds = hitbll.GetListByTime(dtpStart.Value, dtpend.Value, 0, PageSize_HitAlert, libraryname);
+                ds = hitbll.GetListByTime(dtpStart.Value, dtpend.Value, 0, PageSize_HitAlert, libraryid.ToString());
 
                 CurPage_HitAlert = 1;
                 txt_Current_Page_HitAlert.Text = CurPage_HitAlert.ToString(); 
@@ -1408,23 +1407,23 @@ namespace NjustSkyEyeSystem
         #region 数据库测试
         private void btnTestConnection_Click(object sender, EventArgs e)
         {
-            if (fa.LoadData(combox_DataBaseName.Text.ToString())==0)
+            DataAngineSet.Model.person_dataset persondataset = new DataAngineSet.Model.person_dataset();
+            try{
+                persondataset = person_datasetbll.GetModel(combox_DataBaseName.Text.ToString());
+            }
+            catch (Exception ex)
             {
-                libraryname = combox_DataBaseName.Text.ToString();
+            }
+
+            if (fa.LoadData(persondataset.id) == 0)
+            {
+                libraryid = persondataset.id;
                 MessageBox.Show("登录成功");
             }
             else
             {
                 MessageBox.Show("登录失败");
             }
-            //if (DataAngine.DBUtility.DbHelperMySQL.ConnectionTest())
-            //{
-            //    MessageBox.Show("连接成功");
-            //}
-            //else
-            //{
-            //    MessageBox.Show("连接失败");
-            //}
         }
         #endregion
 
@@ -1569,7 +1568,10 @@ namespace NjustSkyEyeSystem
             listViewLibrary.Items.Clear();
             imageListFaceLibrary.Images.Clear();
 
-            DataSet ds = user.GetPicPathList(null,libraryname);
+            DataAngineSet.Model.person_dataset persondataset = new DataAngineSet.Model.person_dataset();
+            persondataset = person_datasetbll.GetModel(libraryid);
+
+            DataSet ds = personbll.GetList(persondataset.id.ToString());
 
             if (0 == ds.Tables.Count)
             {
@@ -1585,7 +1587,7 @@ namespace NjustSkyEyeSystem
   
             try
             {
-                ds = user.GetPicPathList(null, 0, PageSize_Library, libraryname);
+                ds = personbll.GetList(0, PageSize_Library, libraryid.ToString());
                 DataTable dt = ds.Tables[0];
 
                 CurPage_Library = 1;
@@ -1623,7 +1625,7 @@ namespace NjustSkyEyeSystem
             listViewLibrary.Items.Clear();
             imageListFaceLibrary.Images.Clear();
 
-            DataSet ds = user.GetPicPathList(null, (CurPage_Library - 1) * PageSize_Library, PageSize_Library, libraryname);
+            DataSet ds = personbll.GetList((CurPage_Library - 1) * PageSize_Library, PageSize_Library, libraryid.ToString());
 
             if (0 == ds.Tables.Count)
             {
@@ -1669,7 +1671,7 @@ namespace NjustSkyEyeSystem
             listViewLibrary.Items.Clear();
             imageListFaceLibrary.Images.Clear();
 
-            DataSet ds = user.GetPicPathList(null, (CurPage_Library - 1) * PageSize_Library, PageSize_Library, libraryname);
+            DataSet ds = personbll.GetList((CurPage_Library - 1) * PageSize_Library, PageSize_Library, libraryid.ToString());
 
             if (0 == ds.Tables.Count)
             {
@@ -1726,7 +1728,7 @@ namespace NjustSkyEyeSystem
             listViewLibrary.Items.Clear();
             imageListFaceLibrary.Images.Clear();
 
-            DataSet ds = user.GetPicPathList(null, (CurPage_Library - 1) * PageSize_Library, PageSize_Library, libraryname);
+            DataSet ds = personbll.GetList((CurPage_Library - 1) * PageSize_Library, PageSize_Library, libraryid.ToString());
 
             if (0 == ds.Tables.Count)
             {
@@ -1780,7 +1782,7 @@ namespace NjustSkyEyeSystem
             {
                 MessageBox.Show("请选择一张图片");
             }
-            fa.LoadData(libraryname);
+            fa.LoadData(libraryid);
             HitAlert[] hits = fa.Search(image_Library_Compare);
             if (hits != null)
             {
@@ -1800,18 +1802,18 @@ namespace NjustSkyEyeSystem
         /// </summary>
         public void ComboxLibraryList()
         {
-            DataSet ds = dataset.GetAllList();
+            DataSet ds = person_datasetbll.GetAllList();
             DataTable dt = ds.Tables[0];
 
             combox_DataBaseName.DataSource = dt;
             combox_DataBaseName.ValueMember = "id";
-            combox_DataBaseName.DisplayMember = "datasetname";
+            combox_DataBaseName.DisplayMember = "name";
           
         }
 
         public void ComboxDevList()
         {
-            DataSet ds = device.GetAllList();
+            DataSet ds = devicebll.GetAllList();
             DataTable dt = ds.Tables[0];
 
             foreach(DataRow row in dt.Rows){
@@ -1832,7 +1834,7 @@ namespace NjustSkyEyeSystem
 
         private void btn_Library_Register_Click(object sender, EventArgs e)
         {
-            libraryname = txt_library_name.Text;
+            string libraryname = txt_library_name.Text;
             string regLibraryUid = txt_library_uid.Text;
             string regLibraryPsw = txt_library_psw.Text;
 
@@ -1842,14 +1844,14 @@ namespace NjustSkyEyeSystem
                 return;
             }
 
-            DataAngine_Set.Model.dataset dataset = new DataAngine_Set.Model.dataset();
-            DataAngine_Set.BLL.dataset datasetbll = new DataAngine_Set.BLL.dataset();
-            dataset.datasetname = libraryname;
+            DataAngineSet.Model.person_dataset person_dataset = new DataAngineSet.Model.person_dataset();
+            DataAngineSet.BLL.person_dataset person_datasetbll = new DataAngineSet.BLL.person_dataset();
+            person_dataset.name = libraryname;
 
-            if (true == datasetbll.Add(dataset))
+            if (true == person_datasetbll.Add(person_dataset))
             {
                 combox_DataBaseName.Text = libraryname;
-                fa.LoadData(libraryname);
+                fa.LoadData(person_dataset.id);
                 ComboxLibraryList();
                 MessageBox.Show("注册成功");
             }
@@ -1875,15 +1877,15 @@ namespace NjustSkyEyeSystem
                 return;
             }
 
-            DataAngine_Set.Model.device device = new DataAngine_Set.Model.device();
-            DataAngine_Set.BLL.device devicebll = new DataAngine_Set.BLL.device();
+            DataAngineSet.Model.device device = new DataAngineSet.Model.device();
+            DataAngineSet.BLL.device devicebll = new DataAngineSet.BLL.device();
 
             device.name = regDeviceName;
-            device.address = regDeviceAddress;
-            device.departmentmentid = regDeviceDepartment;
+            device.video_address = regDeviceAddress;
+            device.departmentment_id = regDeviceDepartment;
             device.longitude = System.Convert.ToDouble(regDeviceLongitude);
             device.latitude = System.Convert.ToDouble(regDeviceLatitude);
-            device.locationtype = regDeviceLocationIndex;
+            device.location_type = regDeviceLocationIndex.ToString();
 
             if (true == devicebll.Add(device))
             {
@@ -1900,14 +1902,14 @@ namespace NjustSkyEyeSystem
         private void comboBox_DevName_SelectedIndexChanged(object sender, EventArgs e)
         {
             if (comboBox_DevName.Items.Count == 0) return ;
-            DataSet ds = device.GetDevice(comboBox_DevName.Text.ToString());
+            DataSet ds = devicebll.GetDevice(comboBox_DevName.Text.ToString());
             DataTable dt = ds.Tables[0];        
-            tex_DevAddress.Text = dt.Rows[0]["address"].ToString();
-            tex_Department.Text = dt.Rows[0]["departmentmentid"].ToString();
+            tex_DevAddress.Text = dt.Rows[0]["video_address"].ToString();
+            tex_Department.Text = dt.Rows[0]["departmentment_id"].ToString();
             tex_Longitude.Text = dt.Rows[0]["longitude"].ToString();
             tex_Latitude.Text = dt.Rows[0]["latitude"].ToString();
             string type="";
-            switch(dt.Rows[0]["locationtype"].ToString())
+            switch(dt.Rows[0]["location_type"].ToString())
             {
                 case "0": type="汽车站";break;
                 case "1": type="公交站";break;
@@ -1943,7 +1945,7 @@ namespace NjustSkyEyeSystem
                 return;
             }
 
-            DataSet ds = hitbll.GetListByTime(dtpStart.Value, dtpend.Value, (CurPage_HitAlert - 1) * PageSize_HitAlert, PageSize_HitAlert, libraryname);
+            DataSet ds = hitbll.GetListByTime(dtpStart.Value, dtpend.Value, (CurPage_HitAlert - 1) * PageSize_HitAlert, PageSize_HitAlert, libraryid.ToString());
 
             if (0 == ds.Tables.Count)
             {
@@ -1972,7 +1974,7 @@ namespace NjustSkyEyeSystem
 
             CurPage_HitAlert--;
 
-            DataSet ds = hitbll.GetListByTime(dtpStart.Value, dtpend.Value, (CurPage_HitAlert - 1) * PageSize_HitAlert, PageSize_HitAlert, libraryname); ;
+            DataSet ds = hitbll.GetListByTime(dtpStart.Value, dtpend.Value, (CurPage_HitAlert - 1) * PageSize_HitAlert, PageSize_HitAlert, libraryid.ToString()); ;
 
             if (0 == ds.Tables.Count)
             {
@@ -2002,7 +2004,7 @@ namespace NjustSkyEyeSystem
 
             CurPage_HitAlert++;
 
-            DataSet ds = hitbll.GetListByTime(dtpStart.Value, dtpend.Value, (CurPage_HitAlert - 1) * PageSize_HitAlert, PageSize_HitAlert, libraryname);
+            DataSet ds = hitbll.GetListByTime(dtpStart.Value, dtpend.Value, (CurPage_HitAlert - 1) * PageSize_HitAlert, PageSize_HitAlert, libraryid.ToString());
 
             if (0 == ds.Tables.Count)
             {
