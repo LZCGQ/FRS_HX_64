@@ -18,7 +18,8 @@ namespace FRSServerHttp.Model
         public int DeviceID { get; set; }
         public string Type { get; set; }//布控类型
         public string Remark { get; set; }//备注
-
+        public string StartTime { get; set; }
+        public string EndTime { get; set; }
 
         public static SurveillanceTask CreateInstanceFromJson(string json)
         {
@@ -48,6 +49,8 @@ namespace FRSServerHttp.Model
             s.Name = st.name;
             s.Remark = st.remark;
             s.Type = st.type;
+            s.StartTime = st.start_time.ToString();
+            s.EndTime = st.end_time.ToString();
             return s;
         }
 
@@ -63,6 +66,8 @@ namespace FRSServerHttp.Model
                 s.Name = sts[i].name;
                 s.Remark = sts[i].remark;
                 s.Type = sts[i].type;
+                s.StartTime = sts[i].start_time.ToString();
+                s.EndTime = sts[i].end_time.ToString();
                 ss[i] = s;
             }
             return ss;
@@ -76,6 +81,8 @@ namespace FRSServerHttp.Model
             s.name = this.Name;
             s.remark = this.Remark;
             s.type = this.Type;
+            s.start_time = Convert.ToDateTime(this.StartTime);
+            s.end_time = Convert.ToDateTime(this.EndTime);
             return s;
         }
 

@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using System.Configuration;
 using Newtonsoft.Json;
 using DataAngineSet.Model;
+using System.Data;
 namespace FRSServerHttp.Model
 {
     /// <summary>
@@ -16,7 +17,7 @@ namespace FRSServerHttp.Model
         public string Name { get; set; }
         public string Type { get; set; }
         public string Source { get; set; }
-        public DateTime CreateTime { get; set; }
+        public DateTime? CreateTime { get; set; }
         public string Remark { get; set; }
 
         public static AddInfo CreateInstanceFromJSON(string json)
@@ -53,12 +54,68 @@ namespace FRSServerHttp.Model
         }
     }
 
+    class ViewInfo
+    {
+        public int StartIndex { get; set; }
+        public int PageSize { get; set; }
+
+        public static ViewInfo CreateInstanceFromJSON(string json)
+        {
+            ViewInfo msg = null;
+            try
+            {
+                msg = (ViewInfo)JsonConvert.DeserializeObject(json, typeof(ViewInfo));
+            }
+            catch
+            {
+            }
+            return msg;
+        }
+    }
+
+    class PersonData
+    {
+        public int id { get; set; }
+        public int person_dataset_id { get; set; }
+        public string name { get; set; }
+        public string gender { get; set; }
+        public string card_id { get; set; }
+        public string image_id { get; set; }
+        public string face_image_path { get; set; }
+
+        public static PersonData[] CreateInstanceFromDataAngineDataSet(DataSet ds)
+        {
+            if (0 == ds.Tables.Count)
+            {
+                return null;
+            }
+
+            DataTable dt = ds.Tables[0];
+            int UserCount = dt.Rows.Count;
+            PersonData[] users = new PersonData[UserCount];
+
+            for (int i = 0; i < UserCount; ++i)
+            {
+                PersonData userdata = new PersonData();
+                userdata.id = Convert.ToInt32(dt.Rows[i]["id"]);
+                userdata.person_dataset_id = Convert.ToInt32(dt.Rows[i]["person_dataset_id"]);
+                userdata.name = dt.Rows[i]["name"].ToString();
+                userdata.gender = dt.Rows[i]["gender"].ToString();
+                userdata.card_id = dt.Rows[i]["card_id"].ToString();
+                userdata.image_id = dt.Rows[i]["image_id"].ToString();
+                userdata.face_image_path = dt.Rows[i]["face_image_path"].ToString();
+                users[i] = userdata;
+            }
+            return users;
+        }
+    }
+
     class PersonDataSet
     {
         public int ID { get; set; }
         public string Name { get; set; }
         public string Source { get; set; }
-        public DateTime CreateTime { get; set; }
+        public string CreateTime { get; set; }
         public string Type { get; set; }
         public string Remark { get; set; }
 
@@ -90,7 +147,8 @@ namespace FRSServerHttp.Model
             PersonDataSet d = new PersonDataSet();
             d.Name = dt.name;     
             d.Source = dt.source;
-            d.CreateTime = (DateTime)dt.create_time;
+            if (dt.create_time != null)
+                d.CreateTime = dt.create_time.ToString();
             d.Type = dt.type;
             d.Remark = dt.remark;
             return d;
@@ -108,7 +166,8 @@ namespace FRSServerHttp.Model
                 PersonDataSet d = new PersonDataSet();
                 d.Name = dts[i].name;
                 d.Source = dts[i].source;
-                d.CreateTime = (DateTime)dts[i].create_time;
+                if (dts[i].create_time != null)
+                    d.CreateTime = dts[i].create_time.ToString();         
                 d.Type = dts[i].type;
                 d.Remark = dts[i].remark;
                 ds[i] = d;
@@ -120,7 +179,7 @@ namespace FRSServerHttp.Model
             person_dataset d = new person_dataset();
             d.name = this.Name;
             d.source = this.Source;
-            d.create_time = (DateTime)this.CreateTime;
+            d.create_time = Convert.ToDateTime(this.CreateTime);
             d.type = this.Type;
             d.remark = this.Remark;
             return d;

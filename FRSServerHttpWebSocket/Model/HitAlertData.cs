@@ -43,7 +43,7 @@ namespace FRSServerHttp.Model
         public int user_id { get; set; }
         public string user_name { get; set; }
         public string user_gander { get; set; }
-        public string user_people_id { get; set; }
+        public int user_person_dataset_id { get; set; }
         public string user_card_id { get; set; }
         public string user_image_id { get; set; }
         public string user_face_image_path { get; set; }
@@ -92,7 +92,7 @@ namespace FRSServerHttp.Model
                 hitalertdata.user_id = Convert.ToInt32(dt.Rows[i]["user_id"]);
                 hitalertdata.user_name = dt.Rows[i]["user_name"].ToString();
                 hitalertdata.user_gander = dt.Rows[i]["user_gender"].ToString();
-                hitalertdata.user_people_id = dt.Rows[i]["user_people_id"].ToString();
+                hitalertdata.user_person_dataset_id = Convert.ToInt32(dt.Rows[i]["user_person_dataset_id"].ToString());
                 hitalertdata.user_card_id = dt.Rows[i]["user_card_id"].ToString();
                 hitalertdata.user_image_id = dt.Rows[i]["user_image_id"].ToString();
                 hitalertdata.user_face_image_path = dt.Rows[i]["user_face_image_path"].ToString();

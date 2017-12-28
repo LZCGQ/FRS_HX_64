@@ -14,11 +14,12 @@ namespace FRSServerHttp.Service
     class PersonDataSetService : BaseService
     {
         person_dataset bll = new person_dataset();
+        person personbll = new person();
         public static string Domain
         {
             get
             {
-                return "person_dataset";
+                return "person-dataset";
             }
         }
 
@@ -103,7 +104,7 @@ namespace FRSServerHttp.Service
                             status = true;
                         Log.Debug(string.Format("共注册{0}人", num));
                     }
-
+                    response.SetContent(status.ToString());
                 }
                 else if (request.Operation == "delete")//删除
                 {
@@ -120,9 +121,21 @@ namespace FRSServerHttp.Service
                     }
                     status = bll.Delete(id);
                     //删除设备
+                    response.SetContent(status.ToString());
+                }
+                else if (request.Operation == "view")//查看
+                {
+                    Log.Debug("更新一个人员库");
+                    ViewInfo viewinfo = ViewInfo.CreateInstanceFromJSON(request.PostParams);
+                    if (viewinfo != null)
+                    {
+                        int DatasetId = Convert.ToInt32(request.RestConvention);
+                        PersonData[] users = PersonData.CreateInstanceFromDataAngineDataSet(personbll.GetList(viewinfo.StartIndex, viewinfo.PageSize, DatasetId.ToString()));
+
+                        response.SetContent(JsonConvert.SerializeObject(users));
+                    }
                 }
             }
-            response.SetContent(status.ToString());
             response.Send();
         }
     }
