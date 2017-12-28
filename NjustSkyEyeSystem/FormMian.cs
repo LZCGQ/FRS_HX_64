@@ -1172,6 +1172,7 @@ namespace NjustSkyEyeSystem
             hitUserInfo.name = regUserName;
             hitUserInfo.gender = regUserGender;
             hitUserInfo.cardId = regUserIdCard;
+            hitUserInfo.personDatasetId = libraryid;
 
             Bitmap faceBitmap = new Bitmap(width, height);
             Graphics.FromImage(faceBitmap);
@@ -1525,7 +1526,7 @@ namespace NjustSkyEyeSystem
             }
 
             SetDetectParameters();
-            ShowMsgInfo("参数已更新！", null);
+            MessageBox.Show("参数已更新");
         }
 
         private void btn_PicCompare_Click(object sender, EventArgs e)
@@ -1784,7 +1785,7 @@ namespace NjustSkyEyeSystem
             }
             fa.LoadData(libraryid);
             HitAlert[] hits = fa.Search(image_Library_Compare);
-            if (hits != null)
+            if (hits != null && hits[0].Details.Length != 0)
             {
                 this.pic_Library.Image = Image.FromFile(hits[0].Details[0].imgPath);
 

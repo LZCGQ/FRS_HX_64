@@ -7,12 +7,12 @@ using FRSServerHttp.Model;
 using System.IO;
 using Newtonsoft.Json;
 using FRSServerHttp.Server;
-using DataAngine_Set.BLL;
+using DataAngineSet.BLL;
 namespace FRSServerHttp.Service
 {
     class DatasetService : BaseService
     {
-        dataset bll = new dataset();
+        person_dataset bll = new person_dataset();
         public static string Domain
         {
             get
@@ -36,7 +36,7 @@ namespace FRSServerHttp.Service
                 {
 
                 }
-                Dataset da = Dataset.CreateInstanceFromDataAngineModel(bll.GetModel(id));
+                PersonDataSet da = PersonDataSet.CreateInstanceFromDataAngineModel(bll.GetModel(id));
                 if (null != da)
                 {
                     response.SetContent(da.ToJson());
@@ -46,8 +46,8 @@ namespace FRSServerHttp.Service
             else if (request.Domain != null)//获得所有数据库
             {
                 Log.Debug(string.Format("返回所哟数据库信息", request.RestConvention));
-                List<DataAngine_Set.Model.dataset> datasets = bll.DataTableToList(bll.GetAllList().Tables[0]);
-                response.SetContent(JsonConvert.SerializeObject(Dataset.CreateInstanceFromDataAngineModel(datasets.ToArray())));
+                List<DataAngineSet.Model.person_dataset> datasets = bll.DataTableToList(bll.GetAllList().Tables[0]);
+                response.SetContent(JsonConvert.SerializeObject(PersonDataSet.CreateInstanceFromDataAngineModel(datasets.ToArray())));
 
             }
             response.Send();
@@ -61,7 +61,7 @@ namespace FRSServerHttp.Service
             bool status = false;
             if (request.Operation == null)//添加一条数据
             {
-                Dataset da = Dataset.CreateInstanceFromJSON(request.PostParams);
+                PersonDataSet da = PersonDataSet.CreateInstanceFromJSON(request.PostParams);
 
                 if (null != da)
                 {
@@ -76,7 +76,7 @@ namespace FRSServerHttp.Service
                 if (request.Operation == "update")//更新
                 {
                     Console.WriteLine("更新数据库信息");
-                    Dataset da = Dataset.CreateInstanceFromJSON(request.PostParams);
+                    PersonDataSet da = PersonDataSet.CreateInstanceFromJSON(request.PostParams);
                     if (null != da)
                     {
                         status = bll.Update(da.ToDataAngineModel());

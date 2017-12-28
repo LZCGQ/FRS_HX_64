@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using FRSServerHttp.Server;
-using DataAngine_Set.BLL;
+using DataAngineSet.BLL;
 using FRSServerHttp.Model;
 using Newtonsoft.Json;
 using FRS;
@@ -11,14 +11,14 @@ namespace FRSServerHttp.Service
 {
 
 
-    class PersonDatabaseService : BaseService
+    class PersonDataSetService : BaseService
     {
-        dataset bll = new dataset();
+        person_dataset bll = new person_dataset();
         public static string Domain
         {
             get
             {
-                return "person-database";
+                return "person_dataset";
             }
         }
 
@@ -36,22 +36,19 @@ namespace FRSServerHttp.Service
                 }
                 catch
                 {
-
                 }
-                Dataset da = Dataset.CreateInstanceFromDataAngineModel(bll.GetModel(id));
+                PersonDataSet da = PersonDataSet.CreateInstanceFromDataAngineModel(bll.GetModel(id));
                 if (null != da)
                 {
                     response.SetContent(da.ToJson());
                 }
-
-
             }
             else if (request.Domain != string.Empty)
             {
 
                 Log.Debug(string.Format("返回所有库信息"));
-                List<DataAngine_Set.Model.dataset> datasets = bll.DataTableToList(bll.GetAllList().Tables[0]);
-                response.SetContent(JsonConvert.SerializeObject(Dataset.CreateInstanceFromDataAngineModel(datasets.ToArray())));
+                List<DataAngineSet.Model.person_dataset> datasets = bll.DataTableToList(bll.GetAllList().Tables[0]);
+                response.SetContent(JsonConvert.SerializeObject(PersonDataSet.CreateInstanceFromDataAngineModel(datasets.ToArray())));
             }
             response.Send();
 
@@ -70,8 +67,11 @@ namespace FRSServerHttp.Service
                 AddInfo addinfo = AddInfo.CreateInstanceFromJSON(request.PostParams);
                 if (addinfo != null)
                 {
-                    DataAngine_Set.Model.dataset ds = new DataAngine_Set.Model.dataset();
-                    ds.datasetname = addinfo.DatasetName;
+                    DataAngineSet.Model.person_dataset ds = new DataAngineSet.Model.person_dataset();
+                    ds.name = addinfo.Name;
+                    ds.type = addinfo.Type;
+                    ds.source = addinfo.Source;
+                    ds.create_time = addinfo.CreateTime;
                     ds.remark = addinfo.Remark;
                     status = bll.Add(ds);
                     if (status)
@@ -94,11 +94,11 @@ namespace FRSServerHttp.Service
                     if (registerInfo != null)
                     {
                         int DatasetId = Convert.ToInt32(request.RestConvention);
-                        DataAngine_Set.Model.dataset ds = new DataAngine_Set.Model.dataset();
+                        DataAngineSet.Model.person_dataset ds = new DataAngineSet.Model.person_dataset();
                         ds=bll.GetModel(DatasetId);
                         //初始化                   
                         InitFRS();
-                        int num = fa.RegisterInBulk1(registerInfo.Path, ds.datasetname);
+                        int num = fa.RegisterInBulk1(registerInfo.Path, ds.id);
                         if (num > 0)
                             status = true;
                         Log.Debug(string.Format("共注册{0}人", num));

@@ -7,7 +7,7 @@ using System.IO;
 using FRSServerHttp.Model;
 using FRSServerHttp.Server;
 using Newtonsoft.Json;
-using DataAngine_Set.BLL;
+using DataAngineSet.BLL;
 namespace FRSServerHttp.Service
 {
     class DeviceService : BaseService
@@ -62,7 +62,7 @@ namespace FRSServerHttp.Service
             {
                 
                 Log.Debug(string.Format("返回所有设备信息"));
-                List<DataAngine_Set.Model.device> devices = bll.DataTableToList(bll.GetAllList().Tables[0]);
+                List<DataAngineSet.Model.device> devices = bll.DataTableToList(bll.GetAllList().Tables[0]);
                 response.SetContent(JsonConvert.SerializeObject(Device.CreateInstanceFromDataAngineModel(devices.ToArray())));
             }
             response.Send();

@@ -8,7 +8,7 @@ using FRSServerHttp.Model;
 using System.IO;
 using FRSServerHttp.Server;
 using FRSServerHttp.Server.Websocket;
-using DataAngine_Set.BLL;
+using DataAngineSet.BLL;
 using FRS;
 
 namespace FRSServerHttp.Service
@@ -21,9 +21,9 @@ namespace FRSServerHttp.Service
     class HitAlertService : BaseService
     {
 
-        surveillancetask taskBll = new surveillancetask();
+        surveillance_task taskBll = new surveillance_task();
         device deviceBll = new device();
-        dataset datasetBll = new dataset();
+        person_dataset datasetBll = new person_dataset();
 
         /// <summary>
         /// 访问当前service的URL
@@ -93,34 +93,30 @@ namespace FRSServerHttp.Service
 
 
 
-            DataAngine_Set.Model.surveillancetask task=taskBll.GetModel(taskID);
+            DataAngineSet.Model.surveillance_task task=taskBll.GetModel(taskID);
             if (null == task) { Log.Debug("检索任务失败"); return false; }
-            DataAngine_Set.Model.device device = deviceBll.GetModel(task.deviceid);
+            DataAngineSet.Model.device device = deviceBll.GetModel(task.device_id);
             if (null == device) { Log.Debug("检索设备失败"); return false; }
-            DataAngine_Set.Model.dataset dataset = datasetBll.GetModel(task.databaseid);
-            if (null == dataset) { Log.Debug("检索库失败"); return false; }
+            DataAngineSet.Model.person_dataset person_dataset = datasetBll.GetModel(task.person_dataset_id);
+            if (null == person_dataset) { Log.Debug("检索库失败"); return false; }
             
             InitFRS();
-
-            fa.LoadData(dataset.datasetname);
+            fa.LoadData(person_dataset.id);
             cap.HitAlertReturnEvent += new Capture.HitAlertCallback(OnHit);
 
 
            int id=-1;
            try
            {
-               Log.Debug(device.address);
-              id= Convert.ToInt32(device.address);
+               Log.Debug(device.video_address);
+               id = Convert.ToInt32(device.video_address);
            }
            catch
            {
-
            }
            if (id == -1)
            {
-
-
-               if (cap.Start(device.address) != ReturnCode.SUCCESS)
+               if (cap.Start(device.video_address) != ReturnCode.SUCCESS)
                {
                    Log.Debug("打开摄像头失败");
                    return false;
@@ -133,8 +129,7 @@ namespace FRSServerHttp.Service
                    Log.Debug("打开摄像头失败");
                    return false;
                }
-           }
-           
+           }        
            return true;
         }
         public override void OnGet(HttpRequest request, HttpResponse response)
@@ -169,11 +164,9 @@ namespace FRSServerHttp.Service
             {
 
                Log.Debug(string.Format("准备开始布控任务 布控ID{0}", request.RestConvention));
-                //更具p.restConvention（taskID）进行
+                //根据p.restConvention（taskID）进行
                 //SurveillanceTask task = ;
             }
-
-          
 
             HitAlertService.response = response;
             int id = -1;
@@ -187,10 +180,8 @@ namespace FRSServerHttp.Service
 
             if (!Init(id)) {//开启监控失败
                 Log.Debug("开启布控任务失败");
-                response.SetContent("False");
-                
+                response.SetContent("False");              
                 response.SendWebsocketData();
-
                 response.TcpClient.Close();
                 IsOnSurveillance = false;
                 return;
@@ -220,8 +211,7 @@ namespace FRSServerHttp.Service
         {
             if (request.RestConvention != null)
             {
-                 Console.WriteLine("停止 布控ID{0}", request.RestConvention);
-                 
+                 Console.WriteLine("停止 布控ID{0}", request.RestConvention);    
             }
             bool status = true;
             response.SetContent(status.ToString());

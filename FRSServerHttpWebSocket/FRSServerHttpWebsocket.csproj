@@ -53,7 +53,7 @@
   <ItemGroup>
     <Compile Include="Capture.cs" />
     <Compile Include="ImageUtils.cs" />
-    <Compile Include="Model\Dataset.cs" />
+    <Compile Include="Model\PersonDataSet.cs" />
     <Compile Include="Model\Device.cs" />
     <Compile Include="Model\HitAlertData.cs" />
     <Compile Include="Model\HitData.cs" />
@@ -80,7 +80,7 @@
     <Compile Include="Service\FileService.cs" />
     <Compile Include="Service\DeviceService.cs" />
     <Compile Include="Service\HitAlertService.cs" />
-    <Compile Include="Service\PersonDatabaseService.cs" />
+    <Compile Include="Service\PersonDataSetService.cs" />
     <Compile Include="Service\RegisterService.cs" />
     <Compile Include="Service\UserService.cs" />
     <Compile Include="Service\RecordingService.cs" />
@@ -95,13 +95,9 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\DataAngine\DataAngine.csproj">
-      <Project>{dea8e31e-a67f-40a2-900f-127517ced01b}</Project>
-      <Name>DataAngine</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\DataAngine_Set\DataAngine_Set.csproj">
-      <Project>{51ee1964-c866-408b-83ee-827bc2c61ccf}</Project>
-      <Name>DataAngine_Set</Name>
+    <ProjectReference Include="..\DataAngineSet\DataAngineSet.csproj">
+      <Project>{1ecdbcae-b563-4f2c-8259-96aaf1622be3}</Project>
+      <Name>DataAngineSet</Name>
     </ProjectReference>
     <ProjectReference Include="..\FaceAngine\FaceAngine.vcxproj">
       <Project>{b9dc1f90-19be-4a91-a290-542be9c75a0f}</Project>

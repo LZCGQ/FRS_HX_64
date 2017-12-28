@@ -7,8 +7,7 @@ using FRSServerHttp.Model;
 using System.IO;
 using Newtonsoft.Json;
 using FRSServerHttp.Server;
-using DataAngine.BLL;
-using DataAngine_Set.BLL;
+using DataAngineSet.BLL;
 
 namespace FRSServerHttp.Service
 {
@@ -22,7 +21,7 @@ namespace FRSServerHttp.Service
         /// 访问当前service的URL
         /// </summary>
         hitalert bll = new hitalert();
-        dataset datasetbll = new dataset();
+        person_dataset person_datasetbll = new person_dataset();
         public static string Domain
         {
             get
@@ -47,9 +46,9 @@ namespace FRSServerHttp.Service
                 SearchInfo searchinfo = SearchInfo.CreateInstanceFromJSON(request.PostParams);
                 if (searchinfo != null)
                 {
-                    DataAngine_Set.Model.dataset ds = new DataAngine_Set.Model.dataset();
-                    ds = datasetbll.GetModel(id);
-                    HitAlertData[] ha = HitAlertData.CreateInstanceFromDataAngineDataSet(bll.GetListByTime(searchinfo.StartTime, searchinfo.EndTime, searchinfo.StartIndex, searchinfo.PageSize, ds.datasetname));
+                    DataAngineSet.Model.person_dataset ds = new DataAngineSet.Model.person_dataset();
+                    ds = person_datasetbll.GetModel(id);
+                    HitAlertData[] ha = HitAlertData.CreateInstanceFromDataAngineDataSet(bll.GetListByTime(searchinfo.StartTime, searchinfo.EndTime, searchinfo.StartIndex, searchinfo.PageSize, ds.id.ToString()));
                     response.SetContent(JsonConvert.SerializeObject(ha));
                 }
                 //if(request.GetParams!=null)

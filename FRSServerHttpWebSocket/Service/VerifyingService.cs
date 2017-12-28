@@ -1,4 +1,4 @@
-﻿using DataAngine_Set.BLL;
+﻿using DataAngineSet.BLL;
 using FRSServerHttp.Model;
 using FRSServerHttp.Server;
 using Newtonsoft.Json;
@@ -17,7 +17,7 @@ namespace FRSServerHttp.Service
     /// </summary>
     class VerifyingService : BaseService
     {
-        dataset bll = new dataset();
+        person_dataset bll = new person_dataset();
         public static string Domain
         {
             get
@@ -62,11 +62,11 @@ namespace FRSServerHttp.Service
                     if (verify != null)
                     {
                         int DatasetId = Convert.ToInt32(request.RestConvention);
-                        DataAngine_Set.Model.dataset ds = new DataAngine_Set.Model.dataset();
+                        DataAngineSet.Model.person_dataset ds = new DataAngineSet.Model.person_dataset();
                         ds = bll.GetModel(DatasetId);
 
                         Bitmap Bitmapsrc = BytesToBitmap(verify.PicSrc);
-                        fa.LoadData(ds.datasetname);
+                        fa.LoadData(ds.id);
                         FRS.HitAlert[] hits = fa.Search(Bitmapsrc);
                         string msg = JsonConvert.SerializeObject(Model.HitAlert.CreateInstanceFromFRSHitAlert(hits));
                         response.SetContent(msg);

@@ -7,13 +7,13 @@ using System.IO;
 using FRSServerHttp.Model;
 using Newtonsoft.Json;
 using FRSServerHttp.Server;
-using DataAngine_Set.BLL;
+using DataAngineSet.BLL;
 namespace FRSServerHttp.Service
 {
     class SurveillanceTaskService : BaseService
     {
 
-        surveillancetask bll = new surveillancetask();
+        surveillance_task bll = new surveillance_task();
         /// <summary>
         /// 访问当前service的URL
         /// </summary>
@@ -66,7 +66,7 @@ namespace FRSServerHttp.Service
 
                 //构造响应报文
 
-                List<DataAngine_Set.Model.surveillancetask> datasets = bll.DataTableToList(bll.GetAllList().Tables[0]);
+                List<DataAngineSet.Model.surveillance_task> datasets = bll.DataTableToList(bll.GetAllList().Tables[0]);
                 response.SetContent(JsonConvert.SerializeObject(SurveillanceTask.CreateInstanceFromDataAngineModel(datasets.ToArray())));
                 response.Send();
 

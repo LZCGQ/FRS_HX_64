@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Configuration;
 using Newtonsoft.Json;
-using DataAngine_Set.Model;
+using DataAngineSet.Model;
 namespace FRSServerHttp.Model
 {
     /// <summary>
@@ -13,9 +13,10 @@ namespace FRSServerHttp.Model
     /// </summary>
     class AddInfo
     {
-        public string DatasetName { get; set; }
-        //public string Path { get; set; }
+        public string Name { get; set; }
         public string Type { get; set; }
+        public string Source { get; set; }
+        public DateTime CreateTime { get; set; }
         public string Remark { get; set; }
 
         public static AddInfo CreateInstanceFromJSON(string json)
@@ -52,27 +53,25 @@ namespace FRSServerHttp.Model
         }
     }
 
-    class Dataset
+    class PersonDataSet
     {
         public int ID { get; set; }
-        public string DatasetName { get; set; }
-        public string User { get; set; }
-        public string Password { get; set; }
-        public string IP { get; set; }
-        public string Port { get; set; }
-        public int? Type { get; set; }
+        public string Name { get; set; }
+        public string Source { get; set; }
+        public DateTime CreateTime { get; set; }
+        public string Type { get; set; }
         public string Remark { get; set; }
 
         public string ToJson()
         {
             return JsonConvert.SerializeObject(this);
         }
-        public static Dataset CreateInstanceFromJSON(string json)
+        public static PersonDataSet CreateInstanceFromJSON(string json)
         {
-            Dataset msg = null;
+            PersonDataSet msg = null;
             try
             {
-                msg = (Dataset)JsonConvert.DeserializeObject(json, typeof(Dataset));
+                msg = (PersonDataSet)JsonConvert.DeserializeObject(json, typeof(PersonDataSet));
             }
             catch
             {
@@ -82,54 +81,48 @@ namespace FRSServerHttp.Model
         }
 
 
-        public static Dataset CreateInstanceFromDataAngineModel(dataset dt)
+        public static PersonDataSet CreateInstanceFromDataAngineModel(person_dataset dt)
         {
             if (null == dt)
             {
                 return null;
             }
-            Dataset d = new Dataset();
-            d.DatasetName = dt.datasetname;
-            d.ID = dt.id;
-            d.IP = dt.ip;
-            d.Password = dt.password;
-            d.Port = dt.port;
+            PersonDataSet d = new PersonDataSet();
+            d.Name = dt.name;     
+            d.Source = dt.source;
+            d.CreateTime = (DateTime)dt.create_time;
             d.Type = dt.type;
-            d.User = dt.user;
+            d.Remark = dt.remark;
             return d;
         }
 
-        public static Dataset[] CreateInstanceFromDataAngineModel(dataset[] dts)
+        public static PersonDataSet[] CreateInstanceFromDataAngineModel(person_dataset[] dts)
         {
             if (null == dts)
             {
                 return null;
             }
-            Dataset[] ds = new Dataset[dts.Length];
+            PersonDataSet[] ds = new PersonDataSet[dts.Length];
             for (int i = 0; i < dts.Length; i++)
             {
-                Dataset d = new Dataset();
-                d.DatasetName = dts[i].datasetname;
-                d.ID = dts[i].id;
-                d.IP = dts[i].ip;
-                d.Password = dts[i].password;
-                d.Port = dts[i].port;
+                PersonDataSet d = new PersonDataSet();
+                d.Name = dts[i].name;
+                d.Source = dts[i].source;
+                d.CreateTime = (DateTime)dts[i].create_time;
                 d.Type = dts[i].type;
-                d.User = dts[i].user;
+                d.Remark = dts[i].remark;
                 ds[i] = d;
             }
             return ds;
         }
-        public dataset ToDataAngineModel()
+        public person_dataset ToDataAngineModel()
         {
-            dataset d = new dataset();
-            d.datasetname = this.DatasetName;
-            d.id = this.ID;
-            d.ip = this.IP;
-            d.password = this.Password;
-            d.port = this.Port;
+            person_dataset d = new person_dataset();
+            d.name = this.Name;
+            d.source = this.Source;
+            d.create_time = (DateTime)this.CreateTime;
             d.type = this.Type;
-            d.user = this.User;
+            d.remark = this.Remark;
             return d;
         }
     }

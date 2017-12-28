@@ -464,9 +464,9 @@ namespace FRS {
 		Int32 registerFaceWidthThresh = 80;
 		Int32 registerFaceHeightThresh = 80;
 		Int32 registerFaceYawThresh = 10;
-		Int32 registerFaceRollThresh = 11;
-		Int32 registerFacePitchThresh = 12;
-		Int32 registerFaceQualityThresh = 31;
+		Int32 registerFaceRollThresh = 10;
+		Int32 registerFacePitchThresh = 10;
+		Int32 registerFaceQualityThresh = 30;
 #pragma endregion 
 
 

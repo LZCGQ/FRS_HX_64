@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Configuration;
 using Newtonsoft.Json;
-using DataAngine_Set.Model;
+using DataAngineSet.Model;
 namespace FRSServerHttp.Model
 {
 
@@ -16,11 +16,12 @@ namespace FRSServerHttp.Model
     {
         public int ID { get; set; }
         public string Name { get; set; }
-        public string Address { get; set; }//视频地址
+        public string Video_Address { get; set; }//视频地址
         public string DepartmentID { get; set; }//公安ID
         public double? Longitude { get; set; }//经度
         public double? Latitude { get; set; }//纬度
-        public int? LocationType { get; set; }//区域类型，汽车站，公交站，酒吧
+        public string LocationType { get; set; }//区域类型，汽车站，公交站，酒吧
+        public string Type { get; set; }//类型
         public string Remark { get; set; }//备注
 
         public string ToJson()
@@ -46,12 +47,13 @@ namespace FRSServerHttp.Model
             device d = new device();
             d.id = this.ID;
             d.latitude = this.Latitude;
-            d.locationtype = this.LocationType;
+            d.location_type = this.LocationType;
             d.longitude = this.Longitude;
             d.name = this.Name;
             d.remark = this.Remark;
-            d.address = this.Address;
-            d.departmentmentid = this.DepartmentID;
+            d.video_address = this.Video_Address;
+            d.departmentment_id = this.DepartmentID;
+            d.type = this.Type;
             return d;
 
         }
@@ -62,12 +64,13 @@ namespace FRSServerHttp.Model
             Device de = new Device();
             de.ID = d.id;
             de.Latitude = d.latitude;
-            de.LocationType = d.locationtype;
+            de.LocationType = d.location_type;
             de.Longitude = d.longitude;
             de.Name = d.name;
             de.Remark = d.remark;
-            de.Address = d.address;
-            de.DepartmentID = d.departmentmentid;
+            de.Video_Address = d.video_address;
+            de.DepartmentID = d.departmentment_id;
+            de.Type = d.type;
             return de;
 
         }
@@ -83,12 +86,13 @@ namespace FRSServerHttp.Model
                 Device de = new Device();
                 de.ID = ds[i].id;
                 de.Latitude = ds[i].latitude;
-                de.LocationType = ds[i].locationtype;
+                de.LocationType = ds[i].location_type;
                 de.Longitude = ds[i].longitude;
                 de.Name = ds[i].name;
                 de.Remark = ds[i].remark;
-                de.Address = ds[i].address;
-                de.DepartmentID = ds[i].departmentmentid;
+                de.Video_Address = ds[i].video_address;
+                de.DepartmentID = ds[i].departmentment_id;
+                de.Type = ds[i].type;
                 des[i] = de;
             }
             return des;
