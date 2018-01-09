@@ -76,7 +76,6 @@
     <Compile Include="Server\Websocket\WebSocketException.cs" />
     <Compile Include="Server\Websocket\WebSocketStatusCodes.cs" />
     <Compile Include="Service\BaseService.cs" />
-    <Compile Include="Service\DatasetService.cs" />
     <Compile Include="Service\FileService.cs" />
     <Compile Include="Service\DeviceService.cs" />
     <Compile Include="Service\HitAlertService.cs" />

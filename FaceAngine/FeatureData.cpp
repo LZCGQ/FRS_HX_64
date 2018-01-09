@@ -228,7 +228,7 @@ bool FeatureData::SetDataPath(String^ dataPath)
 //}
 #pragma endregion
 
-#pragma region 文件录入--无通道
+#pragma region 文件录入--数据库
 Int32 FeatureData::RegisterInBulkFromFile(String^ filePath, Int32^ libraryid)
 {
 #if USE_EXPIRE
@@ -320,7 +320,7 @@ Int32 FeatureData::RegisterInBulkFromFile(String^ filePath, Int32^ libraryid)
 //}
 #pragma endregion
 
-#pragma region 文件夹录入1--无通道
+#pragma region 文件夹录入1--数据库
 Int32 FeatureData::RegisterInBulk1(String^ fileDirPath, Int32^ libraryid)
 {
 #if USE_EXPIRE
@@ -368,7 +368,7 @@ Int32 FeatureData::RegisterInBulk1(String^ fileDirPath, Int32^ libraryid)
 }
 #pragma endregion
 
-#pragma region 单图注册--录入图像特征，底库位置
+#pragma region 单图注册--录入图像特征，底库位置--通道
 Int32 FeatureData::Register(cv::Mat& cvImg, Model::person ^ usr, short channelID)
 {
 	if (cvImg.channels() < 3) throw gcnew   ArgumentException("image must have more than 3 channels");
@@ -458,7 +458,7 @@ Int32 FeatureData::Register(cv::Mat& cvImg, Model::person ^ usr, short channelID
 }
 #pragma endregion
 
-#pragma region 单图注册--录入图像特征，底库位置--无通道
+#pragma region 单图注册--录入图像特征，底库位置
 Int32 FeatureData::Register(cv::Mat& cvImg, Model::person ^ usr)
 {
 	if (cvImg.channels() < 3) throw gcnew   ArgumentException("image must have more than 3 channels");
@@ -548,7 +548,7 @@ Int32 FeatureData::Register(cv::Mat& cvImg, Model::person ^ usr)
 }
 #pragma endregion
 
-#pragma region 文件录入（带姓名）--无通道
+#pragma region 文件录入（带姓名）
 Int32 FeatureData::Register(String^ filePath, String^ username)
 {
 #if USE_EXPIRE
@@ -576,7 +576,7 @@ Int32 FeatureData::Register(String^ filePath)
 }
 #pragma endregion
 
-#pragma region 文件录入（带姓名）
+#pragma region 文件录入（带姓名）--通道
 Int32 FeatureData::Register(String^ filePath, String^ username, short channelID)
 {
 #if USE_EXPIRE
@@ -604,7 +604,7 @@ Int32 FeatureData::Register(String^ filePath, short channelID)
 }
 #pragma endregion
 
-#pragma region 单图注册（带详细信息）--无通道
+#pragma region 单图注册（带详细信息）
 Int32 FeatureData::Register(cv::Mat& cvImg, UserInfo^ userInfo)
 {
 	Model::person ^usr = gcnew Model::person();
@@ -643,7 +643,7 @@ Int32 FeatureData::Register(String^ filePath, UserInfo^ userInfo)
 }
 #pragma endregion
 
-#pragma region  单图注册（带详细信息）
+#pragma region  单图注册（带详细信息）--通道
 Int32 FeatureData::Register(cv::Mat& cvImg, UserInfo^ userInfo, short channelID)
 {
 	Model::person ^usr = gcnew Model::person();
@@ -712,7 +712,7 @@ Int32 FeatureData::Unregister(Int32^ id)
 
 #pragma region Load data into stack
 
-#pragma region 数据载入--无数据库
+#pragma region 数据载入
 //Int32 FeatureData::LoadData()
 //{
 //#if USE_EXPIRE
@@ -730,7 +730,7 @@ Int32 FeatureData::Unregister(Int32^ id)
 //}
 #pragma endregion
 
-#pragma region 数据载入
+#pragma region 数据载入--数据库
 Int32 FeatureData::LoadData(Int32^ libraryid)
 {
 #if USE_EXPIRE
@@ -760,7 +760,7 @@ array<HitAlertDetail>^ FeatureData::Search(array<BYTE> ^feats)
 #pragma endregion
 
 
-#pragma region 按图搜索-image--无通道
+#pragma region 按图搜索-image
 array<HitAlert^>^ FeatureData::Search(Image^ image)
 {
 #if USE_EXPIRE
@@ -773,7 +773,7 @@ array<HitAlert^>^ FeatureData::Search(Image^ image)
 }
 #pragma endregion
 
-#pragma region 按图搜索-image
+#pragma region 按图搜索-image--通道
 array<HitAlert^>^ FeatureData::Search(Image^ image, short channelID)
 {
 #if USE_EXPIRE
@@ -787,7 +787,7 @@ array<HitAlert^>^ FeatureData::Search(Image^ image, short channelID)
 }
 #pragma endregion
 
-#pragma region 按图搜索-cvmat--无通道
+#pragma region 按图搜索-cvmat
 array<HitAlert^>^ FeatureData::Search(cv::Mat& cvImg)
 {
 #if USE_EXPIRE
@@ -1016,7 +1016,7 @@ array<HitAlert^>^ FeatureData::Search(cv::Mat& cvImg)
 }
 #pragma endregion
 
-#pragma region 按图搜索-cvmat
+#pragma region 按图搜索-cvmat--通道
 array<HitAlert^>^ FeatureData::Search(cv::Mat& cvImg, short channelID)
 {
 #if USE_EXPIRE

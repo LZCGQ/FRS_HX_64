@@ -48,8 +48,10 @@ namespace FRS {
 	public:
 		HitAlert(){};
 		property String^ QueryFacePath;
-		property Image ^QueryFace;
-		property float ^Threshold;
+		//¼ÇÂ¼¹ì¼£
+		property Int32^ Taskid;
+		property Image^ QueryFace;
+		property float^ Threshold;
 		property DateTime^ OccurTime;
 		property array<HitAlertDetail> ^Details;
 	};
@@ -363,6 +365,7 @@ namespace FRS {
 
 		array<HitAlert^>^ FeatureData::Search(Image^ image);
 		array<HitAlert^>^ FeatureData::Search(Image^ image, short channelID);
+		//array<HitAlert^>^ FeatureData::Search(Image^ image, short channelID, int taskID);
 
 
 		//HitAlert^ SearchBulk(List<Image^>^ imgs, float scoreThresh, float qualityThresh, float faceRectScale, int topk, Int32 maxPersonNum, int detectChannel);

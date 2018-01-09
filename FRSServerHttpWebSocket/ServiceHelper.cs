@@ -33,11 +33,7 @@ namespace FRSServerHttp
            else if (DeviceService.Domain == domain)
            {
                return new DeviceService();
-           }
-           else if (DatasetService.Domain == domain)
-           {
-               return new DatasetService();
-           }
+           }        
            else if (RecordingService.Domain == domain)
            {
                return new RecordingService();

@@ -152,10 +152,13 @@ Class FRS.HitAlert: AutoLayout, AnsiClass, Class, Public, BeforeFieldInit
     System.ValueType OccurTime 'get set' DateTime IsBoxed : 
     System.ValueType Threshold 'get set' Single IsBoxed : 
     System.Drawing.Image QueryFace 'get set' : 
+    System.ValueType Taskid 'get set' Int32 IsBoxed : 
     System.String QueryFacePath 'get set' : 
   Methods:
     get_QueryFacePath(): PrivateScope, Public, HideBySig, SpecialName
     set_QueryFacePath(String): PrivateScope, Public, HideBySig, SpecialName
+    get_Taskid(): PrivateScope, Public, HideBySig, SpecialName
+    set_Taskid(ValueType Int32 IsBoxed): PrivateScope, Public, HideBySig, SpecialName
     get_QueryFace(): PrivateScope, Public, HideBySig, SpecialName
     set_QueryFace(Image): PrivateScope, Public, HideBySig, SpecialName
     get_Threshold(): PrivateScope, Public, HideBySig, SpecialName
