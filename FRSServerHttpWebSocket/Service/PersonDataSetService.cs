@@ -94,12 +94,10 @@ namespace FRSServerHttp.Service
                     RegisterInfo registerInfo = RegisterInfo.CreateInstanceFromJSON(request.PostParams);
                     if (registerInfo != null)
                     {
-                        int DatasetId = Convert.ToInt32(request.RestConvention);
-                        DataAngineSet.Model.person_dataset ds = new DataAngineSet.Model.person_dataset();
-                        ds=bll.GetModel(DatasetId);
+                        int DatasetId = Convert.ToInt32(request.RestConvention);                                           
                         //初始化                   
                         InitFRS();
-                        int num = fa.RegisterInBulk1(registerInfo.Path, ds.id);
+                        int num = fa.RegisterInBulk1(registerInfo.Path, DatasetId);
                         if (num > 0)
                             status = true;
                         Log.Debug(string.Format("共注册{0}人", num));

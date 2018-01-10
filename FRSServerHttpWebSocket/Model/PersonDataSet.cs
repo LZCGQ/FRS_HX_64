@@ -37,7 +37,6 @@ namespace FRSServerHttp.Model
 
     class RegisterInfo
     {
-        public int DatasetId { get; set; }
         public string Path { get; set; }
 
         public static RegisterInfo CreateInstanceFromJSON(string json)
@@ -145,6 +144,7 @@ namespace FRSServerHttp.Model
                 return null;
             }
             PersonDataSet d = new PersonDataSet();
+            d.ID = dt.id;
             d.Name = dt.name;     
             d.Source = dt.source;
             if (dt.create_time != null)
@@ -164,6 +164,7 @@ namespace FRSServerHttp.Model
             for (int i = 0; i < dts.Length; i++)
             {
                 PersonDataSet d = new PersonDataSet();
+                d.ID = dts[i].id;
                 d.Name = dts[i].name;
                 d.Source = dts[i].source;
                 if (dts[i].create_time != null)
@@ -177,6 +178,7 @@ namespace FRSServerHttp.Model
         public person_dataset ToDataAngineModel()
         {
             person_dataset d = new person_dataset();
+            d.id = this.ID;
             d.name = this.Name;
             d.source = this.Source;
             d.create_time = Convert.ToDateTime(this.CreateTime);

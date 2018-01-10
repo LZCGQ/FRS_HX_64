@@ -246,6 +246,14 @@ namespace DataAngineSet.DAL
 				{
 					model.departmentment_id=row["departmentment_id"].ToString();
 				}
+                if (row["longitude"] != null)
+                {
+                    model.longitude = System.Convert.ToDouble(row["longitude"].ToString());
+                }
+                if (row["latitude"] != null)
+                {
+                    model.latitude = System.Convert.ToDouble(row["latitude"].ToString());
+                }
 					//model.longitude=row["longitude"].ToString();
 					//model.latitude=row["latitude"].ToString();
 				if(row["location_type"]!=null)
