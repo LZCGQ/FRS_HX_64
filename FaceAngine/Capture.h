@@ -19,7 +19,9 @@ namespace FRS {
 
 		Capture();
 		Capture(short  channelID);
+		Capture(short  channelID,int taskID);
 		Capture(FeatureData^ featureData, short channelID);
+		Capture(FeatureData^ featureData, short channelID, int taskID);
 		Capture(FeatureData^ featureData);
 		~Capture();
 		!Capture();
@@ -38,7 +40,7 @@ namespace FRS {
 		/** @brief stop Capturing device
 		*	@param deciceId 
 		*/
-		Int32 Start(Int32 deciceId);
+		Int32 Start(Int32 deviceId);
 		
 		/** @brief stop Capturing
 		*
@@ -80,8 +82,6 @@ namespace FRS {
 			}
 		};
 
-		
-
 		property DateTime TimeStart{
 			DateTime get()
 			{
@@ -104,6 +104,21 @@ namespace FRS {
 					channelID = 0;
 				else
 					channelID = value;
+
+			}
+		};
+
+		property Int32 TaskID{
+			Int32 get()
+			{
+				return taskID;
+			}
+			void set(Int32 value)
+			{
+				if (value <= 0)
+					taskID = 0;
+				else
+					taskID = value;
 
 			}
 		};
@@ -165,8 +180,7 @@ namespace FRS {
 //				Threading::Monitor::Exit(collectFaceCount);
 			}
 		};
-		
-		
+			
 		property Int32 MatchFaceCount{
 			Int32 get()
 			{
@@ -179,7 +193,6 @@ namespace FRS {
 //				Threading::Monitor::Exit(matchFaceCount);
 			}
 		};
-
 
 
 		/** @brief callback delegte on Hit
@@ -201,7 +214,6 @@ namespace FRS {
 		* usually be used to show imge
 		*/
 		
-
 		
 		/*event NotHitAlertCallback^ NotHitAlertReturnEvent;*/
 
@@ -284,6 +296,7 @@ namespace FRS {
 		*/
 		String ^videoAddress;
 		Int32 channelID = 1;
+		Int32 taskID = 0;
 
 		Thread ^startThread = nullptr;
 		//开一个线程用来人脸识别

@@ -91,8 +91,6 @@ namespace FRSServerHttp.Service
         bool  Init(int taskID)
         {
 
-
-
             DataAngineSet.Model.surveillance_task task=taskBll.GetModel(taskID);
             if (null == task) { Log.Debug("检索任务失败"); return false; }
             DataAngineSet.Model.device device = deviceBll.GetModel(task.device_id);
@@ -102,6 +100,7 @@ namespace FRSServerHttp.Service
             
             InitFRS();
             fa.LoadData(person_dataset.id);
+            cap.TaskID = taskID;
             cap.HitAlertReturnEvent += new Capture.HitAlertCallback(OnHit);
 
 

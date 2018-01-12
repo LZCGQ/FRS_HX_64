@@ -365,7 +365,7 @@ namespace FRS {
 
 		array<HitAlert^>^ FeatureData::Search(Image^ image);
 		array<HitAlert^>^ FeatureData::Search(Image^ image, short channelID);
-		//array<HitAlert^>^ FeatureData::Search(Image^ image, short channelID, int taskID);
+		array<HitAlert^>^ FeatureData::Search(Image^ image, short channelID, int taskID);
 
 
 		//HitAlert^ SearchBulk(List<Image^>^ imgs, float scoreThresh, float qualityThresh, float faceRectScale, int topk, Int32 maxPersonNum, int detectChannel);
@@ -408,6 +408,7 @@ namespace FRS {
 		*/
 		array<HitAlert^>^ FeatureData::Search(cv::Mat& img_color);
 		array<HitAlert^>^ FeatureData::Search(cv::Mat& img_color, short channelID);
+		array<HitAlert^>^ FeatureData::Search(cv::Mat& img_color, short channelID, int taskID);
 		
 		float FeatureData::Compare(cv::Mat& src_img, cv::Mat& dst_img);
 

@@ -254,6 +254,7 @@ Class FRS.FeatureData: AutoLayout, AnsiClass, Class, Public, BeforeFieldInit
     Unregister(ValueType Int32 IsBoxed): PrivateScope, Public, HideBySig
     Unregister(String): PrivateScope, Public, HideBySig
     LoadData(ValueType Int32 IsBoxed): PrivateScope, Public, HideBySig
+    Search(Image, Int16, Int32): PrivateScope, Public, HideBySig
     Search(Image, Int16): PrivateScope, Public, HideBySig
     Search(Image): PrivateScope, Public, HideBySig
     Search(Byte[]): PrivateScope, Public, HideBySig
@@ -296,7 +297,9 @@ Class FRS.FeatureData+FaceDetectedCallback: AutoLayout, AnsiClass, Class, Nested
     EndInvoke(IAsyncResult): PrivateScope, Public, Final, Virtual, VtableLayoutMask
 Class FRS.Capture: AutoLayout, AnsiClass, Class, Public, BeforeFieldInit
     Void .ctor(FRS.FeatureData): PrivateScope, Public, HideBySig, SpecialName, RTSpecialName
+    Void .ctor(FRS.FeatureData, Int16, Int32): PrivateScope, Public, HideBySig, SpecialName, RTSpecialName
     Void .ctor(FRS.FeatureData, Int16): PrivateScope, Public, HideBySig, SpecialName, RTSpecialName
+    Void .ctor(Int16, Int32): PrivateScope, Public, HideBySig, SpecialName, RTSpecialName
     Void .ctor(Int16): PrivateScope, Public, HideBySig, SpecialName, RTSpecialName
     Void .ctor(): PrivateScope, Public, HideBySig, SpecialName, RTSpecialName
   Interfaces:
@@ -306,6 +309,7 @@ Class FRS.Capture: AutoLayout, AnsiClass, Class, Public, BeforeFieldInit
     Int32 CollectFaceCount 'get set' : 
     Int32 CatchFaceCount 'get set' : 
     System.String VideoAddress 'get set' : 
+    Int32 TaskID 'get set' : 
     Int32 ChannelID 'get set' : 
     System.DateTime TimeStart 'get set' : 
     Int32 Interval 'get set' : 
@@ -336,6 +340,8 @@ Class FRS.Capture: AutoLayout, AnsiClass, Class, Public, BeforeFieldInit
     set_TimeStart(DateTime): PrivateScope, Public, HideBySig, SpecialName
     get_ChannelID(): PrivateScope, Public, HideBySig, SpecialName
     set_ChannelID(Int32): PrivateScope, Public, HideBySig, SpecialName
+    get_TaskID(): PrivateScope, Public, HideBySig, SpecialName
+    set_TaskID(Int32): PrivateScope, Public, HideBySig, SpecialName
     get_VideoAddress(): PrivateScope, Public, HideBySig, SpecialName
     set_VideoAddress(String): PrivateScope, Public, HideBySig, SpecialName
     get_CatchFaceCount(): PrivateScope, Public, HideBySig, SpecialName

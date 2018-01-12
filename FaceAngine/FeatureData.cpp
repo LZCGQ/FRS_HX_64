@@ -787,6 +787,20 @@ array<HitAlert^>^ FeatureData::Search(Image^ image, short channelID)
 }
 #pragma endregion
 
+#pragma region 按图搜索-image--通道--任务ID
+array<HitAlert^>^ FeatureData::Search(Image^ image, short channelID, int taskID)
+{
+#if USE_EXPIRE
+	if (IsExpired()) throw gcnew Exception("software has been expired");;
+#endif
+	if (allUsers == nullptr) return nullptr;
+	System::Drawing::Bitmap ^ _image = safe_cast<System::Drawing::Bitmap ^>(image);
+	cv::Mat cvImg = BitmapConverter::ToMat(_image);
+	return this->Search(cvImg, channelID, taskID);
+
+}
+#pragma endregion
+
 #pragma region 按图搜索-cvmat
 array<HitAlert^>^ FeatureData::Search(cv::Mat& cvImg)
 {
@@ -1250,6 +1264,244 @@ array<HitAlert^>^ FeatureData::Search(cv::Mat& cvImg, short channelID)
 
 }
 #pragma endregion
+
+#pragma region 按图搜索-cvmat--通道--任务ID
+array<HitAlert^>^ FeatureData::Search(cv::Mat& cvImg, short channelID, int taskID)
+{
+#if USE_EXPIRE
+	if (IsExpired()) throw gcnew Exception("software has been expired");;
+#endif
+	if (cvImg.empty() || allUsers == nullptr)
+	{
+		MessageBox::Show("allUsers == nullptr");
+		return nullptr;
+	}
+
+
+	if (cvImg.channels() < 3)
+	{
+		ShowMsgEvent("Over!", nullptr);
+		//throw gcnew ArgumentException("src_image must have more than 3 channel");
+		return nullptr;
+	}
+	//Bitmap ^srcImage = gcnew System::Drawing::Bitmap(cvImg.cols, cvImg.rows, cvImg.step, System::Drawing::Imaging::PixelFormat::Format24bppRgb, (System::IntPtr) cvImg.data);
+	Bitmap ^srcImage = BitmapConverter::ToBitmap(&cvImg);
+
+
+
+	int nWidth = cvImg.cols;
+	int nHeight = cvImg.rows;
+
+	// Detect faces
+
+	THFI_FacePos *faces = new THFI_FacePos[maxPersonNum];
+
+	int face_num = FaceImage::DetectFace(channelID, cvImg.data, 24, cvImg.cols, cvImg.rows, faces, maxPersonNum);
+
+	if (face_num <= 0)
+	{
+		return nullptr;
+	}
+
+#pragma region CS架构主界面下侧显示抓拍人脸
+
+	List < Image^>^ facesimg = gcnew  List<Image^>();
+
+	for (int i = 0; i < MIN(maxPersonNum, face_num); i++)
+	{
+		if (searchFaceQualityThresh > faces[i].nQuality){
+			ShowMsgEvent("searchFaceQualityThresh:" + faces[i].nQuality, nullptr);
+			continue;
+		}
+		if (abs(faces[i].fAngle.yaw) > searchFaceYawThresh || abs(faces[i].fAngle.pitch) > searchFacePitchThresh || abs(faces[i].fAngle.roll) > searchFaceRollThresh)
+		{
+			ShowMsgEvent("angle" + faces[i].fAngle.yaw + ",roll:" + faces[i].fAngle.roll + ",pitch:" + faces[i].fAngle.pitch, nullptr);
+			continue;
+		}
+		if (faces[i].rcFace.bottom - faces[i].rcFace.top < searchFaceHeightThresh || faces[i].rcFace.right - faces[i].rcFace.left < searchFaceWidthThresh)
+		{
+			ShowMsgEvent("size,height:" + (faces[i].rcFace.bottom - faces[i].rcFace.top) + ",width:" + (faces[i].rcFace.bottom - faces[i].rcFace.top), nullptr);
+			continue;
+		}
+
+		System::Drawing::Rectangle retFaceRect = GetScaleFaceRect(nWidth, nHeight, faces[i].rcFace, faceRectScale);
+
+		Image^ imgFace = srcImage->Clone(retFaceRect, srcImage->PixelFormat);
+
+		facesimg->Add(imgFace);
+
+		/*cv::Rect rect(faces[i].rcFace.left, faces[i].rcFace.top, faces[i].rcFace.right - faces[i].rcFace.left, faces[i].rcFace.bottom - faces[i].rcFace.top);
+		cv::Mat faceimg = cvImg(rect);
+		facesimg->Add((Image^)BitmapConverter::ToBitmap(&faceimg));		*/
+
+	}
+
+	if (facesimg->Count > 0)
+		FaceDetectedEvent(facesimg->ToArray());
+#pragma endregion
+
+	//array<HitAlert^>^ resultNoThresh = gcnew array<HitAlert^> (MIN(maxPersonNum, face_num));
+	List<HitAlert^>^ result = gcnew List<HitAlert^>();
+	for (int i = 0; i < MIN(maxPersonNum, face_num); i++)
+	{
+		if (searchFaceQualityThresh > faces[i].nQuality){
+			ShowMsgEvent("searchFaceQualityThresh:" + faces[i].nQuality, nullptr);
+			continue;
+		}
+		if (abs(faces[i].fAngle.yaw) > searchFaceYawThresh || abs(faces[i].fAngle.pitch) > searchFacePitchThresh || abs(faces[i].fAngle.roll) > searchFaceRollThresh)
+		{
+			ShowMsgEvent("angle" + faces[i].fAngle.yaw + ",roll:" + faces[i].fAngle.roll + ",pitch:" + faces[i].fAngle.pitch, nullptr);
+			continue;
+		}
+		if (faces[i].rcFace.bottom - faces[i].rcFace.top < searchFaceHeightThresh || faces[i].rcFace.right - faces[i].rcFace.left < searchFaceWidthThresh)
+		{
+			ShowMsgEvent("size,height:" + (faces[i].rcFace.bottom - faces[i].rcFace.top) + ",width:" + (faces[i].rcFace.bottom - faces[i].rcFace.top), nullptr);
+			continue;
+		}
+
+		HitAlert ^hit = gcnew HitAlert();
+		array<HitAlertDetail>^ details = nullptr;
+
+		/* extract features */
+		BYTE* feats = new BYTE[Feature::Size()];
+		//array<BYTE>^ pFeature = gcnew array<BYTE>(Feature::Size());
+		//only extract the first face(max size face)
+
+		int ret = Feature::Extract(0, cvImg.data, cvImg.cols, cvImg.rows, 3, (THFI_FacePos*)&faces[i], feats);
+
+		details = Search(feats);
+
+		//std::cout << faces[i].bbox.x<<"," << faces[i].bbox.y <<","<< faces[i].bbox.width <<","<< faces[i].bbox.height << std::endl;
+
+		//printf("%d\n", details->Length);
+		System::Drawing::Rectangle retFaceRect = GetScaleFaceRect(nWidth, nHeight, faces[i].rcFace, faceRectScale);
+		Image^ imgFace = srcImage->Clone(retFaceRect, srcImage->PixelFormat);
+
+		//缩放
+		Int32 width = 100;
+		Int32 height = imgFace->Height * 100 / imgFace->Width;
+		Bitmap^ faceBitmap = gcnew Bitmap(width, height);
+		Graphics^ g = Graphics::FromImage(faceBitmap);
+		g->DrawImage(imgFace, System::Drawing::Rectangle(0, 0, width, height), System::Drawing::Rectangle(0, 0, imgFace->Width, imgFace->Height), GraphicsUnit::Pixel);
+
+
+		hit->QueryFace = faceBitmap;
+		hit->OccurTime = DateTime::Now;
+		hit->Details = details;
+		hit->Threshold = scoreThresh;
+		hit->Taskid = taskID;
+		result->Add(hit);
+		SafeDeleteArray(feats);
+	}
+
+
+
+#pragma region 保存至数据库
+	for (int n = 0; n < result->Count; n++){
+		HitAlert ^frsha = result[n];
+		Model::hitalert ^ha = gcnew Model::hitalert();
+		ha->details = gcnew array<Model::hitrecord_detail^>(frsha->Details->Length);
+		String ^savePath = queryFaceDir + System::Guid::NewGuid().ToString() + L".jpg";
+		frsha->QueryFace->Save(savePath);
+
+		frsha->QueryFacePath = savePath;
+
+		ha->hit = gcnew Model::hitrecord();
+		ha->hit->face_query_image_path = savePath;
+		ha->hit->occur_time = DateTime::Now;
+		ha->hit->threshold = (Decimal)scoreThresh;
+		ha->hit->task_id = (Int32)frsha->Taskid;
+
+		for (int i = 0; i < frsha->Details->Length; i++)
+		{
+			Model::hitrecord_detail ^hd = gcnew Model::hitrecord_detail();
+			hd->rank = i;
+			hd->score = (Decimal)(safe_cast<HitAlertDetail^>(frsha->Details[i])->Score);
+			hd->user_id = safe_cast<HitAlertDetail^>(frsha->Details[i])->UserId;
+			ha->details[i] = hd;
+		}
+
+		habll->Add(ha);
+	}
+#pragma endregion
+
+#pragma region 上传至云平台
+	//	int sequenceCode = 0;
+	//	for each(Image^ im in faceImgSet)
+	//	{
+	//		String^ faceFileName = String::Format("{0}_{1}_{2}_face.jpg", cameraCode, DateTime::Now.ToString("yyyy_MM_dd_HH_mm_ss"), sequenceCode);
+	//		//inf4->SendAsync(defenseCode, cameraCode, INF4::SaveImageType::SaveImageType_Normal_Face, faceFileName, ImageHelper::ImageToBytes(im));
+	//	}
+	//	for each(auto hit in result){
+	//		if (nullptr != hit->Details&&hit->Details->Length > 0){
+	//			long sequenceNumber = 0;
+	//			String^ faceFileName = String::Format("{0}_{1}_{2}_alarm_face.jpg", cameraCode, DateTime::Now.ToString("yyyy_MM_dd_HH_mm_ss"), 1);
+	//			//inf4->SendAsync(defenseCode, cameraCode, INF4::SaveImageType::SaveImageType_Alarm_Face, faceFileName, ImageHelper::ImageToBytes(hit->QueryFace));
+	//			String^ captFileName = String::Format("{0}_{1}_{2}_alarm_capt.jpg", cameraCode, DateTime::Now.ToString("yyyy_MM_dd_HH_mm_ss"), 1);
+	//			//inf4->SendAsync(defenseCode, cameraCode, INF4::SaveImageType::SaveImageType_Alarm_CapturedImage, captFileName, ImageHelper::ImageToBytes(faceImgSet[0]));
+	//
+	//			/*inf5->ReportAlarmAsync(
+	//			DateTime::Now.ToString("yyyy-MM-dd HH:mm:ss"),
+	//			captFileName, String::Empty, faceFileName,
+	//			safe_cast<HitAlertDetail>(hit->Details[0]).peopleId,
+	//			safe_cast<HitAlertDetail>(hit->Details[0]).imageId,
+	//			safe_cast<HitAlertDetail>(hit->Details[0]).Score.ToString("F4"));*/
+	//			ShowMsgEvent(
+	//				"capture_Time:" + DateTime::Now.ToString("yyyy-MM-dd HH:mm:ss") +
+	//				" capture_image:" + captFileName +
+	//				" capture_video：" + String::Empty +
+	//				" face_image:" + faceFileName +
+	//				" people_id：" + safe_cast<HitAlertDetail>(hit->Details[0]).peopleId +
+	//				" image_id:" + safe_cast<HitAlertDetail>(hit->Details[0]).imageId +
+	//				" match_degree：" + safe_cast<HitAlertDetail>(hit->Details[0]).Score.ToString("F4"), nullptr);
+	//}
+	//
+	//	}
+#pragma endregion
+
+#pragma region 保存识别数据C版本 
+	//String^ GenDir = "record\\";
+	////std::cout << "Record_hitResult=" << hitResult->Count << std::endl;
+	//for each(auto hit in result){
+	//	if (nullptr != hit->Details&&hit->Details->Length > 0){
+	//		String^ FileName = safe_cast<HitAlertDetail>(hit->Details[0]).peopleId;
+	//		float score = safe_cast<HitAlertDetail>(hit->Details[0]).Score;
+	//		std::string dir = msclr::interop::marshal_as<std::string>(GenDir + FileName);
+	//		std::cout << dir << std::endl;
+	//		if (_access(dir.c_str(), 0)){
+	//			_mkdir(dir.c_str()); /*这是在程序所在当前文件夹下创建*/
+	//		}
+	//		//detect face
+	//		system(("dir /b /s /a-d G:\\新街口\\FRS_new\\FaceAngineNew\\FaceAngine\\" + dir + "\\*.* | find /c \":\" >D:\\nfiles.txt").c_str());
+	//		//读文件d:\\nfiles.txt的内容即d:\\mydir目录下的文件数
+	//		std::ifstream in;
+	//		std::string str;
+	//		in.open("D:\\nfiles.txt");
+	//		if (!in.is_open())
+	//		{
+	//			std::cout << "Error opening file"; exit(1);
+	//		}
+	//		else
+	//		{
+	//			std::copy(std::istream_iterator<unsigned char>(in), std::istream_iterator<unsigned char>(), back_inserter(str));
+	//		}
+	//		std::stringstream ss;
+	//		ss << score;
+	//		std::string t;
+	//		ss >> t;
+	//		cv::imwrite(dir + "\\ptoto_" + str + "_" + t + ".jpg", copy);
+	//	}
+	//}
+#pragma endregion
+	//保存识别数据
+	CollectTrainData(result);
+	System::GC::Collect();
+	SafeDeleteArray(faces);
+	return result->ToArray();
+
+}
+#pragma endregion
+
 
 
 #pragma region 保存识别数据

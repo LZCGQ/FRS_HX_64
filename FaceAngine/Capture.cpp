@@ -35,6 +35,17 @@ Capture::Capture(short channelID)
 	featureData = gcnew FeatureData();
 	this->channelID = channelID;
 }
+
+Capture::Capture(short channelID,int taskID)
+{
+#if USE_EXPIRE
+	if (IsExpired()) return;
+#endif
+	featureData = gcnew FeatureData();
+	this->channelID = channelID; 
+	this->taskID = taskID;
+}
+
 Capture::Capture(FeatureData^ featureData, short channelID)
 {
 #if USE_EXPIRE
@@ -42,6 +53,16 @@ Capture::Capture(FeatureData^ featureData, short channelID)
 #endif
 	this->featureData = featureData;
 	this->channelID = channelID;
+}
+
+Capture::Capture(FeatureData^ featureData, short channelID,int taskID)
+{
+#if USE_EXPIRE
+	if (IsExpired()) return;
+#endif
+	this->featureData = featureData;
+	this->channelID = channelID;
+	this->taskID = taskID;
 }
 
 Capture::Capture(FeatureData^ featureData)
@@ -54,16 +75,13 @@ Capture::Capture(FeatureData^ featureData)
 
 Capture::~Capture()
 {
-	
 	this->!Capture();
 }
-
 
 Capture::!Capture()
 {
 	this->featureData->~FeatureData();
 }
-
 
 Int32 Capture::Start(Int32 deviceId)
 {
@@ -89,6 +107,7 @@ Int32 Capture::Start(Int32 deviceId)
 		return ReturnCode::OPEN_VIDEO_FAILED;
 	}
 }
+
 Int32 Capture::Start()
 {
 	if (videoAddress == nullptr || videoAddress->Trim()->Length == 0)
@@ -97,6 +116,7 @@ Int32 Capture::Start()
 		return Start(videoAddress);
 	}
 }
+
 Int32 Capture::Start(String ^streamAddress)
 {
 	
@@ -123,6 +143,7 @@ Int32 Capture::Start(String ^streamAddress)
 	}
 	
 }
+
 Int32 Capture::Stop()
 {
 	control = false;
@@ -157,7 +178,6 @@ void Capture::Begin(Object^ o)
 #endif
 		return;
 	}
-
 
 	control = true;
 	bool isvideoFile = false;
@@ -246,26 +266,19 @@ void Capture::Begin(Object^ o)
 		ShowMsgEvent("Video Error", nullptr);
 	}
 
-
-
 	if (NULL != cap){
-
 		cap->release();
 		delete cap;
 		cap = NULL;
 	}
 	if (NULL != vp){
-
 		vp->Stop();
 		delete vp;
 		vp = NULL;
 	}
 
-
 	isRun = false;
-
 }
-
 
 Bitmap^  Capture::Retrive()
 {
@@ -323,7 +336,6 @@ bool Capture::SetDataPath(String^ dataPath)
 
 }
 
-
 void Capture::OnSearch(Object^ o)
 {
 	if (o->GetType() != Int32::typeid) return;
@@ -367,7 +379,7 @@ void Capture::OnSearch(Object^ o)
 		//1.61
 		//array<HitAlert^>^ result = featureData->Search(mat);
 		
-		array<HitAlert^>^ result = featureData->Search(mat, channelID);
+		array<HitAlert^>^ result = featureData->Search(mat, channelID, taskID);
 
 		if (nullptr == result)
 		{
@@ -409,7 +421,6 @@ void Capture::OnSearch(Object^ o)
 	}
 }
 
-
 void Capture::CatchFaceImg(Image ^img, int detectChannel)
 {
 	try
@@ -427,7 +438,6 @@ void Capture::CatchFaceImg(Image ^img, int detectChannel)
 	}
 }
 
-
 bool Capture::LocateFaceImg(cv::Mat mat, int detectChannel)
 {
 	bool isLocate = false;
@@ -441,7 +451,6 @@ bool Capture::LocateFaceImg(cv::Mat mat, int detectChannel)
 	
 	return isLocate;
 }
-
 
 void Capture::MatchFaceImg(Object^ o)
 {
