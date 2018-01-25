@@ -11,8 +11,8 @@ namespace FRSServerHttp.Model
     /// </summary>
     class VerifyOneVsOne
     {
-        public byte[] PicSrc { get; set; }
-        public byte[] PicDst { get; set; }
+        public string PicSrc { get; set; }
+        public string PicDst { get; set; }
         public static VerifyOneVsOne CreateInstanceFromJSON(string json)
         {
             VerifyOneVsOne msg = null;
@@ -29,7 +29,7 @@ namespace FRSServerHttp.Model
 
     class VerifyOneVsN
     {
-        public byte[] PicSrc { get; set; }
+        public string PicSrc { get; set; }
         public static VerifyOneVsN CreateInstanceFromJSON(string json)
         {
             VerifyOneVsN msg = null;

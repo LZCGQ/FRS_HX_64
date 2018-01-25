@@ -83,10 +83,74 @@ namespace FaceAngineTest
             return list;
         }
 
+        static void bytetest()
+        {
+            InitFRS();
+            FeatureData fa = new FeatureData();
+            fa.LoadData(1);
+            Bitmap bitmap = new Bitmap("D:\\test.jpg");
+            byte[] b = BitmapToBytes(bitmap);
+            Console.WriteLine(BitConverter.ToString(b));
+           
+            Bitmap Bitmapsrc = BytesToBitmap(b);
+            Bitmapsrc.Save("D:\\test1.jpg");
+            Bitmap bitmaptest = new Bitmap("D:\\test1.jpg");
+            fa.LoadData(2);
+            FRS.HitAlert[] hits = fa.Search(bitmaptest);
+            
+            Console.WriteLine(hits[0].Details[0].Score);
+           
+        }
+
+
+        public static Bitmap BytesToBitmap(byte[] Bytes)
+        {
+            MemoryStream stream = null;
+            try
+            {
+                stream = new MemoryStream(Bytes);
+                return new Bitmap((Image)new Bitmap(stream));
+            }
+            catch (ArgumentNullException ex)
+            {
+                throw ex;
+            }
+            catch (ArgumentException ex)
+            {
+                throw ex;
+            }
+            finally
+            {
+                stream.Close();
+            }
+        }   
+
+
+        public static byte[] BitmapToBytes(Bitmap Bitmap)
+        {
+            MemoryStream ms = null;
+            try
+            {
+                ms = new MemoryStream();
+                Bitmap.Save(ms, Bitmap.RawFormat);
+                byte[] byteImage = new Byte[ms.Length];
+                byteImage = ms.ToArray();
+                return byteImage;
+            }
+            catch (ArgumentNullException ex)
+            {
+                throw ex;
+            }
+            finally
+            {
+                ms.Close();
+            }
+        }  
+
         static void Main(string[] args)
         {
             //RegisterTest();
-            SearchTest();
+            bytetest();
             Console.WriteLine("执行完毕");
             Console.ReadLine();
         }

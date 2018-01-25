@@ -22,7 +22,7 @@ namespace FRSServerHttp.Service
         {
             get
             {
-                return "person-database";
+                return "verify";
             }
         }
 
@@ -43,21 +43,25 @@ namespace FRSServerHttp.Service
 
                 //OneVsOne
                 if (request.RestConvention == "0")
-                {              
+                {
+                    //http://127.0.0.1:8080/v1/person-database/0/verify
                     VerifyOneVsOne verify = VerifyOneVsOne.CreateInstanceFromJSON(request.PostParams);
                     if (verify != null)
                     {
-                       Bitmap Bitmapsrc = BytesToBitmap(verify.PicSrc);
-                       Bitmap Bitmapdst = BytesToBitmap(verify.PicDst);
-                       double score=fa.Compare(Bitmapsrc, Bitmapdst);
+                        Bitmap Bitmapsrc = Base64ToImage(verify.PicSrc);
 
-                       response.SetContent(JsonConvert.SerializeObject(score));
-                        
+                        Bitmap Bitmapdst = Base64ToImage(verify.PicDst);
+                        //Bitmapsrc.Save("Bitmapsrc.jpg");
+                        //Bitmapsrc.Save("Bitmapdst.jpg");
+                        double score = fa.Compare(Bitmapsrc, Bitmapdst);
+
+                        response.SetContent(JsonConvert.SerializeObject(score));
+                        //response.SetContent("0.8");
                     }
 
                 }
                 else
-                {                   
+                {
                     VerifyOneVsN verify = VerifyOneVsN.CreateInstanceFromJSON(request.PostParams);
                     if (verify != null)
                     {
@@ -65,8 +69,8 @@ namespace FRSServerHttp.Service
                         DataAngineSet.Model.person_dataset ds = new DataAngineSet.Model.person_dataset();
                         ds = bll.GetModel(DatasetId);
 
-                        Bitmap Bitmapsrc = BytesToBitmap(verify.PicSrc);
-                        fa.LoadData(ds.id);
+                        Bitmap Bitmapsrc = Base64ToImage(verify.PicSrc);
+                        fa.LoadData(DatasetId);
                         FRS.HitAlert[] hits = fa.Search(Bitmapsrc);
                         string msg = JsonConvert.SerializeObject(Model.HitAlert.CreateInstanceFromFRSHitAlert(hits));
                         response.SetContent(msg);
@@ -76,6 +80,12 @@ namespace FRSServerHttp.Service
             }
             response.Send();
 
+        }
+
+        public static Bitmap Base64ToImage(string base64)
+        {
+            byte[] bytes = Convert.FromBase64String(base64);
+            return BytesToBitmap(bytes);
         }
 
         public static Bitmap BytesToBitmap(byte[] Bytes)
