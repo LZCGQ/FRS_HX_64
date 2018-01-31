@@ -78,6 +78,14 @@ namespace DataAngineSet.BLL
         {
             return dal.DeleteByName(name);
         }
+
+        /// <summary>
+        /// 删除一条数据
+        /// </summary>
+        public bool DeleteByName(string name, string libraryid)
+        {
+            return dal.DeleteByName(name, libraryid);
+        }
 		/// <summary>
 		/// 删除一条数据
 		/// </summary>

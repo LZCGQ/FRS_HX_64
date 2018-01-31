@@ -46,6 +46,10 @@ namespace FRSServerHttp
            {
                return new VerifyingService();
            }
+           else if (PersonService.Domain == domain)
+           {
+               return new PersonService();
+           }
            
            return null;
        }

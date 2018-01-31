@@ -53,6 +53,27 @@ namespace FRSServerHttp.Model
         }
     }
 
+    class RegisterSingleInfo
+    {
+        public string Path { get; set; }
+        public string Name { get; set; }
+        public string Gender { get; set; }
+        public string CardId { get; set; }
+
+        public static RegisterSingleInfo CreateInstanceFromJSON(string json)
+        {
+            RegisterSingleInfo msg = null;
+            try
+            {
+                msg = (RegisterSingleInfo)JsonConvert.DeserializeObject(json, typeof(RegisterSingleInfo));
+            }
+            catch
+            {
+            }
+            return msg;
+        }
+    }
+
     class ViewInfo
     {
         public int StartIndex { get; set; }
@@ -81,6 +102,20 @@ namespace FRSServerHttp.Model
         public string card_id { get; set; }
         public string image_id { get; set; }
         public string face_image_path { get; set; }
+
+
+        public static PersonData CreateInstanceFromJSON(string json)
+        {
+            PersonData msg = null;
+            try
+            {
+                msg = (PersonData)JsonConvert.DeserializeObject(json, typeof(PersonData));
+            }
+            catch
+            {
+            }
+            return msg;
+        }
 
         public static PersonData[] CreateInstanceFromDataAngineDataSet(DataSet ds)
         {

@@ -18,6 +18,7 @@ namespace FRSServerHttp.Service
     class VerifyingService : BaseService
     {
         person_dataset bll = new person_dataset();
+        
         public static string Domain
         {
             get
@@ -29,6 +30,7 @@ namespace FRSServerHttp.Service
 
         public override void OnGet(HttpRequest request, HttpResponse response)
         {
+            //Log.Debug("比较图片");
         }
 
         /// <summary>
@@ -37,47 +39,63 @@ namespace FRSServerHttp.Service
         public override void OnPost(HttpRequest request, HttpResponse response)
         {
             bool status = false;
-            if (request.Operation == "verify")//添加一条数据
+
+            Log.Debug("比较图片");
+
+            //OneVsOne
+            if (request.RestConvention == "0")
             {
-                Log.Debug("比较图片");
-
-                //OneVsOne
-                if (request.RestConvention == "0")
+                //http://127.0.0.1:8080/v1/verify/0
+                VerifyOneVsOne verify = VerifyOneVsOne.CreateInstanceFromJSON(request.PostParams);
+                if (verify != null)
                 {
-                    //http://127.0.0.1:8080/v1/person-database/0/verify
-                    VerifyOneVsOne verify = VerifyOneVsOne.CreateInstanceFromJSON(request.PostParams);
-                    if (verify != null)
-                    {
-                        Bitmap Bitmapsrc = Base64ToImage(verify.PicSrc);
+                    Bitmap Bitmapsrc = Base64ToImage(verify.PicSrc);
+                    Bitmap Bitmapdst = Base64ToImage(verify.PicDst);
 
-                        Bitmap Bitmapdst = Base64ToImage(verify.PicDst);
-                        //Bitmapsrc.Save("Bitmapsrc.jpg");
-                        //Bitmapsrc.Save("Bitmapdst.jpg");
-                        double score = fa.Compare(Bitmapsrc, Bitmapdst);
+                    Bitmap bmpsrc = new Bitmap(Bitmapsrc.Width, Bitmapsrc.Height, System.Drawing.Imaging.PixelFormat.Format24bppRgb);
+                    Graphics.FromImage(bmpsrc).DrawImage(Bitmapsrc, new Rectangle(0, 0, bmpsrc.Width, bmpsrc.Height));
 
-                        response.SetContent(JsonConvert.SerializeObject(score));
-                        //response.SetContent("0.8");
-                    }
+                    Bitmap bmpdst = new Bitmap(Bitmapdst.Width, Bitmapdst.Height, System.Drawing.Imaging.PixelFormat.Format24bppRgb);
+                    Graphics.FromImage(bmpdst).DrawImage(Bitmapdst, new Rectangle(0, 0, bmpdst.Width, bmpdst.Height));
 
-                }
-                else
-                {
-                    VerifyOneVsN verify = VerifyOneVsN.CreateInstanceFromJSON(request.PostParams);
-                    if (verify != null)
-                    {
-                        int DatasetId = Convert.ToInt32(request.RestConvention);
-                        DataAngineSet.Model.person_dataset ds = new DataAngineSet.Model.person_dataset();
-                        ds = bll.GetModel(DatasetId);
+                    Bitmapsrc.Save("Bitmapsrc.jpg");
+                    Bitmapdst.Save("Bitmapdst.jpg");
+               
+                    //初始化                   
+                    InitFRS();
+                    double score = fa.Compare(Bitmapsrc, bmpdst);
 
-                        Bitmap Bitmapsrc = Base64ToImage(verify.PicSrc);
-                        fa.LoadData(DatasetId);
-                        FRS.HitAlert[] hits = fa.Search(Bitmapsrc);
-                        string msg = JsonConvert.SerializeObject(Model.HitAlert.CreateInstanceFromFRSHitAlert(hits));
-                        response.SetContent(msg);
-                    }
+                    response.SetContent(JsonConvert.SerializeObject(score));
+                    //response.SetContent("0.8");
+                    bmpsrc.Dispose();
+                    bmpdst.Dispose();
                 }
 
             }
+            else
+            {
+                VerifyOneVsN verify = VerifyOneVsN.CreateInstanceFromJSON(request.PostParams);
+                if (verify != null)
+                {
+                    int DatasetId = Convert.ToInt32(request.RestConvention);
+                    DataAngineSet.Model.person_dataset ds = new DataAngineSet.Model.person_dataset();
+                    ds = bll.GetModel(DatasetId);
+
+                    Bitmap Bitmapsrc = Base64ToImage(verify.PicSrc);
+                    Bitmap bmpsrc = new Bitmap(Bitmapsrc.Width, Bitmapsrc.Height, System.Drawing.Imaging.PixelFormat.Format24bppRgb);
+                    Graphics.FromImage(bmpsrc).DrawImage(Bitmapsrc, new Rectangle(0, 0, bmpsrc.Width, bmpsrc.Height));
+                    Bitmapsrc.Save("Bitmapsrc.jpg");
+                    //初始化                   
+                    InitFRS();
+                    fa.LoadData(DatasetId);
+                    FRS.HitAlert[] hits = fa.Search(bmpsrc);
+                    string msg = JsonConvert.SerializeObject(Model.HitAlert.CreateInstanceFromFRSHitAlert(hits));
+                    response.SetContent(msg);
+                    bmpsrc.Dispose();
+                }
+            }
+
+
             response.Send();
 
         }
@@ -108,7 +126,7 @@ namespace FRSServerHttp.Service
             {
                 stream.Close();
             }
-        }   
-  
+        }
+
     }
 }

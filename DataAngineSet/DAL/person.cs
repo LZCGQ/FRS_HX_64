@@ -215,6 +215,34 @@ namespace DataAngineSet.DAL
                 return false;
             }
         }
+        /// <summary>
+        /// 按名字删除库id删除
+        /// </summary>
+        /// <param name="name"></param>
+        /// <returns></returns>
+        public bool DeleteByName(string name, string libraryid)
+        {
+
+            StringBuilder strSql = new StringBuilder();
+            strSql.Append("delete from person ");
+            strSql.Append(" where name=@name and person_dataset_id=@libraryid");
+            MySqlParameter[] parameters = {
+					new MySqlParameter("@name", MySqlDbType.String),
+                    new MySqlParameter("@libraryid", MySqlDbType.String)
+			};
+            parameters[0].Value = name;
+            parameters[1].Value = libraryid;
+
+            int rows = DbHelperMySQL.ExecuteSql(strSql.ToString(), parameters);
+            if (rows > 0)
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
 		/// <summary>
 		/// 批量删除数据
 		/// </summary>

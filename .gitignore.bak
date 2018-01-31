@@ -9,6 +9,7 @@
 feadb.db10
 feadb.db20
 feadb.db30
+feadb.db40
 CHCTest/obj/
 CHCTest/bin/
 *.suo
@@ -47,7 +48,10 @@ TestFaceAgine/bin/
 x64/
 FRSServer/obj/
 FRSServer/bin/
+FRSServerHttp/obj/
+FRSServerHttp/bin/
 Release/Logs/
 INF/Debug/
 INF/Release/
+Release/FileCHC/
 

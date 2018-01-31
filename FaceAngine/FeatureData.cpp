@@ -1796,7 +1796,7 @@ float FeatureData::Compare(cv::Mat& src_img, cv::Mat& dst_img)
 #if USE_EXPIRE
 	if (IsExpired()) throw gcnew Exception("software has been expired");;
 #endif
-	if (src_img.channels() < 3 || dst_img.channels() < 3)
+	if (src_img.channels() != 3 || dst_img.channels() != 3)
 	{
 		ShowMsgEvent("Picture Error!", nullptr);
 		//throw gcnew ArgumentException("src_image must have more than 3 channel");

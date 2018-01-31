@@ -84,23 +84,17 @@ namespace FRSServerHttp.Service
                         //Log.Debug(string.Format("共注册{0}人", num));
                     }
                 }
+                response.SetContent(status.ToString());
 
             }
             else
             {
                 if (request.Operation == "update")//更新
                 {
-                    Log.Debug("更新一个人员库");
-                    RegisterInfo registerInfo = RegisterInfo.CreateInstanceFromJSON(request.PostParams);
-                    if (registerInfo != null)
+                    PersonDataSet persondataset = PersonDataSet.CreateInstanceFromJSON(request.PostParams);
+                    if (null != persondataset)
                     {
-                        int DatasetId = Convert.ToInt32(request.RestConvention);                                           
-                        //初始化                   
-                        InitFRS();
-                        int num = fa.RegisterInBulk1(registerInfo.Path, DatasetId);
-                        if (num > 0)
-                            status = true;
-                        Log.Debug(string.Format("共注册{0}人", num));
+                        status = bll.Update(persondataset.ToDataAngineModel());
                     }
                     response.SetContent(status.ToString());
                 }
@@ -120,18 +114,6 @@ namespace FRSServerHttp.Service
                     status = bll.Delete(id);
                     //删除设备
                     response.SetContent(status.ToString());
-                }
-                else if (request.Operation == "view")//查看
-                {
-                    Log.Debug("更新一个人员库");
-                    ViewInfo viewinfo = ViewInfo.CreateInstanceFromJSON(request.PostParams);
-                    if (viewinfo != null)
-                    {
-                        int DatasetId = Convert.ToInt32(request.RestConvention);
-                        PersonData[] users = PersonData.CreateInstanceFromDataAngineDataSet(personbll.GetList(viewinfo.StartIndex, viewinfo.PageSize, DatasetId.ToString()));
-
-                        response.SetContent(JsonConvert.SerializeObject(users));
-                    }
                 }
             }
             response.Send();
