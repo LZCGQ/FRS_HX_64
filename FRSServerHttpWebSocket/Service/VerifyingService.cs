@@ -81,6 +81,10 @@ namespace FRSServerHttp.Service
                     DataAngineSet.Model.person_dataset ds = new DataAngineSet.Model.person_dataset();
                     ds = bll.GetModel(DatasetId);
 
+                    // 获取Post的阈值和top值
+                    double ScoreThresh = Convert.ToDouble(verify.ScoreThresh);
+                    int TopK = Convert.ToInt32(verify.TopK);
+
                     Bitmap Bitmapsrc = Base64ToImage(verify.PicSrc);
                     Bitmap bmpsrc = new Bitmap(Bitmapsrc.Width, Bitmapsrc.Height, System.Drawing.Imaging.PixelFormat.Format24bppRgb);
                     Graphics.FromImage(bmpsrc).DrawImage(Bitmapsrc, new Rectangle(0, 0, bmpsrc.Width, bmpsrc.Height));
@@ -88,6 +92,17 @@ namespace FRSServerHttp.Service
                     //初始化                   
                     InitFRS();
                     fa.LoadData(DatasetId);
+
+                    Log.Debug(string.Format("初始阈值:{0}", fa.ScoreThresh));
+                    Log.Debug(string.Format("初始top值:{0}", fa.TopK));
+
+                    // 设置阈值和top值
+                    fa.ScoreThresh = (float)ScoreThresh;
+                    fa.TopK = TopK;
+
+                    Log.Debug(string.Format("设置阈值:{0}", fa.ScoreThresh));
+                    Log.Debug(string.Format("设置top值:{0}", fa.TopK));
+
                     FRS.HitAlert[] hits = fa.Search(bmpsrc);
                     string msg = JsonConvert.SerializeObject(Model.HitAlert.CreateInstanceFromFRSHitAlert(hits));
                     response.SetContent(msg);

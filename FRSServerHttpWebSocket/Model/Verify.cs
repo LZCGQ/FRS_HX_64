@@ -30,6 +30,8 @@ namespace FRSServerHttp.Model
     class VerifyOneVsN
     {
         public string PicSrc { get; set; }
+        public string ScoreThresh { get; set; }
+        public string TopK { get; set; }
         public static VerifyOneVsN CreateInstanceFromJSON(string json)
         {
             VerifyOneVsN msg = null;
