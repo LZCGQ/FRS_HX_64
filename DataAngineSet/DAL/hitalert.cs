@@ -102,6 +102,18 @@ namespace DataAngineSet.DAL
 
         }
 
+        /// <summary>
+        /// 获得数据列表
+        /// </summary>
+        public DataSet GetList(int userId)
+        {
+            StringBuilder strSql = new StringBuilder();
+            strSql.Append("select * ");
+            strSql.Append("from hitalert ");
+            strSql.Append("where user_id = " + userId);
+            strSql.Append("order by occur_time asc");
+            return DbHelperMySQL.Query(strSql.ToString());
+        }
 
         /// <summary>
         /// 获得数据列表

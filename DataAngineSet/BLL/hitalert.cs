@@ -152,7 +152,13 @@ namespace DataAngineSet.BLL
         {
             string strWhere = string.Format("occur_time between '{0}' and '{1}'", startTime.ToString("yyyy-MM-dd HH:mm:ss"), endTime.ToString("yyyy-MM-dd HH:mm:ss"));
             return dal.GetList(strWhere, startIndex, pageSize, libraryid);
-        }  
+        }
+
+        //匹配人员查询
+        public DataSet GetListById(int userId)
+        {
+            return dal.GetList(userId);
+        }
         
 		#endregion  ExtensionMethod
 	}
