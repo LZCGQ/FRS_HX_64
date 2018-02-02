@@ -1800,6 +1800,7 @@ float FeatureData::Compare(cv::Mat& src_img, cv::Mat& dst_img)
 	{
 		ShowMsgEvent("Picture Error!", nullptr);
 		//throw gcnew ArgumentException("src_image must have more than 3 channel");
+		//cout << src_img.channels() << "," << dst_img.channels() << endl;
 		return 0;
 	}
 	//Bitmap ^srcImage = gcnew System::Drawing::Bitmap(cvImg.cols, cvImg.rows, cvImg.step, System::Drawing::Imaging::PixelFormat::Format24bppRgb, (System::IntPtr) cvImg.data);

@@ -63,7 +63,7 @@ namespace FRSServerHttp.Service
                
                     //初始化                   
                     InitFRS();
-                    double score = fa.Compare(Bitmapsrc, bmpdst);
+                    double score = fa.Compare(bmpsrc, bmpdst);
 
                     response.SetContent(JsonConvert.SerializeObject(score));
                     //response.SetContent("0.8");
