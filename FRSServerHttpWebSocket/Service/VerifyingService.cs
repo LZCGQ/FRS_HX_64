@@ -58,8 +58,8 @@ namespace FRSServerHttp.Service
                     Bitmap bmpdst = new Bitmap(Bitmapdst.Width, Bitmapdst.Height, System.Drawing.Imaging.PixelFormat.Format24bppRgb);
                     Graphics.FromImage(bmpdst).DrawImage(Bitmapdst, new Rectangle(0, 0, bmpdst.Width, bmpdst.Height));
 
-                    Bitmapsrc.Save("Bitmapsrc.jpg");
-                    Bitmapdst.Save("Bitmapdst.jpg");
+                    //Bitmapsrc.Save("Bitmapsrc.jpg");
+                    //Bitmapdst.Save("Bitmapdst.jpg");
                
                     //初始化                   
                     InitFRS();
@@ -88,7 +88,7 @@ namespace FRSServerHttp.Service
                     Bitmap Bitmapsrc = Base64ToImage(verify.PicSrc);
                     Bitmap bmpsrc = new Bitmap(Bitmapsrc.Width, Bitmapsrc.Height, System.Drawing.Imaging.PixelFormat.Format24bppRgb);
                     Graphics.FromImage(bmpsrc).DrawImage(Bitmapsrc, new Rectangle(0, 0, bmpsrc.Width, bmpsrc.Height));
-                    Bitmapsrc.Save("Bitmapsrc.jpg");
+                    //Bitmapsrc.Save("Bitmapsrc.jpg");
                     //初始化                   
                     InitFRS();
                     fa.LoadData(DatasetId);
