@@ -118,6 +118,24 @@ namespace DataAngineSet.DAL
         /// <summary>
         /// 获得数据列表
         /// </summary>
+        public DataSet GetListById(string strWhere, int userId)
+        {
+            StringBuilder strSql = new StringBuilder();
+            strSql.Append("select * ");
+            strSql.Append("from hitalert ");
+            strSql.Append(" LEFT JOIN surveillance_task ON hitalert.task_id = surveillance_task.id ");
+            if (strWhere.Trim() != "")
+            {
+                strSql.Append(" where " + strWhere);
+                strSql.Append(" and user_id = " + userId);
+            }
+            strSql.Append(" order by occur_time asc");
+            return DbHelperMySQL.Query(strSql.ToString());
+        }
+
+        /// <summary>
+        /// 获得数据列表
+        /// </summary>
         public DataSet GetList(string strWhere)
         {
             StringBuilder strSql = new StringBuilder();

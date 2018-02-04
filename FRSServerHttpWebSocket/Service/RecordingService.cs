@@ -65,7 +65,18 @@ namespace FRSServerHttp.Service
                 //     response.SetContent(JsonConvert.SerializeObject(ha));
                    
                 //}          
-            }           
+            }
+            else
+            {
+                Log.Debug("轨迹查询");
+
+                Trajectory_Search trajectory_search = Trajectory_Search.CreateInstanceFromJSON(request.PostParams);
+                if (trajectory_search != null)
+                {
+                    HitAlertData_Trajectory_Search[] ha = HitAlertData_Trajectory_Search.CreateInstanceFromDataAngineDataSet(bll.GetListById(trajectory_search.UserId, trajectory_search.StartTime, trajectory_search.EndTime));
+                    response.SetContent(JsonConvert.SerializeObject(ha));
+                }
+            }
             response.Send();
         }
         /// <summary>

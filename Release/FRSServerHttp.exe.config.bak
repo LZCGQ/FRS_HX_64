@@ -1,11 +1,11 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <configuration>
     <startup> 
         <supportedRuntime version="v4.0" sku=".NETFramework,Version=v4.0"/>
     </startup>
 
   <appSettings>
-    <add key="ConnectionStringMySQL" value="server=127.0.0.1;database=frsdb;uid=root;pwd=123456"/>
+    <add key="ConnectionStringMySQL" value="server=127.0.0.1;database=frsdb;uid=root;pwd=941205"/>
     <add key="ConStringEncrypt" value="false"/>
 
     <!--同时支持的视频路数-->
@@ -36,10 +36,10 @@
     <!--注册时人脸高度阈值-->
     <add key="RegisterFaceHeightThresh" value="80"/>
     <!--注册时人脸角度阈值-->
-    <add key="RegisterFaceYawThresh" value="10"/>
-    <add key="RegisterFaceRollThresh" value="11"/>
-    <add key="RegisterFacePitchThresh" value="12"/>
-    <add key="RegisterFaceQualityThresh" value="20"/>
+    <add key="RegisterFaceYawThresh" value="15"/>
+    <add key="RegisterFaceRollThresh" value="15"/>
+    <add key="RegisterFacePitchThresh" value="15"/>
+    <add key="RegisterFaceQualityThresh" value="30"/>
 
   </appSettings>
 </configuration>
