@@ -334,6 +334,24 @@ namespace DataAngineSet.DAL
 			return DbHelperMySQL.Query(strSql.ToString());
 		}
 
+
+        /// <summary>
+        /// 分页获得数据列表
+        /// </summary>
+        public DataSet GetList(int startIndex, int pageSize, string strWhere)
+        {
+            StringBuilder strSql = new StringBuilder();
+            strSql.Append("select * ");
+            strSql.Append(" FROM device ");
+            if (strWhere.Trim() != "")
+            {
+                strSql.Append(" where " + strWhere);
+            }
+            strSql.Append(" limit " + startIndex + ", " + pageSize);
+
+            return DbHelperMySQL.Query(strSql.ToString());
+        }
+
 		/*
 		/// <summary>
 		/// 分页获取数据列表

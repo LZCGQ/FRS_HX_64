@@ -35,6 +35,26 @@ namespace FRSServerHttp.Model
 
     }
 
+    class SearchInfo_PersonDateSet
+    {
+        public int StartIndex { get; set; }
+        public int PageSize { get; set; }
+
+        public static SearchInfo_PersonDateSet CreateInstanceFromJSON(string json)
+        {
+            SearchInfo_PersonDateSet msg = null;
+            try
+            {
+                msg = (SearchInfo_PersonDateSet)JsonConvert.DeserializeObject(json, typeof(SearchInfo_PersonDateSet));
+            }
+            catch
+            {
+            }
+            return msg;
+        }
+
+    }
+
     class RegisterInfo
     {
         public string Path { get; set; }

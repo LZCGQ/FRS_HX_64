@@ -138,7 +138,7 @@ namespace DataAngineSet.BLL
 		public DataSet GetAllList()
 		{
 			return GetList("");
-		}
+		}       
 
 		/// <summary>
 		/// 分页获取数据列表
@@ -157,10 +157,10 @@ namespace DataAngineSet.BLL
 		/// <summary>
 		/// 分页获取数据列表
 		/// </summary>
-		//public DataSet GetList(int PageSize,int PageIndex,string strWhere)
-		//{
-			//return dal.GetList(PageSize,PageIndex,strWhere);
-		//}
+        public DataSet GetAllList(int startIndex, int pageSize, string strWhere)
+        {
+            return dal.GetList(startIndex, pageSize, strWhere);
+        }
 
 		#endregion  BasicMethod
 		#region  ExtensionMethod

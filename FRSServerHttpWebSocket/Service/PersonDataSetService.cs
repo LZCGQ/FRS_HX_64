@@ -46,7 +46,6 @@ namespace FRSServerHttp.Service
             }
             else if (request.Domain != string.Empty)
             {
-
                 Log.Debug(string.Format("返回所有库信息"));
                 List<DataAngineSet.Model.person_dataset> datasets = bll.DataTableToList(bll.GetAllList().Tables[0]);
                 response.SetContent(JsonConvert.SerializeObject(PersonDataSet.CreateInstanceFromDataAngineModel(datasets.ToArray())));
@@ -114,6 +113,16 @@ namespace FRSServerHttp.Service
                     status = bll.Delete(id);
                     //删除设备
                     response.SetContent(status.ToString());
+                }
+                else if (request.Operation == "list")
+                {
+                    Log.Debug(string.Format("返回所有库信息"));
+                    SearchInfo_PersonDateSet searchinfo = SearchInfo_PersonDateSet.CreateInstanceFromJSON(request.PostParams);
+                    if (searchinfo != null)
+                    {
+                        List<DataAngineSet.Model.person_dataset> datasets = bll.DataTableToList(bll.GetAllList(searchinfo.StartIndex, searchinfo.PageSize, "").Tables[0]);
+                        response.SetContent(JsonConvert.SerializeObject(PersonDataSet.CreateInstanceFromDataAngineModel(datasets.ToArray())));
+                    }
                 }
             }
             response.Send();

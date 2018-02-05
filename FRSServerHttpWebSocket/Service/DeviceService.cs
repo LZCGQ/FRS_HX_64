@@ -60,7 +60,6 @@ namespace FRSServerHttp.Service
             }
             else if (request.Domain != string.Empty)
             {
-                
                 Log.Debug(string.Format("返回所有设备信息"));
                 List<DataAngineSet.Model.device> devices = bll.DataTableToList(bll.GetAllList().Tables[0]);
                 response.SetContent(JsonConvert.SerializeObject(Device.CreateInstanceFromDataAngineModel(devices.ToArray())));
@@ -95,6 +94,7 @@ namespace FRSServerHttp.Service
                     {
                         status = bll.Update(device.ToDataAngineModel());
                     }
+                    response.SetContent(status.ToString());
                 }
                 else if (request.Operation == "delete")//删除
                 {
@@ -110,10 +110,21 @@ namespace FRSServerHttp.Service
 
                     }
                     status = bll.Delete(id);
+                    response.SetContent(status.ToString());
                     //删除设备
                 }
+                else if (request.Operation == "list")
+                {
+                    Log.Debug(string.Format("返回所有设备信息"));
+                    SearchInfo_Device searchinfo = SearchInfo_Device.CreateInstanceFromJSON(request.PostParams);
+                    if (searchinfo != null)
+                    {
+                        List<DataAngineSet.Model.device> devices = bll.DataTableToList(bll.GetAllList(searchinfo.StartIndex, searchinfo.PageSize, "").Tables[0]);
+                        response.SetContent(JsonConvert.SerializeObject(Device.CreateInstanceFromDataAngineModel(devices.ToArray())));
+                    }
+                }
             }
-            response.SetContent(status.ToString());
+            
             response.Send();
 
         }

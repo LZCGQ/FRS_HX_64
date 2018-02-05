@@ -9,6 +9,26 @@ using DataAngineSet.Model;
 namespace FRSServerHttp.Model
 {
 
+    class SearchInfo_Device
+    {
+        public int StartIndex { get; set; }
+        public int PageSize { get; set; }
+
+        public static SearchInfo_Device CreateInstanceFromJSON(string json)
+        {
+            SearchInfo_Device msg = null;
+            try
+            {
+                msg = (SearchInfo_Device)JsonConvert.DeserializeObject(json, typeof(SearchInfo_Device));
+            }
+            catch
+            {
+            }
+            return msg;
+        }
+
+    }
+
     /// <summary>
     /// 摄像地址
     /// </summary>
