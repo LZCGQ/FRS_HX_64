@@ -40,11 +40,10 @@ namespace FRSServerHttp.Service
         {
             bool status = false;
 
-            Log.Debug("比较图片");
-
             //OneVsOne
             if (request.RestConvention == "0")
             {
+                Log.Debug("比较图片");
                 //http://127.0.0.1:8080/v1/verify/0
                 VerifyOneVsOne verify = VerifyOneVsOne.CreateInstanceFromJSON(request.PostParams);
                 if (verify != null)
@@ -74,6 +73,7 @@ namespace FRSServerHttp.Service
             }
             else
             {
+                Log.Debug("查找图片");
                 VerifyOneVsN verify = VerifyOneVsN.CreateInstanceFromJSON(request.PostParams);
                 if (verify != null)
                 {
