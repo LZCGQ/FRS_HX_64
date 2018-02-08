@@ -173,6 +173,12 @@ namespace DataAngineSet.BLL
 			return GetList("");
 		}
 
+
+        public DataSet GetList_Library(string libraryid)
+        {
+            return dal.GetList(libraryid);
+        }
+
 		/// <summary>
 		/// 分页获取数据列表
 		/// </summary>

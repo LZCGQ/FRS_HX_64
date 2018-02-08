@@ -105,10 +105,11 @@ namespace FRSServerHttp.Service
                 ViewInfo viewinfo = ViewInfo.CreateInstanceFromJSON(request.PostParams);
                 if (viewinfo != null)
                 {
+                    
                     int DatasetId = Convert.ToInt32(request.RestConvention);
+                    int num = personbll.DataTableToList(personbll.GetList_Library(DatasetId.ToString()).Tables[0]).Count;
                     PersonData[] users = PersonData.CreateInstanceFromDataAngineDataSet(personbll.GetList(viewinfo.StartIndex, viewinfo.PageSize, DatasetId.ToString()));
-
-                    response.SetContent(JsonConvert.SerializeObject(users));
+                    response.SetContent("PersonNum:" + num + "," + JsonConvert.SerializeObject(users));
                 }
             }
 
