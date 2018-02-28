@@ -120,9 +120,9 @@ namespace FRSServerHttp.Service
                     SearchInfo_PersonDateSet searchinfo = SearchInfo_PersonDateSet.CreateInstanceFromJSON(request.PostParams);
                     if (searchinfo != null)
                     {
-                        int num = bll.DataTableToList(bll.GetAllList().Tables[0]).Count;
+                        //int num = bll.DataTableToList(bll.GetAllList().Tables[0]).Count;
                         List<DataAngineSet.Model.person_dataset> datasets = bll.DataTableToList(bll.GetAllList(searchinfo.StartIndex, searchinfo.PageSize, "").Tables[0]);
-                        response.SetContent("PersonDataSetNum:" + num + "," + JsonConvert.SerializeObject(PersonDataSet.CreateInstanceFromDataAngineModel(datasets.ToArray())));
+                        response.SetContent(JsonConvert.SerializeObject(PersonDataSet.CreateInstanceFromDataAngineModel(datasets.ToArray())));
                     }
                 }
             }

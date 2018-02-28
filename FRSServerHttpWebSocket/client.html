@@ -23,7 +23,7 @@ function connect()
         }
         webSocket.onmessage = function(msg)
         {
-		   // message.innerHTML +="<p>接收信息：" + msg.data + "</p>";
+		    message.innerHTML +="<p>接收信息：" + msg.data + "</p>";
 		    var imageLive = document.getElementById("imageLive");  
 			var imageCan = document.getElementById("imageCan");  			
 			var hitalerts = JSON.parse(msg.data);

@@ -63,7 +63,7 @@ namespace FRSServerHttp.Service
                     //初始化                   
                     InitFRS();
                     double score = fa.Compare(bmpsrc, bmpdst);
-
+                    Log.Debug(string.Format("相似度:{0}", score));
                     response.SetContent(JsonConvert.SerializeObject(score));
                     //response.SetContent("0.8");
                     bmpsrc.Dispose();
@@ -84,6 +84,11 @@ namespace FRSServerHttp.Service
                     // 获取Post的阈值和top值
                     double ScoreThresh = Convert.ToDouble(verify.ScoreThresh);
                     int TopK = Convert.ToInt32(verify.TopK);
+
+                    if (ScoreThresh == 0)
+                        ScoreThresh = 0.6;
+                    if (TopK == 0)
+                        TopK = 3;
 
                     Bitmap Bitmapsrc = Base64ToImage(verify.PicSrc);
                     Bitmap bmpsrc = new Bitmap(Bitmapsrc.Width, Bitmapsrc.Height, System.Drawing.Imaging.PixelFormat.Format24bppRgb);

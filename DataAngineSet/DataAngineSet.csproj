@@ -87,6 +87,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="BLL\device.cs" />
+    <Compile Include="BLL\device_placetype.cs" />
     <Compile Include="BLL\hitalert.cs" />
     <Compile Include="BLL\hitrecord.cs" />
     <Compile Include="BLL\hitrecord_detail.cs" />
@@ -94,7 +95,9 @@
     <Compile Include="BLL\person_dataset.cs" />
     <Compile Include="BLL\statistics.cs" />
     <Compile Include="BLL\surveillance_task.cs" />
+    <Compile Include="BLL\surveillance_task_type.cs" />
     <Compile Include="DAL\device.cs" />
+    <Compile Include="DAL\device_placetype.cs" />
     <Compile Include="DAL\hitalert.cs" />
     <Compile Include="DAL\hitrecord.cs" />
     <Compile Include="DAL\hitrecord_detail.cs" />
@@ -102,6 +105,7 @@
     <Compile Include="DAL\person_dataset.cs" />
     <Compile Include="DAL\statistics.cs" />
     <Compile Include="DAL\surveillance_task.cs" />
+    <Compile Include="DAL\surveillance_task_type.cs" />
     <Compile Include="DBUtility\CommandInfo.cs" />
     <Compile Include="DBUtility\DbHelperMySQL.cs" />
     <Compile Include="DBUtility\DbHelperOleDb.cs" />
@@ -114,6 +118,7 @@
     <Compile Include="DBUtility\SQLHelper.cs" />
     <Compile Include="DBUtility\TypeConverter.cs" />
     <Compile Include="Model\device.cs" />
+    <Compile Include="Model\device_placetype.cs" />
     <Compile Include="Model\hitalert.cs" />
     <Compile Include="Model\hitrecord.cs" />
     <Compile Include="Model\hitrecord_detail.cs" />
@@ -121,6 +126,7 @@
     <Compile Include="Model\person_dataset.cs" />
     <Compile Include="Model\statistics.cs" />
     <Compile Include="Model\surveillance_task.cs" />
+    <Compile Include="Model\surveillance_task_type.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup />

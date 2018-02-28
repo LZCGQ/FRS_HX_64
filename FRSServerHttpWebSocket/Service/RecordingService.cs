@@ -48,9 +48,9 @@ namespace FRSServerHttp.Service
                 {
                     DataAngineSet.Model.person_dataset ds = new DataAngineSet.Model.person_dataset();
                     ds = person_datasetbll.GetModel(id);
-                    int num = bll.GetListByTime(searchinfo.StartTime, searchinfo.EndTime, ds.id.ToString()).Tables[0].Rows.Count;
+                    //int num = bll.GetListByTime(searchinfo.StartTime, searchinfo.EndTime, ds.id.ToString()).Tables[0].Rows.Count;
                     HitAlertData[] ha = HitAlertData.CreateInstanceFromDataAngineDataSet(bll.GetListByTime(searchinfo.StartTime, searchinfo.EndTime, searchinfo.StartIndex, searchinfo.PageSize, ds.id.ToString()));
-                    response.SetContent("RecordNum:" + num + "," + JsonConvert.SerializeObject(ha));
+                    response.SetContent(JsonConvert.SerializeObject(ha));
                 }
                 //if(request.GetParams!=null)
                 //{

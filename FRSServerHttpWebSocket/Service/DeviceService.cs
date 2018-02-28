@@ -119,9 +119,9 @@ namespace FRSServerHttp.Service
                     SearchInfo_Device searchinfo = SearchInfo_Device.CreateInstanceFromJSON(request.PostParams);
                     if (searchinfo != null)
                     {
-                        int num = bll.DataTableToList(bll.GetAllList().Tables[0]).Count;
+                        //int num = bll.DataTableToList(bll.GetAllList().Tables[0]).Count;
                         List<DataAngineSet.Model.device> deviceslist = bll.DataTableToList(bll.GetAllList(searchinfo.StartIndex, searchinfo.PageSize, "").Tables[0]);
-                        response.SetContent("DeviceNum:" + num + "," + JsonConvert.SerializeObject(Device.CreateInstanceFromDataAngineModel(deviceslist.ToArray())));
+                        response.SetContent(JsonConvert.SerializeObject(Device.CreateInstanceFromDataAngineModel(deviceslist.ToArray())));
                     }
                 }
             }

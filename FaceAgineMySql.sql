@@ -115,7 +115,47 @@ create table `frsdb`.`surveillance_task`
 	UNIQUE KEY `id` (`id`)
 )ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
+create table `frsdb`.`device_placetype`
+(
+	`id` int(11) AUTO_INCREMENT,	
+	`name` nvarchar(50) NOT NULL,
+	PRIMARY KEY (`id`),
+	UNIQUE KEY `datasetname` (`id`)
+)ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+create table `frsdb`.`device_placetype`
+(
+	`id` int(11) AUTO_INCREMENT,	
+	`name` nvarchar(50) NOT NULL,
+	PRIMARY KEY (`id`),
+	UNIQUE KEY `id` (`id`)
+)ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+create table `frsdb`.`surveillance_task_type`
+(
+	`id` int(11) AUTO_INCREMENT,	
+	`name` nvarchar(50) NOT NULL,
+	PRIMARY KEY (`id`),
+	UNIQUE KEY `id` (`id`)
+)ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
 INSERT INTO `frsdb`.`person_dataset` (`name`) VALUES ('frsdb');
+
+INSERT INTO `frsdb`.`device_placetype` (`name`) VALUES ('汽车站');
+INSERT INTO `frsdb`.`device_placetype` (`name`) VALUES ('公交站');
+INSERT INTO `frsdb`.`device_placetype` (`name`) VALUES ('火车站');
+INSERT INTO `frsdb`.`device_placetype` (`name`) VALUES ('飞机场');
+INSERT INTO `frsdb`.`device_placetype` (`name`) VALUES ('街道');
+INSERT INTO `frsdb`.`device_placetype` (`name`) VALUES ('酒吧');
+INSERT INTO `frsdb`.`device_placetype` (`name`) VALUES ('宾馆');
+INSERT INTO `frsdb`.`device_placetype` (`name`) VALUES ('商场');
+INSERT INTO `frsdb`.`device_placetype` (`name`) VALUES ('其他');
+
+INSERT INTO `frsdb`.`surveillance_task_type` (`name`) VALUES ('常控（所有人接受报警）');
+INSERT INTO `frsdb`.`surveillance_task_type` (`name`) VALUES ('临控（有订阅权限的用户接受报警）');
+INSERT INTO `frsdb`.`surveillance_task_type` (`name`) VALUES ('密控（仅自己接受报警）');
+
+
 
 
 

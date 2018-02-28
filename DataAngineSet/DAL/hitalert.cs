@@ -192,7 +192,7 @@ namespace DataAngineSet.DAL
             if (strWhere.Trim() != "")
             {
                 strSql.Append(" where " + strWhere);
-                strSql.Append(" and user_person_dataset_id = " + libraryid);
+                strSql.Append(" and task_id = " + libraryid);
             }
             strSql.Append(" limit " + startIndex + ", " + pageSize);
 
