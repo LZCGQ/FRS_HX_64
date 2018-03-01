@@ -14,23 +14,24 @@ namespace FRSServerHttp.Service
     /// <summary>
     /// 以图搜图
     /// </summary>
-    class RecordingService : BaseService
+    class HitrecordService : BaseService
     {
 
         /// <summary>
         /// 访问当前service的URL
         /// </summary>
-        hitalert bll = new hitalert();
-        person_dataset person_datasetbll = new person_dataset();
+        hitrecord bll = new hitrecord();
+        // person_dataset person_datasetbll = new person_dataset();
         public static string Domain
         {
             get
             {
-                return "recording";
+                return "hitrecord";
             }
         }
         public override void OnPost(HttpRequest request, HttpResponse response)
         {
+            Log.Debug("sxn...");
             if (request.RestConvention != null)//根据ID获得数据库
             {
                 Log.Debug(string.Format("返回数据库{0}的信息", request.RestConvention));
@@ -42,14 +43,14 @@ namespace FRSServerHttp.Service
                 catch
                 {
                 }
-               
+
                 SearchInfo searchinfo = SearchInfo.CreateInstanceFromJSON(request.PostParams);
                 if (searchinfo != null)
                 {
-                    DataAngineSet.Model.person_dataset ds = new DataAngineSet.Model.person_dataset();
-                    ds = person_datasetbll.GetModel(id);
+                    // DataAngineSet.Model.person_dataset ds = new DataAngineSet.Model.person_dataset();
+                    // ds = person_datasetbll.GetModel(id);
                     //int num = bll.GetListByTime(searchinfo.StartTime, searchinfo.EndTime, ds.id.ToString()).Tables[0].Rows.Count;
-                    HitAlertData[] ha = HitAlertData.CreateInstanceFromDataAngineDataSet(bll.GetListByTime(searchinfo.StartTime, searchinfo.EndTime, searchinfo.StartIndex, searchinfo.PageSize, ds.id.ToString()));
+                    HitRecordData[] ha = HitRecordData.CreateInstanceFromDataAngineDataSet(bll.GetListByTime(searchinfo.StartTime, searchinfo.EndTime, searchinfo.StartIndex, searchinfo.PageSize, id.ToString()));
                     response.SetContent(JsonConvert.SerializeObject(ha));
                 }
                 //if(request.GetParams!=null)
@@ -64,19 +65,19 @@ namespace FRSServerHttp.Service
                 //    pagesize = Convert.ToInt32(request.GetParams["pagesize"]);
                 //    HitAlertData[] ha = HitAlertData.CreateInstanceFromDataAngineDataSet(bll.GetListByTime(starttime, endtime, startindex, pagesize, library));
                 //     response.SetContent(JsonConvert.SerializeObject(ha));
-                   
+
                 //}          
             }
             else
             {
-                Log.Debug("轨迹查询");
+                Log.Debug("人脸抓拍缺少任务ID");
 
-                Trajectory_Search trajectory_search = Trajectory_Search.CreateInstanceFromJSON(request.PostParams);
-                if (trajectory_search != null)
-                {
-                    HitAlertData_Trajectory_Search[] ha = HitAlertData_Trajectory_Search.CreateInstanceFromDataAngineDataSet(bll.GetListById(trajectory_search.UserId, trajectory_search.StartTime, trajectory_search.EndTime));
-                    response.SetContent(JsonConvert.SerializeObject(ha));
-                }
+                //Trajectory_Search trajectory_search = Trajectory_Search.CreateInstanceFromJSON(request.PostParams);
+                //if (trajectory_search != null)
+                //{
+                    //HitAlertData_Trajectory_Search[] ha = HitAlertData_Trajectory_Search.CreateInstanceFromDataAngineDataSet(bll.GetListById(trajectory_search.UserId, trajectory_search.StartTime, trajectory_search.EndTime));
+                    //response.SetContent(JsonConvert.SerializeObject(ha));
+                //}
             }
             response.Send();
         }
@@ -84,10 +85,10 @@ namespace FRSServerHttp.Service
         /// Get时调用
         /// </summary>
         public override void OnGet(HttpRequest request, HttpResponse response)
-        {         
-            Log.Debug("xxxxx");
+        {
+            Log.Debug("sxn....");
         }
-       
+
     }
-    
+
 }

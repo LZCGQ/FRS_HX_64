@@ -53,6 +53,7 @@
   <ItemGroup>
     <Compile Include="Capture.cs" />
     <Compile Include="ImageUtils.cs" />
+    <Compile Include="Model\HitRecordData.cs" />
     <Compile Include="Model\PersonDataSet.cs" />
     <Compile Include="Model\Device.cs" />
     <Compile Include="Model\HitAlertData.cs" />
@@ -79,6 +80,7 @@
     <Compile Include="Service\FileService.cs" />
     <Compile Include="Service\DeviceService.cs" />
     <Compile Include="Service\HitAlertService.cs" />
+    <Compile Include="Service\HitrecordService.cs" />
     <Compile Include="Service\PersonDataSetService.cs" />
     <Compile Include="Service\PersonService.cs" />
     <Compile Include="Service\RegisterService.cs" />

@@ -319,6 +319,21 @@ namespace DataAngineSet.DAL
 			return DbHelperMySQL.RunProcedure("UP_GetRecordByPage",parameters,"ds");
 		}*/
 
+        public DataSet GetList(string strWhere, int startIndex, int pageSize, string taskid)
+        {
+            StringBuilder strSql = new StringBuilder();
+            strSql.Append("select * ");
+            strSql.Append(" FROM hitrecord ");
+            if (strWhere.Trim() != "")
+            {
+                strSql.Append(" where " + strWhere);
+                strSql.Append(" and task_id = " + taskid);
+            }
+            strSql.Append(" limit " + startIndex + ", " + pageSize);
+
+            return DbHelperMySQL.Query(strSql.ToString());
+        }
+
 		#endregion  BasicMethod
 		#region  ExtensionMethod
 

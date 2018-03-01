@@ -154,8 +154,19 @@ namespace DataAngineSet.BLL
 			//return dal.GetList(PageSize,PageIndex,strWhere);
 		//}
 
+
 		#endregion  BasicMethod
 		#region  ExtensionMethod
+        /// <summary>
+        /// 通过时间得到对象实体
+        /// </summary>
+
+        //分页时间查询
+        public DataSet GetListByTime(DateTime startTime, DateTime endTime, int startIndex, int pageSize, string taskid)
+        {
+            string strWhere = string.Format("occur_time between '{0}' and '{1}'", startTime.ToString("yyyy-MM-dd HH:mm:ss"), endTime.ToString("yyyy-MM-dd HH:mm:ss"));
+            return dal.GetList(strWhere, startIndex, pageSize, taskid);
+        }
 
 		#endregion  ExtensionMethod
 	}

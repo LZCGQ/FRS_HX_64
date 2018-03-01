@@ -38,6 +38,10 @@ namespace FRSServerHttp
            {
                return new RecordingService();
            }
+           else if (HitrecordService.Domain == domain)
+           {
+               return new HitrecordService();
+           }
            else if (PersonDataSetService.Domain == domain)
            {
                return new PersonDataSetService();
