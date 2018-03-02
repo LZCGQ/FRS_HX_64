@@ -120,14 +120,6 @@ create table `frsdb`.`device_placetype`
 	`id` int(11) AUTO_INCREMENT,	
 	`name` nvarchar(50) NOT NULL,
 	PRIMARY KEY (`id`),
-	UNIQUE KEY `datasetname` (`id`)
-)ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
-create table `frsdb`.`device_placetype`
-(
-	`id` int(11) AUTO_INCREMENT,	
-	`name` nvarchar(50) NOT NULL,
-	PRIMARY KEY (`id`),
 	UNIQUE KEY `id` (`id`)
 )ENGINE=InnoDB DEFAULT CHARSET=utf8;
 

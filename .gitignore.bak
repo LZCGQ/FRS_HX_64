@@ -50,6 +50,8 @@ FRSServer/obj/
 FRSServer/bin/
 FRSServerHttp/obj/
 FRSServerHttp/bin/
+FRSServerHttpWebSocket/obj/
+FRSServerHttpWebSocket/bin/
 Release/Logs/
 INF/Debug/
 INF/Release/
