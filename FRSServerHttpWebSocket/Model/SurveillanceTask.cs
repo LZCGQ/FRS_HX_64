@@ -7,6 +7,27 @@ using Newtonsoft.Json;
 using DataAngineSet.Model;
 namespace FRSServerHttp.Model
 {
+
+    class SearchInfo_SurveillanceTask
+    {
+        public int StartIndex { get; set; }
+        public int PageSize { get; set; }
+
+        public static SearchInfo_SurveillanceTask CreateInstanceFromJSON(string json)
+        {
+            SearchInfo_SurveillanceTask msg = null;
+            try
+            {
+                msg = (SearchInfo_SurveillanceTask)JsonConvert.DeserializeObject(json, typeof(SearchInfo_SurveillanceTask));
+            }
+            catch
+            {
+            }
+            return msg;
+        }
+
+    }
+
     /// <summary>
     /// 布控任务
     /// </summary>

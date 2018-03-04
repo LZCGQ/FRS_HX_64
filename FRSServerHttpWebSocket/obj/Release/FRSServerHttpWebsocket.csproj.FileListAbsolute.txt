@@ -33,3 +33,9 @@ F:\人脸识别\FRS_HX_64\FRSServerHttpWebSocket\obj\Release\FRSServerHttp.pdb
 F:\人脸识别\FRS_HX_64\Release\FRSServerHttp.exe
 F:\人脸识别\FRS_HX_64\Release\FRSServerHttp.pdb
 F:\人脸识别\FRS_HX_64\FRSServerHttpWebSocket\obj\Release\FRSServerHttpWebsocket.csprojResolveAssemblyReference.cache
+G:\人脸识别项目\FRS_HX_64\Release\FRSServerHttp.exe.config
+G:\人脸识别项目\FRS_HX_64\FRSServerHttpWebSocket\obj\Release\FRSServerHttp.exe
+G:\人脸识别项目\FRS_HX_64\Release\FRSServerHttp.exe
+G:\人脸识别项目\FRS_HX_64\Release\FRSServerHttp.pdb
+G:\人脸识别项目\FRS_HX_64\FRSServerHttpWebSocket\obj\Release\FRSServerHttpWebsocket.csprojResolveAssemblyReference.cache
+G:\人脸识别项目\FRS_HX_64\FRSServerHttpWebSocket\obj\Release\FRSServerHttp.pdb

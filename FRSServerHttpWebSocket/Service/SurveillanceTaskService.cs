@@ -86,7 +86,7 @@ namespace FRSServerHttp.Service
                 SurveillanceTask task = SurveillanceTask.CreateInstanceFromJson(request.PostParams);
                 if (null != task)
                 {
-                   
+
                     //添加到数据库
                     status = bll.Add(task.ToDataAngineModel());
                 }
@@ -117,8 +117,19 @@ namespace FRSServerHttp.Service
                     }
                     status = bll.Delete(id);
                 }
+                else if (request.Operation == "list")
+                {
+                    Log.Debug(string.Format("返回所有库信息"));
+                    SearchInfo_SurveillanceTask searchinfo = SearchInfo_SurveillanceTask.CreateInstanceFromJSON(request.PostParams);
+                    if (searchinfo != null)
+                    {
+                        Log.Debug("xxxx");
+                        //int num = bll.DataTableToList(bll.GetAllList().Tables[0]).Count;
+                        List<DataAngineSet.Model.surveillance_task> datasets = bll.DataTableToList(bll.GetAllList(searchinfo.StartIndex, searchinfo.PageSize, "").Tables[0]);
+                        response.SetContent(JsonConvert.SerializeObject(SurveillanceTask.CreateInstanceFromDataAngineModel(datasets.ToArray())));
+                    }
+                }
             }
-            response.SetContent(status.ToString());
             response.Send();
         }
     }
