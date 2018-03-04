@@ -208,6 +208,7 @@ namespace DataAngineSet.DAL
 			{
 				strSql.Append(" where "+strWhere);
 			}
+            Console.WriteLine(strSql);
 			return DbHelperMySQL.Query(strSql.ToString());
 		}
 

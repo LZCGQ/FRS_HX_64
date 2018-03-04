@@ -54,7 +54,16 @@ namespace FRSServerHttp
            {
                return new PersonService();
            }
-           
+           else if (SurveillanceTaskTypeService.Domain == domain)
+           {
+               return new SurveillanceTaskTypeService();
+           }
+           else if (DevicePlacetypeService.Domain == domain)
+           {
+               return new DevicePlacetypeService();
+           }
+
+
            return null;
        }
 
