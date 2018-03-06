@@ -10,11 +10,11 @@ namespace FRSServerHttp.Model
 {
 
     class SearchInfo
-    {       
-        public DateTime StartTime { get; set; }    
+    {
+        public DateTime StartTime { get; set; }
         public DateTime EndTime { get; set; }
-        public int StartIndex { get; set; } 
-        public int PageSize { get; set; } 
+        public int StartIndex { get; set; }
+        public int PageSize { get; set; }
 
         public static SearchInfo CreateInstanceFromJSON(string json)
         {
@@ -70,7 +70,7 @@ namespace FRSServerHttp.Model
         public string user_type { get; set; }
         public string user_create_time { get; set; }
         public string user_modified_time { get; set; }
-        public float user_quality_score { get; set; }     
+        public float user_quality_score { get; set; }
 
         public string ToJson()
         {
@@ -125,7 +125,7 @@ namespace FRSServerHttp.Model
             return hits;
         }
 
-        
+
     }
 
     class HitAlertData_Trajectory_Search
@@ -175,7 +175,8 @@ namespace FRSServerHttp.Model
                 hitalertdata.FaceQueryImagePath = dt.Rows[i]["face_query_image_path"].ToString();
                 hitalertdata.Threshold = Convert.ToSingle(dt.Rows[i]["Threshold"]);
                 hitalertdata.OccurTime = dt.Rows[i]["occur_time"].ToString();
-                hitalertdata.task_id = Convert.ToInt32(dt.Rows[i]["task_id"]);
+                if (dt.Rows[i]["task_id"] != string.Empty)
+                    hitalertdata.task_id = Convert.ToInt32(dt.Rows[i]["task_id"]);
                 hitalertdata.detail_id = Convert.ToInt32(dt.Rows[i]["detail_id"]);
                 hitalertdata.rank = Convert.ToInt32(dt.Rows[i]["rank"]);
                 hitalertdata.score = Convert.ToSingle(dt.Rows[i]["score"]);
@@ -190,7 +191,8 @@ namespace FRSServerHttp.Model
                 hitalertdata.user_create_time = dt.Rows[i]["user_create_time"].ToString();
                 hitalertdata.user_modified_time = dt.Rows[i]["user_modified_time"].ToString();
                 hitalertdata.user_quality_score = Convert.ToSingle(dt.Rows[i]["user_quality_score"]);
-                hitalertdata.device_id = Convert.ToInt32(dt.Rows[i]["device_id"]);
+                if (dt.Rows[i]["device_id"] != string.Empty)
+                    hitalertdata.device_id = Convert.ToInt32(dt.Rows[i]["device_id"]);
                 hits[i] = hitalertdata;
             }
             return hits;

@@ -57,8 +57,8 @@ namespace FRSServerHttp.Service
                     Bitmap bmpdst = new Bitmap(Bitmapdst.Width, Bitmapdst.Height, System.Drawing.Imaging.PixelFormat.Format24bppRgb);
                     Graphics.FromImage(bmpdst).DrawImage(Bitmapdst, new Rectangle(0, 0, bmpdst.Width, bmpdst.Height));
 
-                    //Bitmapsrc.Save("Bitmapsrc.jpg");
-                    //Bitmapdst.Save("Bitmapdst.jpg");
+                    Bitmapsrc.Save("Bitmapsrc.jpg");
+                    Bitmapdst.Save("Bitmapdst.jpg");
                
                     //初始化                   
                     InitFRS();
