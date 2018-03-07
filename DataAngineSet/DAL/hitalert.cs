@@ -111,7 +111,7 @@ namespace DataAngineSet.DAL
             strSql.Append("select * ");
             strSql.Append("from hitalert ");
             strSql.Append("where user_id = " + userId);
-            strSql.Append("order by occur_time asc");
+            strSql.Append(" order by occur_time desc");
             return DbHelperMySQL.Query(strSql.ToString());
         }
 
@@ -129,7 +129,7 @@ namespace DataAngineSet.DAL
                 strSql.Append(" where " + strWhere);
                 strSql.Append(" and user_id = " + userId);
             }
-            strSql.Append(" order by occur_time asc");
+            strSql.Append(" order by occur_time desc"); ;
             return DbHelperMySQL.Query(strSql.ToString());
         }
 

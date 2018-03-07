@@ -8,6 +8,7 @@ using System.IO;
 using Newtonsoft.Json;
 using FRSServerHttp.Server;
 using DataAngineSet.BLL;
+using Newtonsoft.Json.Linq;
 
 namespace FRSServerHttp.Service
 {
@@ -51,7 +52,12 @@ namespace FRSServerHttp.Service
                     // ds = person_datasetbll.GetModel(id);
                     //int num = bll.GetListByTime(searchinfo.StartTime, searchinfo.EndTime, ds.id.ToString()).Tables[0].Rows.Count;
                     HitRecordData[] ha = HitRecordData.CreateInstanceFromDataAngineDataSet(bll.GetListByTime(searchinfo.StartTime, searchinfo.EndTime, searchinfo.StartIndex, searchinfo.PageSize, id.ToString()));
-                    response.SetContent(JsonConvert.SerializeObject(ha));
+                    // 没有分页限制获取总数
+                    HitRecordData[] haALL = HitRecordData.CreateInstanceFromDataAngineDataSet(bll.GetListByTime(searchinfo.StartTime, searchinfo.EndTime, id.ToString()));
+
+                    JObject jo = new JObject(new JProperty("num", haALL.Length), new JProperty("pageData", JsonConvert.DeserializeObject(JsonConvert.SerializeObject(ha)) ) );
+
+                    response.SetContent(JsonConvert.SerializeObject(jo));
                 }
                 //if(request.GetParams!=null)
                 //{

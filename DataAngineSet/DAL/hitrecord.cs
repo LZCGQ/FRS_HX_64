@@ -319,6 +319,7 @@ namespace DataAngineSet.DAL
 			return DbHelperMySQL.RunProcedure("UP_GetRecordByPage",parameters,"ds");
 		}*/
 
+        // 含分页
         public DataSet GetList(string strWhere, int startIndex, int pageSize, string taskid)
         {
             StringBuilder strSql = new StringBuilder();
@@ -329,7 +330,23 @@ namespace DataAngineSet.DAL
                 strSql.Append(" where " + strWhere);
                 strSql.Append(" and task_id = " + taskid);
             }
+            strSql.Append(" order by occur_time desc");
             strSql.Append(" limit " + startIndex + ", " + pageSize);
+
+            return DbHelperMySQL.Query(strSql.ToString());
+        }
+
+        // 不含分页
+        public DataSet GetList(string strWhere, string taskid)
+        {
+            StringBuilder strSql = new StringBuilder();
+            strSql.Append("select * ");
+            strSql.Append(" FROM hitrecord ");
+            if (strWhere.Trim() != "")
+            {
+                strSql.Append(" where " + strWhere);
+                strSql.Append(" and task_id = " + taskid);
+            }
 
             return DbHelperMySQL.Query(strSql.ToString());
         }

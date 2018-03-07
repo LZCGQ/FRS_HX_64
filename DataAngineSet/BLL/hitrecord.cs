@@ -168,6 +168,13 @@ namespace DataAngineSet.BLL
             return dal.GetList(strWhere, startIndex, pageSize, taskid);
         }
 
+        //不含分页的时间查询
+        public DataSet GetListByTime(DateTime startTime, DateTime endTime, string taskid)
+        {
+            string strWhere = string.Format("occur_time between '{0}' and '{1}'", startTime.ToString("yyyy-MM-dd HH:mm:ss"), endTime.ToString("yyyy-MM-dd HH:mm:ss"));
+            return dal.GetList(strWhere, taskid);
+        }
+
 		#endregion  ExtensionMethod
 	}
 }
