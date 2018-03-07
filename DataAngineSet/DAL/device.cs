@@ -191,8 +191,10 @@ namespace DataAngineSet.DAL
 		{
 			
 			StringBuilder strSql=new StringBuilder();
-			strSql.Append("select id,name,video_address,departmentment_id,longitude,latitude,location_type,type,remark from device ");
-			strSql.Append(" where id=@id");
+
+            strSql.Append("select d.id,d.name,d.video_address,d.departmentment_id,d.longitude,d.latitude,dpt.name as location_type ,d.type,d.remark from device as d INNER JOIN device_placetype as dpt on d.location_type = dpt.id ");
+            strSql.Append(" where d.id=@id");
+
 			MySqlParameter[] parameters = {
 					new MySqlParameter("@id", MySqlDbType.Int32)
 			};
@@ -278,8 +280,8 @@ namespace DataAngineSet.DAL
 		public DataSet GetList(string strWhere)
 		{
 			StringBuilder strSql=new StringBuilder();
-			strSql.Append("select id,name,video_address,departmentment_id,longitude,latitude,location_type,type,remark ");
-			strSql.Append(" FROM device ");
+            strSql.Append("select d.id,d.name,d.video_address,d.departmentment_id,d.longitude,d.latitude,dpt.name as location_type ,d.type,d.remark from device as d INNER JOIN device_placetype as dpt on d.location_type = dpt.id ");
+
 			if(strWhere.Trim()!="")
 			{
 				strSql.Append(" where "+strWhere);
@@ -341,8 +343,8 @@ namespace DataAngineSet.DAL
         public DataSet GetList(int startIndex, int pageSize, string strWhere)
         {
             StringBuilder strSql = new StringBuilder();
-            strSql.Append("select * ");
-            strSql.Append(" FROM device ");
+            strSql.Append("select d.id,d.name,d.video_address,d.departmentment_id,d.longitude,d.latitude,dpt.name as location_type ,d.type,d.remark from device as d INNER JOIN device_placetype as dpt on d.location_type = dpt.id ");
+
             if (strWhere.Trim() != "")
             {
                 strSql.Append(" where " + strWhere);

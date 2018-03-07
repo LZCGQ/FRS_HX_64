@@ -191,8 +191,8 @@ namespace DataAngineSet.DAL
         {
 
             StringBuilder strSql = new StringBuilder();
-            strSql.Append("select id,name,person_dataset_id,device_id,type,create_time,start_time,end_time,remark from surveillance_task ");
-            strSql.Append(" where id=@id");
+            strSql.Append("select st.id,st.name,st.person_dataset_id,st.device_id,stt.name as type,st.create_time,st.start_time,st.end_time,st.remark from surveillance_task as st INNER JOIN surveillance_task_type as stt on st.type = stt.id ");
+            strSql.Append(" where st.id=@id");
             MySqlParameter[] parameters = {
 					new MySqlParameter("@id", MySqlDbType.Int32)
 			};
@@ -265,8 +265,8 @@ namespace DataAngineSet.DAL
         public DataSet GetList(string strWhere)
         {
             StringBuilder strSql = new StringBuilder();
-            strSql.Append("select id,name,person_dataset_id,device_id,type,create_time,start_time,end_time,remark ");
-            strSql.Append(" FROM surveillance_task ");
+            strSql.Append("select st.id,st.name,st.person_dataset_id,st.device_id,stt.name as type,st.create_time,st.start_time,st.end_time,st.remark from surveillance_task as st INNER JOIN surveillance_task_type as stt on st.type = stt.id ");
+
             if (strWhere.Trim() != "")
             {
                 strSql.Append(" where " + strWhere);
@@ -354,8 +354,8 @@ namespace DataAngineSet.DAL
         public DataSet GetList(int startIndex, int pageSize, string strWhere)
         {
             StringBuilder strSql = new StringBuilder();
-            strSql.Append("select * ");
-            strSql.Append(" FROM surveillance_task ");
+            strSql.Append("select st.id,st.name,st.person_dataset_id,st.device_id,stt.name as type,st.create_time,st.start_time,st.end_time,st.remark from surveillance_task as st INNER JOIN surveillance_task_type as stt on st.type = stt.id ");
+
             if (strWhere.Trim() != "")
             {
                 strSql.Append(" where " + strWhere);
