@@ -36,6 +36,8 @@ namespace FRSServerHttp.Model
         public DateTime StartTime { get; set; }
         public DateTime EndTime { get; set; }
         public int UserId { get; set; }
+        public int StartIndex { get; set; }
+        public int PageSize { get; set; }
 
         public static Trajectory_Search CreateInstanceFromJSON(string json)
         {

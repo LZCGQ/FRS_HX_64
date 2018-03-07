@@ -118,7 +118,7 @@ namespace DataAngineSet.DAL
         /// <summary>
         /// 获得数据列表
         /// </summary>
-        public DataSet GetListById(string strWhere, int userId)
+        public DataSet GetListById(string strWhere, int userId, int startIndex, int pageSize)
         {
             StringBuilder strSql = new StringBuilder();
             strSql.Append("select * ");
@@ -129,7 +129,9 @@ namespace DataAngineSet.DAL
                 strSql.Append(" where " + strWhere);
                 strSql.Append(" and user_id = " + userId);
             }
-            strSql.Append(" order by occur_time desc"); ;
+            strSql.Append(" order by occur_time desc");
+            strSql.Append(" limit " + startIndex + ", " + pageSize);
+            
             return DbHelperMySQL.Query(strSql.ToString());
         }
 

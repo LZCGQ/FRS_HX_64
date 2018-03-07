@@ -74,7 +74,7 @@ namespace FRSServerHttp.Service
                 Trajectory_Search trajectory_search = Trajectory_Search.CreateInstanceFromJSON(request.PostParams);
                 if (trajectory_search != null)
                 {
-                    HitAlertData_Trajectory_Search[] ha = HitAlertData_Trajectory_Search.CreateInstanceFromDataAngineDataSet(bll.GetListById(trajectory_search.UserId, trajectory_search.StartTime, trajectory_search.EndTime));
+                    HitAlertData_Trajectory_Search[] ha = HitAlertData_Trajectory_Search.CreateInstanceFromDataAngineDataSet(bll.GetListById(trajectory_search.UserId, trajectory_search.StartTime, trajectory_search.EndTime, trajectory_search.StartIndex, trajectory_search.PageSize));
                     response.SetContent(JsonConvert.SerializeObject(ha));
                 }
             }
@@ -85,7 +85,6 @@ namespace FRSServerHttp.Service
         /// </summary>
         public override void OnGet(HttpRequest request, HttpResponse response)
         {         
-            Log.Debug("xxxxx");
         }
        
     }

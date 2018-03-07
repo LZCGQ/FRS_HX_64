@@ -155,10 +155,10 @@ namespace DataAngineSet.BLL
         }
 
         //匹配人员查询
-        public DataSet GetListById(int userId, DateTime startTime, DateTime endTime)
+        public DataSet GetListById(int userId, DateTime startTime, DateTime endTime, int startIndex, int pageSize)
         {
             string strWhere = string.Format("occur_time between '{0}' and '{1}'", startTime.ToString("yyyy-MM-dd HH:mm:ss"), endTime.ToString("yyyy-MM-dd HH:mm:ss"));
-            return dal.GetListById(strWhere, userId);
+            return dal.GetListById(strWhere, userId, startIndex, pageSize);
         }
         
 		#endregion  ExtensionMethod
