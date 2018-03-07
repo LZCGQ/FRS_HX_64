@@ -8,6 +8,7 @@ using System.IO;
 using Newtonsoft.Json;
 using FRSServerHttp.Server;
 using DataAngineSet.BLL;
+using Newtonsoft.Json.Linq;
 
 namespace FRSServerHttp.Service
 {
@@ -50,7 +51,11 @@ namespace FRSServerHttp.Service
                     ds = person_datasetbll.GetModel(id);
                     //int num = bll.GetListByTime(searchinfo.StartTime, searchinfo.EndTime, ds.id.ToString()).Tables[0].Rows.Count;
                     HitAlertData[] ha = HitAlertData.CreateInstanceFromDataAngineDataSet(bll.GetListByTime(searchinfo.StartTime, searchinfo.EndTime, searchinfo.StartIndex, searchinfo.PageSize, ds.id.ToString()));
-                    response.SetContent(JsonConvert.SerializeObject(ha));
+
+                    HitAlertData[] haALL = HitAlertData.CreateInstanceFromDataAngineDataSet(bll.GetListByTime_TaskId(searchinfo.StartTime, searchinfo.EndTime, ds.id.ToString()));
+                    JObject jo = new JObject(new JProperty("num", haALL.Length), new JProperty("pageData", JsonConvert.DeserializeObject(JsonConvert.SerializeObject(ha))));
+
+                    response.SetContent(JsonConvert.SerializeObject(jo));
                 }
                 //if(request.GetParams!=null)
                 //{
@@ -75,7 +80,10 @@ namespace FRSServerHttp.Service
                 if (trajectory_search != null)
                 {
                     HitAlertData_Trajectory_Search[] ha = HitAlertData_Trajectory_Search.CreateInstanceFromDataAngineDataSet(bll.GetListById(trajectory_search.UserId, trajectory_search.StartTime, trajectory_search.EndTime, trajectory_search.StartIndex, trajectory_search.PageSize));
-                    response.SetContent(JsonConvert.SerializeObject(ha));
+                    HitAlertData_Trajectory_Search[] haALL = HitAlertData_Trajectory_Search.CreateInstanceFromDataAngineDataSet(bll.GetListById(trajectory_search.UserId, trajectory_search.StartTime, trajectory_search.EndTime));
+                    JObject jo = new JObject(new JProperty("num", haALL.Length), new JProperty("pageData", JsonConvert.DeserializeObject(JsonConvert.SerializeObject(ha))));
+
+                    response.SetContent(JsonConvert.SerializeObject(jo));
                 }
             }
             response.Send();

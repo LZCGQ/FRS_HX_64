@@ -154,11 +154,25 @@ namespace DataAngineSet.BLL
             return dal.GetList(strWhere, startIndex, pageSize, libraryid);
         }
 
+        //不含分页的时间查询
+        public DataSet GetListByTime_TaskId(DateTime startTime, DateTime endTime, string taskid)
+        {
+            string strWhere = string.Format("occur_time between '{0}' and '{1}'", startTime.ToString("yyyy-MM-dd HH:mm:ss"), endTime.ToString("yyyy-MM-dd HH:mm:ss"));
+            return dal.GetList_TaskId(strWhere, taskid);
+        }
+
         //匹配人员查询
         public DataSet GetListById(int userId, DateTime startTime, DateTime endTime, int startIndex, int pageSize)
         {
             string strWhere = string.Format("occur_time between '{0}' and '{1}'", startTime.ToString("yyyy-MM-dd HH:mm:ss"), endTime.ToString("yyyy-MM-dd HH:mm:ss"));
             return dal.GetListById(strWhere, userId, startIndex, pageSize);
+        }
+
+        //匹配人员查询不含分页
+        public DataSet GetListById(int userId, DateTime startTime, DateTime endTime)
+        {
+            string strWhere = string.Format("occur_time between '{0}' and '{1}'", startTime.ToString("yyyy-MM-dd HH:mm:ss"), endTime.ToString("yyyy-MM-dd HH:mm:ss"));
+            return dal.GetListById(strWhere, userId);
         }
         
 		#endregion  ExtensionMethod
