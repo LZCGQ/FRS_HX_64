@@ -87,6 +87,15 @@ namespace DataAngineSet.BLL
             return dal.GetModel(id);
         }
 
+        /// <summary>
+        /// 得到一个对象实体
+        /// </summary>
+        public DataSet GetModel_Cascade(int id)
+        {
+
+            return dal.GetModel_Cascade(id);
+        }
+
 
         /// <summary>
         /// 获得数据列表
@@ -94,6 +103,14 @@ namespace DataAngineSet.BLL
         public DataSet GetList(string strWhere)
         {
             return dal.GetList(strWhere);
+        }
+
+        /// <summary>
+        /// 获得数据列表
+        /// </summary>
+        public DataSet GetList_Cascade(string strWhere)
+        {
+            return dal.GetList_Cascade(strWhere);
         }
         /// <summary>
         /// 获得数据列表
@@ -134,6 +151,14 @@ namespace DataAngineSet.BLL
         }
 
         /// <summary>
+        /// 获得数据列表
+        /// </summary>
+        public DataSet GetAllList_Cascade()
+        {
+            return GetList_Cascade("");
+        }
+
+        /// <summary>
         /// 分页获取数据列表
         /// </summary>
         public int GetRecordCount(string strWhere)
@@ -160,6 +185,11 @@ namespace DataAngineSet.BLL
         public DataSet GetAllList(int startIndex, int pageSize, string strWhere)
         {
             return dal.GetList(startIndex, pageSize, strWhere);
+        }
+
+        public DataSet GetAllList_Cascade(int startIndex, int pageSize, string strWhere)
+        {
+            return dal.GetList_Cascade(startIndex, pageSize, strWhere);
         }
         #endregion  ExtensionMethod
     }

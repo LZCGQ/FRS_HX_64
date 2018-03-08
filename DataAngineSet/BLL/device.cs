@@ -88,6 +88,15 @@ namespace DataAngineSet.BLL
 		}
 
         /// <summary>
+        /// 得到一个对象实体
+        /// </summary>
+        public DataSet GetModel_Cascade(int id)
+        {
+
+            return dal.GetModel_Cascade(id);
+        }
+
+        /// <summary>
         /// 获得数据列表
         /// </summary>
         public DataSet GetDevice(string name)
@@ -102,6 +111,13 @@ namespace DataAngineSet.BLL
 		{
 			return dal.GetList(strWhere);
 		}
+        /// <summary>
+        /// 获得数据列表
+        /// </summary>
+        public DataSet GetList_Cascade(string strWhere)
+        {
+            return dal.GetList_Cascade(strWhere);
+        }
 		/// <summary>
 		/// 获得数据列表
 		/// </summary>
@@ -138,7 +154,15 @@ namespace DataAngineSet.BLL
 		public DataSet GetAllList()
 		{
 			return GetList("");
-		}       
+		}
+
+        /// <summary>
+        /// 获得数据列表
+        /// </summary>
+        public DataSet GetAllList_Cascade()
+        {
+            return GetList_Cascade("");
+        }  
 
 		/// <summary>
 		/// 分页获取数据列表
@@ -160,6 +184,14 @@ namespace DataAngineSet.BLL
         public DataSet GetAllList(int startIndex, int pageSize, string strWhere)
         {
             return dal.GetList(startIndex, pageSize, strWhere);
+        }
+
+        /// <summary>
+        /// 分页获取数据列表
+        /// </summary>
+        public DataSet GetAllList_Cascade(int startIndex, int pageSize, string strWhere)
+        {
+            return dal.GetList_Cascade(startIndex, pageSize, strWhere);
         }
 
 		#endregion  BasicMethod

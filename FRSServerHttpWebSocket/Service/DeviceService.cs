@@ -50,7 +50,8 @@ namespace FRSServerHttp.Service
                 {
 
                 }
-                Device da = Device.CreateInstanceFromDataAngineModel(bll.GetModel(id));
+                //Device da = Device.CreateInstanceFromDataAngineModel(bll.GetModel(id));
+                Device_Cascade da = Device_Cascade.CreateInstanceFromDataAngineModel(bll.GetModel_Cascade(id));
                 if (null != da)
                 {
                     response.SetContent(da.ToJson());
@@ -61,8 +62,9 @@ namespace FRSServerHttp.Service
             else if (request.Domain != string.Empty)
             {
                 Log.Debug(string.Format("返回所有设备信息"));
-                List<DataAngineSet.Model.device> devices = bll.DataTableToList(bll.GetAllList().Tables[0]);
-                response.SetContent(JsonConvert.SerializeObject(Device.CreateInstanceFromDataAngineModel(devices.ToArray())));
+                //List<DataAngineSet.Model.device> devices = bll.DataTableToList(bll.GetAllList().Tables[0]);
+                Device_Cascade[] des = Device_Cascade.CreateInstanceFromDataAngineDataSet(bll.GetAllList_Cascade());
+                response.SetContent(JsonConvert.SerializeObject(des));
             }
             response.Send();
 
@@ -120,8 +122,9 @@ namespace FRSServerHttp.Service
                     if (searchinfo != null)
                     {
                         //int num = bll.DataTableToList(bll.GetAllList().Tables[0]).Count;
-                        List<DataAngineSet.Model.device> deviceslist = bll.DataTableToList(bll.GetAllList(searchinfo.StartIndex, searchinfo.PageSize, "").Tables[0]);
-                        response.SetContent(JsonConvert.SerializeObject(Device.CreateInstanceFromDataAngineModel(deviceslist.ToArray())));
+                        //List<DataAngineSet.Model.device> deviceslist = bll.DataTableToList(bll.GetAllList(searchinfo.StartIndex, searchinfo.PageSize, "").Tables[0]);
+                        Device_Cascade[] des = Device_Cascade.CreateInstanceFromDataAngineDataSet(bll.GetAllList_Cascade(searchinfo.StartIndex, searchinfo.PageSize, ""));
+                        response.SetContent(JsonConvert.SerializeObject(des));
                     }
                 }
             }

@@ -51,7 +51,8 @@ namespace FRSServerHttp.Service
                 {
 
                 }
-                SurveillanceTask da = SurveillanceTask.CreateInstanceFromDataAngineModel(bll.GetModel(id));
+                //SurveillanceTask da = SurveillanceTask.CreateInstanceFromDataAngineModel(bll.GetModel(id));
+                SurveillanceTask_Cascade da = SurveillanceTask_Cascade.CreateInstanceFromDataAngineModel(bll.GetModel_Cascade(id));
                 if (null != da)
                 {
                     response.SetContent(da.ToJson());
@@ -66,8 +67,9 @@ namespace FRSServerHttp.Service
 
                 //构造响应报文
 
-                List<DataAngineSet.Model.surveillance_task> datasets = bll.DataTableToList(bll.GetAllList().Tables[0]);
-                response.SetContent(JsonConvert.SerializeObject(SurveillanceTask.CreateInstanceFromDataAngineModel(datasets.ToArray())));
+                //List<DataAngineSet.Model.surveillance_task> datasets = bll.DataTableToList(bll.GetAllList().Tables[0]);
+                SurveillanceTask_Cascade[] des = SurveillanceTask_Cascade.CreateInstanceFromDataAngineDataSet(bll.GetAllList_Cascade());
+                response.SetContent(JsonConvert.SerializeObject(des));
                 response.Send();
 
             }
@@ -123,10 +125,11 @@ namespace FRSServerHttp.Service
                     SearchInfo_SurveillanceTask searchinfo = SearchInfo_SurveillanceTask.CreateInstanceFromJSON(request.PostParams);
                     if (searchinfo != null)
                     {
-                        Log.Debug("xxxx");
+                        //Log.Debug("xxxx");
                         //int num = bll.DataTableToList(bll.GetAllList().Tables[0]).Count;
-                        List<DataAngineSet.Model.surveillance_task> datasets = bll.DataTableToList(bll.GetAllList(searchinfo.StartIndex, searchinfo.PageSize, "").Tables[0]);
-                        response.SetContent(JsonConvert.SerializeObject(SurveillanceTask.CreateInstanceFromDataAngineModel(datasets.ToArray())));
+                        //List<DataAngineSet.Model.surveillance_task> datasets = bll.DataTableToList(bll.GetAllList(searchinfo.StartIndex, searchinfo.PageSize, "").Tables[0]);
+                        SurveillanceTask_Cascade[] des = SurveillanceTask_Cascade.CreateInstanceFromDataAngineDataSet(bll.GetAllList_Cascade(searchinfo.StartIndex, searchinfo.PageSize, ""));
+                        response.SetContent(JsonConvert.SerializeObject(des));
                     }
                 }
             }

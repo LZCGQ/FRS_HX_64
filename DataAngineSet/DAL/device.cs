@@ -192,8 +192,11 @@ namespace DataAngineSet.DAL
 			
 			StringBuilder strSql=new StringBuilder();
 
-            strSql.Append("select d.id,d.name,d.video_address,d.departmentment_id,d.longitude,d.latitude,dpt.name as location_type ,d.type,d.remark from device as d INNER JOIN device_placetype as dpt on d.location_type = dpt.id ");
-            strSql.Append(" where d.id=@id");
+            strSql.Append("select id,name,video_address,departmentment_id,longitude,latitude,location_type,type,remark from device ");
+            strSql.Append(" where id=@id");
+
+            //strSql.Append("select d.id,d.name,d.video_address,d.departmentment_id,d.longitude,d.latitude,dpt.name as location_type ,d.type,d.remark from device as d INNER JOIN device_placetype as dpt on d.location_type = dpt.id ");
+            //strSql.Append(" where d.id=@id");
 
 			MySqlParameter[] parameters = {
 					new MySqlParameter("@id", MySqlDbType.Int32)
@@ -211,6 +214,29 @@ namespace DataAngineSet.DAL
 				return null;
 			}
 		}
+
+
+        /// <summary>
+        /// 得到一个对象实体
+        /// </summary>
+        public DataSet GetModel_Cascade(int id)
+        {
+
+            StringBuilder strSql = new StringBuilder();
+
+            //strSql.Append("select id,name,video_address,departmentment_id,longitude,latitude,location_type,type,remark from device ");
+            //strSql.Append(" where id=@id");
+
+            strSql.Append("select d.*,dpt.name as locationtype_name from device as d ");
+            strSql.Append(" INNER JOIN device_placetype as dpt on d.location_type = dpt.id ");
+            strSql.Append(" where d.id=@id");
+
+            MySqlParameter[] parameters = {
+					new MySqlParameter("@id", MySqlDbType.Int32)
+			};
+            parameters[0].Value = id;
+            return DbHelperMySQL.Query(strSql.ToString(),parameters);
+        }
 
         public DataSet GetDevice(string name)
         {
@@ -280,7 +306,9 @@ namespace DataAngineSet.DAL
 		public DataSet GetList(string strWhere)
 		{
 			StringBuilder strSql=new StringBuilder();
-            strSql.Append("select d.id,d.name,d.video_address,d.departmentment_id,d.longitude,d.latitude,dpt.name as location_type ,d.type,d.remark from device as d INNER JOIN device_placetype as dpt on d.location_type = dpt.id ");
+            strSql.Append("select id,name,video_address,departmentment_id,longitude,latitude,location_type,type,remark ");
+            strSql.Append(" FROM device ");
+            //strSql.Append("select d.id,d.name,d.video_address,d.departmentment_id,d.longitude,d.latitude,dpt.name as location_type ,d.type,d.remark from device as d INNER JOIN device_placetype as dpt on d.location_type = dpt.id ");
 
 			if(strWhere.Trim()!="")
 			{
@@ -288,6 +316,24 @@ namespace DataAngineSet.DAL
 			}
 			return DbHelperMySQL.Query(strSql.ToString());
 		}
+
+        /// <summary>
+        /// 获得数据列表
+        /// </summary>
+        public DataSet GetList_Cascade(string strWhere)
+        {
+            StringBuilder strSql = new StringBuilder();
+            //strSql.Append("select id,name,video_address,departmentment_id,longitude,latitude,location_type,type,remark ");
+            //strSql.Append(" FROM device ");
+            strSql.Append("select d.*,dpt.name as locationtype_name from device as d ");
+            strSql.Append(" INNER JOIN device_placetype as dpt on d.location_type = dpt.id ");
+
+            if (strWhere.Trim() != "")
+            {
+                strSql.Append(" where " + strWhere);
+            }
+            return DbHelperMySQL.Query(strSql.ToString());
+        }
 
 		/// <summary>
 		/// 获取记录总数
@@ -343,7 +389,29 @@ namespace DataAngineSet.DAL
         public DataSet GetList(int startIndex, int pageSize, string strWhere)
         {
             StringBuilder strSql = new StringBuilder();
-            strSql.Append("select d.id,d.name,d.video_address,d.departmentment_id,d.longitude,d.latitude,dpt.name as location_type ,d.type,d.remark from device as d INNER JOIN device_placetype as dpt on d.location_type = dpt.id ");
+            strSql.Append("select * ");
+            strSql.Append(" FROM device ");
+            //strSql.Append("select d.id,d.name,d.video_address,d.departmentment_id,d.longitude,d.latitude,dpt.name as location_type ,d.type,d.remark from device as d INNER JOIN device_placetype as dpt on d.location_type = dpt.id ");
+
+            if (strWhere.Trim() != "")
+            {
+                strSql.Append(" where " + strWhere);
+            }
+            strSql.Append(" limit " + startIndex + ", " + pageSize);
+
+            return DbHelperMySQL.Query(strSql.ToString());
+        }
+
+        /// <summary>
+        /// 分页获得数据列表
+        /// </summary>
+        public DataSet GetList_Cascade(int startIndex, int pageSize, string strWhere)
+        {
+            StringBuilder strSql = new StringBuilder();
+            //strSql.Append("select * ");
+            //strSql.Append(" FROM device ");
+            strSql.Append("select d.*,dpt.name as locationtype_name from device as d ");
+            strSql.Append(" INNER JOIN device_placetype as dpt on d.location_type = dpt.id ");
 
             if (strWhere.Trim() != "")
             {

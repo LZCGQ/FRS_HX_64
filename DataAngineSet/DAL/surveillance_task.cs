@@ -191,8 +191,11 @@ namespace DataAngineSet.DAL
         {
 
             StringBuilder strSql = new StringBuilder();
-            strSql.Append("select st.id,st.name,st.person_dataset_id,st.device_id,stt.name as type,st.create_time,st.start_time,st.end_time,st.remark from surveillance_task as st INNER JOIN surveillance_task_type as stt on st.type = stt.id ");
-            strSql.Append(" where st.id=@id");
+
+            strSql.Append("select id,name,person_dataset_id,device_id,type,create_time,start_time,end_time,remark from surveillance_task ");
+            strSql.Append(" where id=@id");
+            //strSql.Append("select st.id,st.name,st.person_dataset_id,st.device_id,stt.name as type,st.create_time,st.start_time,st.end_time,st.remark from surveillance_task as st INNER JOIN surveillance_task_type as stt on st.type = stt.id ");
+            //strSql.Append(" where st.id=@id");
             MySqlParameter[] parameters = {
 					new MySqlParameter("@id", MySqlDbType.Int32)
 			};
@@ -208,6 +211,31 @@ namespace DataAngineSet.DAL
             {
                 return null;
             }
+        }
+
+        /// <summary>
+        /// 得到一个对象实体
+        /// </summary>
+        public DataSet GetModel_Cascade(int id)
+        {
+
+            StringBuilder strSql = new StringBuilder();
+
+            //strSql.Append("select id,name,person_dataset_id,device_id,type,create_time,start_time,end_time,remark from surveillance_task ");
+            //strSql.Append(" where id=@id");
+            strSql.Append("select st.*,stt.name as type_name,de.name as device_name,per.name as person_dataset_name from surveillance_task as st");
+            strSql.Append(" INNER JOIN surveillance_task_type as stt on st.type = stt.id ");
+            strSql.Append(" INNER JOIN device as de on st.device_id = de.id ");
+            strSql.Append(" INNER JOIN person_dataset as per on st.person_dataset_id = per.id ");
+            strSql.Append(" where st.id=@id");
+            MySqlParameter[] parameters = {
+					new MySqlParameter("@id", MySqlDbType.Int32)
+			};
+            parameters[0].Value = id;
+
+
+            return DbHelperMySQL.Query(strSql.ToString(), parameters);
+            
         }
 
 
@@ -265,7 +293,32 @@ namespace DataAngineSet.DAL
         public DataSet GetList(string strWhere)
         {
             StringBuilder strSql = new StringBuilder();
-            strSql.Append("select st.id,st.name,st.person_dataset_id,st.device_id,stt.name as type,st.create_time,st.start_time,st.end_time,st.remark from surveillance_task as st INNER JOIN surveillance_task_type as stt on st.type = stt.id ");
+
+            strSql.Append("select id,name,person_dataset_id,device_id,type,create_time,start_time,end_time,remark ");
+            strSql.Append(" FROM surveillance_task ");
+            //strSql.Append("select st.id,st.name,st.person_dataset_id,st.device_id,stt.name as type,st.create_time,st.start_time,st.end_time,st.remark from surveillance_task as st INNER JOIN surveillance_task_type as stt on st.type = stt.id ");
+
+            if (strWhere.Trim() != "")
+            {
+                strSql.Append(" where " + strWhere);
+            }
+            return DbHelperMySQL.Query(strSql.ToString());
+        }
+
+        /// <summary>
+        /// 获得数据列表
+        /// </summary>
+        public DataSet GetList_Cascade(string strWhere)
+        {
+            StringBuilder strSql = new StringBuilder();
+
+            //strSql.Append("select id,name,person_dataset_id,device_id,type,create_time,start_time,end_time,remark ");
+            //strSql.Append(" FROM surveillance_task ");
+            
+            strSql.Append("select st.*,stt.name as type_name,de.name as device_name,per.name as person_dataset_name from surveillance_task as st");
+            strSql.Append(" INNER JOIN surveillance_task_type as stt on st.type = stt.id ");
+            strSql.Append(" INNER JOIN device as de on st.device_id = de.id ");
+            strSql.Append(" INNER JOIN person_dataset as per on st.person_dataset_id = per.id ");
 
             if (strWhere.Trim() != "")
             {
@@ -354,7 +407,30 @@ namespace DataAngineSet.DAL
         public DataSet GetList(int startIndex, int pageSize, string strWhere)
         {
             StringBuilder strSql = new StringBuilder();
-            strSql.Append("select st.id,st.name,st.person_dataset_id,st.device_id,stt.name as type,st.create_time,st.start_time,st.end_time,st.remark from surveillance_task as st INNER JOIN surveillance_task_type as stt on st.type = stt.id ");
+
+            strSql.Append("select * ");
+            strSql.Append(" FROM surveillance_task ");
+            //strSql.Append("select st.id,st.name,st.person_dataset_id,st.device_id,stt.name as type,st.create_time,st.start_time,st.end_time,st.remark from surveillance_task as st INNER JOIN surveillance_task_type as stt on st.type = stt.id ");
+
+            if (strWhere.Trim() != "")
+            {
+                strSql.Append(" where " + strWhere);
+            }
+            strSql.Append(" limit " + startIndex + ", " + pageSize);
+
+            return DbHelperMySQL.Query(strSql.ToString());
+        }
+
+        public DataSet GetList_Cascade(int startIndex, int pageSize, string strWhere)
+        {
+            StringBuilder strSql = new StringBuilder();
+
+            //strSql.Append("select * ");
+            //strSql.Append(" FROM surveillance_task ");
+            strSql.Append("select st.*,stt.name as type_name,de.name as device_name,per.name as person_dataset_name from surveillance_task as st");
+            strSql.Append(" INNER JOIN surveillance_task_type as stt on st.type = stt.id ");
+            strSql.Append(" INNER JOIN device as de on st.device_id = de.id ");
+            strSql.Append(" INNER JOIN person_dataset as per on st.person_dataset_id = per.id ");
 
             if (strWhere.Trim() != "")
             {

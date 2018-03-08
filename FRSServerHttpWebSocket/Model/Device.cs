@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using System.Configuration;
 using Newtonsoft.Json;
 using DataAngineSet.Model;
+using System.Data;
 namespace FRSServerHttp.Model
 {
 
@@ -117,6 +118,79 @@ namespace FRSServerHttp.Model
             }
             return des;
 
+        }
+    }
+
+    //级联类
+    class Device_Cascade
+    {
+        public int ID { get; set; }
+        public string Name { get; set; }
+        public string Video_Address { get; set; }//视频地址
+        public string DepartmentID { get; set; }//公安ID
+        public double? Longitude { get; set; }//经度
+        public double? Latitude { get; set; }//纬度
+        public string LocationType { get; set; }//区域类型，汽车站，公交站，酒吧
+        public string LocationType_Name { get; set; }//区域类型，汽车站，公交站，酒吧
+        public string Type { get; set; }//类型
+        public string Remark { get; set; }//备注
+
+        public string ToJson()
+        {
+            return JsonConvert.SerializeObject(this);
+        }
+
+
+        public static Device_Cascade[] CreateInstanceFromDataAngineDataSet(DataSet ds)
+        {
+            if (0 == ds.Tables.Count)
+            {
+                return null;
+            }
+
+            DataTable dt = ds.Tables[0];
+            int DeCount = dt.Rows.Count;
+            Device_Cascade[] des = new Device_Cascade[DeCount];
+
+            for (int i = 0; i < DeCount; ++i)
+            {
+                Device_Cascade de = new Device_Cascade();
+                de.ID = Convert.ToInt32(dt.Rows[i]["id"]);
+                de.Name = dt.Rows[i]["name"].ToString();
+                de.Video_Address = dt.Rows[i]["video_address"].ToString();
+                de.DepartmentID = dt.Rows[i]["departmentment_id"].ToString();
+                de.Longitude = Convert.ToDouble(dt.Rows[i]["longitude"]);
+                de.Latitude = Convert.ToDouble(dt.Rows[i]["latitude"]);
+                de.LocationType = dt.Rows[i]["location_type"].ToString();
+                de.LocationType_Name = dt.Rows[i]["locationtype_name"].ToString();
+                de.Type = dt.Rows[i]["type"].ToString();
+                de.Remark = dt.Rows[i]["remark"].ToString();
+                des[i] = de;
+            }
+            return des;
+        }
+
+
+        public static Device_Cascade CreateInstanceFromDataAngineModel(DataSet ds)
+        {
+            if (1 != ds.Tables.Count)
+            {
+                return null;
+            }
+
+            DataTable dt = ds.Tables[0];
+            Device_Cascade de = new Device_Cascade();
+            de.ID = Convert.ToInt32(dt.Rows[0]["id"]);
+            de.Name = dt.Rows[0]["name"].ToString();
+            de.Video_Address = dt.Rows[0]["video_address"].ToString();
+            de.DepartmentID = dt.Rows[0]["departmentment_id"].ToString();
+            de.Longitude = Convert.ToDouble(dt.Rows[0]["longitude"]);
+            de.Latitude = Convert.ToDouble(dt.Rows[0]["latitude"]);
+            de.LocationType = dt.Rows[0]["location_type"].ToString();
+            de.LocationType_Name = dt.Rows[0]["locationtype_name"].ToString();
+            de.Type = dt.Rows[0]["type"].ToString();
+            de.Remark = dt.Rows[0]["remark"].ToString();
+            return de;
         }
     }
     //class DeviceData
