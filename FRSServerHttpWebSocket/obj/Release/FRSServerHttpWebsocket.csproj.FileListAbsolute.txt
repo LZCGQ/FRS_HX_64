@@ -39,3 +39,9 @@ G:\人脸识别项目\FRS_HX_64\Release\FRSServerHttp.exe
 G:\人脸识别项目\FRS_HX_64\Release\FRSServerHttp.pdb
 G:\人脸识别项目\FRS_HX_64\FRSServerHttpWebSocket\obj\Release\FRSServerHttpWebsocket.csprojResolveAssemblyReference.cache
 G:\人脸识别项目\FRS_HX_64\FRSServerHttpWebSocket\obj\Release\FRSServerHttp.pdb
+D:\BaiduNetdiskDownload\FaceAngineNew_x64_2.0_HX\Release\FRSServerHttp.exe.config
+D:\BaiduNetdiskDownload\FaceAngineNew_x64_2.0_HX\FRSServerHttpWebSocket\obj\Release\FRSServerHttp.exe
+D:\BaiduNetdiskDownload\FaceAngineNew_x64_2.0_HX\FRSServerHttpWebSocket\obj\Release\FRSServerHttp.pdb
+D:\BaiduNetdiskDownload\FaceAngineNew_x64_2.0_HX\Release\FRSServerHttp.exe
+D:\BaiduNetdiskDownload\FaceAngineNew_x64_2.0_HX\Release\FRSServerHttp.pdb
+D:\BaiduNetdiskDownload\FaceAngineNew_x64_2.0_HX\FRSServerHttpWebSocket\obj\Release\FRSServerHttpWebsocket.csprojResolveAssemblyReference.cache

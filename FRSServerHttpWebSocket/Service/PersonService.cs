@@ -7,6 +7,8 @@ using DataAngineSet.BLL;
 using FRSServerHttp.Model;
 using Newtonsoft.Json;
 using FRS;
+using System.Drawing;
+using System.IO;
 namespace FRSServerHttp.Service
 {
 
@@ -65,7 +67,8 @@ namespace FRSServerHttp.Service
                 }
 
                 UserInfo usr = new UserInfo();
-                RegisterSingleInfo registersingleinfo = RegisterSingleInfo.CreateInstanceFromJSON(request.PostParams);
+                string result = Base64Decode(request.PostParams);
+                RegisterSingleInfo registersingleinfo = RegisterSingleInfo.CreateInstanceFromJSON(result);
                 usr.personDatasetId = id;
                 usr.name = registersingleinfo.Name;
                 usr.gender = registersingleinfo.Gender;
@@ -74,11 +77,16 @@ namespace FRSServerHttp.Service
                 
                 //初始化                   
                 InitFRS();
-                int statusnum = fa.Register(registersingleinfo.Path, usr);
+
+                Bitmap Bitmapsrc = Base64ToImage(registersingleinfo.PicSrc);
+                Bitmap bmpsrc = new Bitmap(Bitmapsrc.Width, Bitmapsrc.Height, System.Drawing.Imaging.PixelFormat.Format24bppRgb);
+                Graphics.FromImage(bmpsrc).DrawImage(Bitmapsrc, new Rectangle(0, 0, bmpsrc.Width, bmpsrc.Height));
+
+                int statusnum = fa.Register(bmpsrc, usr);
                 if (statusnum == 0)
                 {
                     status = true;
-                    Log.Debug(string.Format("共注册成功"));
+                    Log.Debug(string.Format("注册成功"));
                 }
                 
                 response.SetContent(status.ToString());
@@ -120,5 +128,97 @@ namespace FRSServerHttp.Service
 
             response.Send();
         }
+        public static Bitmap Base64ToImage(string base64)
+        {
+            byte[] bytes = Convert.FromBase64String(base64);
+            return BytesToBitmap(bytes);
+        }
+
+        public static Bitmap BytesToBitmap(byte[] Bytes)
+        {
+            MemoryStream stream = null;
+            try
+            {
+                stream = new MemoryStream(Bytes);
+                return new Bitmap((Image)new Bitmap(stream));
+            }
+            catch (ArgumentNullException ex)
+            {
+                throw ex;
+            }
+            catch (ArgumentException ex)
+            {
+                throw ex;
+            }
+            finally
+            {
+                stream.Close();
+            }
+        }
+
+
+
+        /// <summary>
+        /// Base64加密，采用utf8编码方式加密
+        /// </summary>
+        /// <param name="source">待加密的明文</param>
+        /// <returns>加密后的字符串</returns>
+        public static string Base64Encode(string source)
+        {
+            return Base64Encode(Encoding.UTF8, source);
+        }
+
+        /// <summary>
+        /// Base64加密
+        /// </summary>
+        /// <param name="encodeType">加密采用的编码方式</param>
+        /// <param name="source">待加密的明文</param>
+        /// <returns></returns>
+        public static string Base64Encode(Encoding encodeType, string source)
+        {
+            string encode = string.Empty;
+            byte[] bytes = encodeType.GetBytes(source);
+            try
+            {
+                encode = Convert.ToBase64String(bytes);
+            }
+            catch
+            {
+                encode = source;
+            }
+            return encode;
+        }
+
+        /// <summary>
+        /// Base64解密，采用utf8编码方式解密
+        /// </summary>
+        /// <param name="result">待解密的密文</param>
+        /// <returns>解密后的字符串</returns>
+        public static string Base64Decode(string result)
+        {
+            return Base64Decode(Encoding.UTF8, result);
+        }
+
+        /// <summary>
+        /// Base64解密
+        /// </summary>
+        /// <param name="encodeType">解密采用的编码方式，注意和加密时采用的方式一致</param>
+        /// <param name="result">待解密的密文</param>
+        /// <returns>解密后的字符串</returns>
+        public static string Base64Decode(Encoding encodeType, string result)
+        {
+            string decode = string.Empty;
+            byte[] bytes = Convert.FromBase64String(result);
+            try
+            {
+                decode = encodeType.GetString(bytes);
+            }
+            catch
+            {
+                decode = result;
+            }
+            return decode;
+        }
+        
     }
 }

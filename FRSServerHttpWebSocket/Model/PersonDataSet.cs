@@ -75,7 +75,7 @@ namespace FRSServerHttp.Model
 
     class RegisterSingleInfo
     {
-        public string Path { get; set; }
+        public string PicSrc { get; set; }
         public string Name { get; set; }
         public string Gender { get; set; }
         public string CardId { get; set; }
