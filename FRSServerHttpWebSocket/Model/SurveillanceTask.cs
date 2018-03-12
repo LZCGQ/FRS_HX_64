@@ -150,7 +150,7 @@ namespace FRSServerHttp.Model
                 st.DatasetID = Convert.ToInt32(dt.Rows[i]["person_dataset_id"]);
                 st.DatasetName = dt.Rows[i]["person_dataset_name"].ToString();
                 st.DeviceID = Convert.ToInt32(dt.Rows[i]["device_id"]);
-                st.DatasetName = dt.Rows[i]["device_name"].ToString();
+                st.DeviceName = dt.Rows[i]["device_name"].ToString();
                 st.Type = dt.Rows[i]["type"].ToString();
                 st.Type_Name = dt.Rows[i]["type_name"].ToString();
                 st.Remark = dt.Rows[i]["remark"].ToString();
@@ -176,7 +176,7 @@ namespace FRSServerHttp.Model
             st.DatasetID = Convert.ToInt32(dt.Rows[0]["person_dataset_id"]);
             st.DatasetName = dt.Rows[0]["person_dataset_name"].ToString();
             st.DeviceID = Convert.ToInt32(dt.Rows[0]["device_id"]);
-            st.DatasetName = dt.Rows[0]["device_name"].ToString();
+            st.DeviceName = dt.Rows[0]["device_name"].ToString();
             st.Type = dt.Rows[0]["type"].ToString();
             st.Type_Name = dt.Rows[0]["type_name"].ToString();
             st.Remark = dt.Rows[0]["remark"].ToString();
