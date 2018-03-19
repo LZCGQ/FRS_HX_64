@@ -131,7 +131,9 @@ namespace DataAngineSet.DAL
             }
             strSql.Append(" order by occur_time desc");
             strSql.Append(" limit " + startIndex + ", " + pageSize);
-            
+
+            Console.WriteLine(strSql.ToString());
+
             return DbHelperMySQL.Query(strSql.ToString());
         }
 

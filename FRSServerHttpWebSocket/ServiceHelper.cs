@@ -62,7 +62,10 @@ namespace FRSServerHttp
            {
                return new DevicePlacetypeService();
            }
-
+           else if (RecordingByImgService.Domain == domain)
+           {
+               return new RecordingByImgService();
+           }
 
            return null;
        }

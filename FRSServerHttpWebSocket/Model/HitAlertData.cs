@@ -53,6 +53,28 @@ namespace FRSServerHttp.Model
         }
     }
 
+    class Trajectory_Search_ByImg
+    {
+        public DateTime StartTime { get; set; }
+        public DateTime EndTime { get; set; }
+        public String PicSrc { get; set; }
+        public int StartIndex { get; set; }
+        public int PageSize { get; set; }
+
+        public static Trajectory_Search_ByImg CreateInstanceFromJSON(string json)
+        {
+            Trajectory_Search_ByImg msg = null;
+            try
+            {
+                msg = (Trajectory_Search_ByImg)JsonConvert.DeserializeObject(json, typeof(Trajectory_Search_ByImg));
+            }
+            catch
+            {
+            }
+            return msg;
+        }
+    }
+
     class HitAlertData
     {
         public int id { get; set; }
@@ -177,8 +199,14 @@ namespace FRSServerHttp.Model
                 hitalertdata.FaceQueryImagePath = dt.Rows[i]["face_query_image_path"].ToString();
                 hitalertdata.Threshold = Convert.ToSingle(dt.Rows[i]["Threshold"]);
                 hitalertdata.OccurTime = dt.Rows[i]["occur_time"].ToString();
-                if (dt.Rows[i]["task_id"] != string.Empty)
+                try
+                {
                     hitalertdata.task_id = Convert.ToInt32(dt.Rows[i]["task_id"]);
+                }
+                catch
+                {
+                    hitalertdata.task_id = 0;
+                }
                 hitalertdata.detail_id = Convert.ToInt32(dt.Rows[i]["detail_id"]);
                 hitalertdata.rank = Convert.ToInt32(dt.Rows[i]["rank"]);
                 hitalertdata.score = Convert.ToSingle(dt.Rows[i]["score"]);
@@ -193,8 +221,14 @@ namespace FRSServerHttp.Model
                 hitalertdata.user_create_time = dt.Rows[i]["user_create_time"].ToString();
                 hitalertdata.user_modified_time = dt.Rows[i]["user_modified_time"].ToString();
                 hitalertdata.user_quality_score = Convert.ToSingle(dt.Rows[i]["user_quality_score"]);
-                if (dt.Rows[i]["device_id"] != string.Empty)
+                try
+                {
                     hitalertdata.device_id = Convert.ToInt32(dt.Rows[i]["device_id"]);
+                }
+                catch
+                {
+                    hitalertdata.device_id = 0;
+                }
                 hits[i] = hitalertdata;
             }
             return hits;
