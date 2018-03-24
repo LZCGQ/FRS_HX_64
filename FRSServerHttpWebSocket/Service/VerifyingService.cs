@@ -2,6 +2,7 @@
 using FRSServerHttp.Model;
 using FRSServerHttp.Server;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
@@ -114,6 +115,11 @@ namespace FRSServerHttp.Service
 
                     FRS.HitAlert[] hits = fa.Search(bmpsrc);
                     string msg = JsonConvert.SerializeObject(Model.HitAlert.CreateInstanceFromFRSHitAlert(hits));
+                    if(hits==null)
+                    {
+                        JObject jo = new JObject(new JProperty("num", 0));
+                        response.SetContent(JsonConvert.SerializeObject(jo));
+                    }
                     response.SetContent(msg);
                     bmpsrc.Dispose();
                 }

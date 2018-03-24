@@ -6,3 +6,6 @@ F:\FRS\FRSServerHttp\bin\Debug\Newtonsoft.Json.xml
 F:\FRS\FRSServerHttp\obj\Debug\FRSServerHttpWebsocket.csprojResolveAssemblyReference.cache
 F:\FRS\FRSServerHttp\obj\Debug\FRSServerHttp.exe
 F:\FRS\FRSServerHttp\obj\Debug\FRSServerHttp.pdb
+F:\人脸识别\FRS_HX_64\FRSServerHttpWebSocket\bin\Debug\FRSServerHttp.exe.config
+F:\人脸识别\FRS_HX_64\FRSServerHttpWebSocket\obj\Debug\FRSServerHttp.exe
+F:\人脸识别\FRS_HX_64\FRSServerHttpWebSocket\obj\Debug\FRSServerHttpWebsocket.csprojResolveAssemblyReference.cache

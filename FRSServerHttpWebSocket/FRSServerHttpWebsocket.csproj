@@ -87,6 +87,7 @@
     <Compile Include="Service\HitrecordService.cs" />
     <Compile Include="Service\PersonDataSetService.cs" />
     <Compile Include="Service\PersonService.cs" />
+    <Compile Include="Service\RecordingByImgService.cs" />
     <Compile Include="Service\RegisterService.cs" />
     <Compile Include="Service\SurveillanceTaskTypeService.cs" />
     <Compile Include="Service\UserService.cs" />
