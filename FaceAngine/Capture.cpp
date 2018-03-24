@@ -167,8 +167,6 @@ Int32 Capture::Stop()
 	}
 }
 
-
-
 void Capture::Begin(Object^ o)
 {
 	if (isRun)

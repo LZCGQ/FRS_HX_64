@@ -813,7 +813,7 @@ array<HitAlert^>^ FeatureData::Search(cv::Mat& cvImg)
 		return nullptr;
 	}
 
-	if (cvImg.channels() < 3)
+	if (cvImg.channels() != 3)
 	{
 		ShowMsgEvent("Over!", nullptr);
 		//throw gcnew ArgumentException("src_image must have more than 3 channel");
