@@ -58,6 +58,7 @@ namespace FRSServerHttp.Model
         public DateTime StartTime { get; set; }
         public DateTime EndTime { get; set; }
         public String PicSrc { get; set; }
+        public String PicSrc_Path { get; set; }
         public int StartIndex { get; set; }
         public int PageSize { get; set; }
 

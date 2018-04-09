@@ -254,6 +254,7 @@ Class FRS.FeatureData: AutoLayout, AnsiClass, Class, Public, BeforeFieldInit
     Unregister(ValueType Int32 IsBoxed): PrivateScope, Public, HideBySig
     Unregister(String): PrivateScope, Public, HideBySig
     LoadData(ValueType Int32 IsBoxed): PrivateScope, Public, HideBySig
+    LoadData(): PrivateScope, Public, HideBySig
     Search(Image, Int16, Int32): PrivateScope, Public, HideBySig
     Search(Image, Int16): PrivateScope, Public, HideBySig
     Search(Image): PrivateScope, Public, HideBySig

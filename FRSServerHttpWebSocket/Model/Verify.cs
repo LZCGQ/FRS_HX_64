@@ -12,7 +12,9 @@ namespace FRSServerHttp.Model
     class VerifyOneVsOne
     {
         public string PicSrc { get; set; }
+        public string PicSrc_Path { get; set; }
         public string PicDst { get; set; }
+        public string PicDst_Path { get; set; }
         public static VerifyOneVsOne CreateInstanceFromJSON(string json)
         {
             VerifyOneVsOne msg = null;
@@ -30,6 +32,7 @@ namespace FRSServerHttp.Model
     class VerifyOneVsN
     {
         public string PicSrc { get; set; }
+        public string PicSrc_Path { get; set; }
         public string ScoreThresh { get; set; }
         public string TopK { get; set; }
         public static VerifyOneVsN CreateInstanceFromJSON(string json)

@@ -349,7 +349,7 @@ namespace FRS {
 		/** @brief  load feature data from binary file;
 		*
 		*/
-		//Int32 LoadData();
+		Int32 LoadData();
 
 		Int32 LoadData(Int32^ libraryid);
 

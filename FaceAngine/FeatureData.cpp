@@ -713,21 +713,21 @@ Int32 FeatureData::Unregister(Int32^ id)
 #pragma region Load data into stack
 
 #pragma region 数据载入
-//Int32 FeatureData::LoadData()
-//{
-//#if USE_EXPIRE
-//	if (IsExpired()) throw gcnew Exception("software has been expired");;
-//#endif
-//
-//	try{
-//		allUsers = usrbll->GetAllUser();		
-//	}
-//	catch (Exception ^e){
-//		MessageBox::Show("GetAllUser Error:" + e->Message);
-//		return ReturnCode::UNKOWN_EXCEPTION;
-//	}
-//	return ReturnCode::SUCCESS;
-//}
+Int32 FeatureData::LoadData()
+{
+#if USE_EXPIRE
+	if (IsExpired()) throw gcnew Exception("software has been expired");;
+#endif
+
+	try{
+		allUsers = usrbll->GetAllUser();		
+	}
+	catch (Exception ^e){
+		MessageBox::Show("GetAllUser Error:" + e->Message);
+		return ReturnCode::UNKOWN_EXCEPTION;
+	}
+	return ReturnCode::SUCCESS;
+}
 #pragma endregion
 
 #pragma region 数据载入--数据库

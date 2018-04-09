@@ -51,26 +51,39 @@ namespace FRSServerHttp.Service
                 VerifyOneVsOne verify = VerifyOneVsOne.CreateInstanceFromJSON(result);
                 if (verify != null)
                 {
-                    Bitmap Bitmapsrc = Base64ToImage(verify.PicSrc);
-                    Bitmap Bitmapdst = Base64ToImage(verify.PicDst);
-
-                    Bitmap bmpsrc = new Bitmap(Bitmapsrc.Width, Bitmapsrc.Height, System.Drawing.Imaging.PixelFormat.Format24bppRgb);
-                    Graphics.FromImage(bmpsrc).DrawImage(Bitmapsrc, new Rectangle(0, 0, bmpsrc.Width, bmpsrc.Height));
-
-                    Bitmap bmpdst = new Bitmap(Bitmapdst.Width, Bitmapdst.Height, System.Drawing.Imaging.PixelFormat.Format24bppRgb);
-                    Graphics.FromImage(bmpdst).DrawImage(Bitmapdst, new Rectangle(0, 0, bmpdst.Width, bmpdst.Height));
-
-                    Bitmapsrc.Save("Bitmapsrc.jpg");
-                    Bitmapdst.Save("Bitmapdst.jpg");
-               
+                    double score = 0;
                     //初始化                   
                     InitFRS();
-                    double score = fa.Compare(bmpsrc, bmpdst);
+                    if (verify.PicSrc != null && verify.PicDst != null)
+                    {
+                        Bitmap Bitmapsrc = Base64ToImage(verify.PicSrc);
+                        Bitmap Bitmapdst = Base64ToImage(verify.PicDst);
+
+                        Bitmap bmpsrc = new Bitmap(Bitmapsrc.Width, Bitmapsrc.Height, System.Drawing.Imaging.PixelFormat.Format24bppRgb);
+                        Graphics.FromImage(bmpsrc).DrawImage(Bitmapsrc, new Rectangle(0, 0, bmpsrc.Width, bmpsrc.Height));
+
+                        Bitmap bmpdst = new Bitmap(Bitmapdst.Width, Bitmapdst.Height, System.Drawing.Imaging.PixelFormat.Format24bppRgb);
+                        Graphics.FromImage(bmpdst).DrawImage(Bitmapdst, new Rectangle(0, 0, bmpdst.Width, bmpdst.Height));
+
+                        Bitmapsrc.Save("Bitmapsrc.jpg");
+                        Bitmapdst.Save("Bitmapdst.jpg");
+                        
+                        score = fa.Compare(bmpsrc, bmpdst);
+                        bmpsrc.Dispose();
+                        bmpdst.Dispose();
+                    }
+                    else
+                    {
+                        Image src = Image.FromFile(verify.PicSrc_Path);
+                        Image dst = Image.FromFile(verify.PicDst_Path);
+                        score = fa.Compare(src, dst);
+                    }
+               
+                   
                     Log.Debug(string.Format("相似度:{0}", score));
                     response.SetContent(JsonConvert.SerializeObject(score));
                     //response.SetContent("0.8");
-                    bmpsrc.Dispose();
-                    bmpdst.Dispose();
+                    
                 }
 
             }
@@ -95,10 +108,7 @@ namespace FRSServerHttp.Service
                     if (TopK == 0)
                         TopK = 3;
 
-                    Bitmap Bitmapsrc = Base64ToImage(verify.PicSrc);
-                    Bitmap bmpsrc = new Bitmap(Bitmapsrc.Width, Bitmapsrc.Height, System.Drawing.Imaging.PixelFormat.Format24bppRgb);
-                    Graphics.FromImage(bmpsrc).DrawImage(Bitmapsrc, new Rectangle(0, 0, bmpsrc.Width, bmpsrc.Height));
-                    //Bitmapsrc.Save("Bitmapsrc.jpg");
+
                     //初始化                   
                     InitFRS();
                     fa.LoadData(DatasetId);
@@ -113,7 +123,24 @@ namespace FRSServerHttp.Service
                     Log.Debug(string.Format("设置阈值:{0}", fa.ScoreThresh));
                     Log.Debug(string.Format("设置top值:{0}", fa.TopK));
 
-                    FRS.HitAlert[] hits = fa.Search(bmpsrc);
+                    FRS.HitAlert[] hits;
+                    if (verify.PicSrc != null)
+                    {
+
+                        Bitmap Bitmapsrc = Base64ToImage(verify.PicSrc);
+                        Bitmap bmpsrc = new Bitmap(Bitmapsrc.Width, Bitmapsrc.Height, System.Drawing.Imaging.PixelFormat.Format24bppRgb);
+                        Graphics.FromImage(bmpsrc).DrawImage(Bitmapsrc, new Rectangle(0, 0, bmpsrc.Width, bmpsrc.Height));
+                        //Bitmapsrc.Save("Bitmapsrc.jpg");
+
+
+                        hits = fa.Search(bmpsrc);
+                        bmpsrc.Dispose();
+                    }
+                    else
+                    {
+                         Image src = Image.FromFile(verify.PicSrc_Path);
+                        hits = fa.Search(src);
+                    }
                     string msg = JsonConvert.SerializeObject(Model.HitAlert.CreateInstanceFromFRSHitAlert(hits));
                     if(hits==null)
                     {
@@ -121,7 +148,7 @@ namespace FRSServerHttp.Service
                         response.SetContent(JsonConvert.SerializeObject(jo));
                     }
                     response.SetContent(msg);
-                    bmpsrc.Dispose();
+                    
                 }
             }
 

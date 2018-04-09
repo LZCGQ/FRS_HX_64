@@ -70,16 +70,26 @@ namespace FRSServerHttp.Service
                 Trajectory_Search_ByImg trajectory_search = Trajectory_Search_ByImg.CreateInstanceFromJSON(result);
                 if (trajectory_search != null)
                 {
-                    Bitmap Bitmapsrc = Base64ToImage(trajectory_search.PicSrc);
-                    Bitmap bmpsrc = new Bitmap(Bitmapsrc.Width, Bitmapsrc.Height, System.Drawing.Imaging.PixelFormat.Format24bppRgb);
-                    Graphics.FromImage(bmpsrc).DrawImage(Bitmapsrc, new Rectangle(0, 0, bmpsrc.Width, bmpsrc.Height));
 
                     InitFRS();
-                    fa.LoadData(1);
-                    FRS.HitAlert[] hits = fa.Search(bmpsrc);
-
+                    fa.LoadData();
                     Log.Debug(string.Format("阈值:{0}", fa.ScoreThresh));
                     Log.Debug(string.Format("top值:{0}", fa.TopK));
+                    FRS.HitAlert[] hits;
+
+                    if (trajectory_search.PicSrc != null)
+                    {
+                        Bitmap Bitmapsrc = Base64ToImage(trajectory_search.PicSrc);
+                        Bitmap bmpsrc = new Bitmap(Bitmapsrc.Width, Bitmapsrc.Height, System.Drawing.Imaging.PixelFormat.Format24bppRgb);
+                        Graphics.FromImage(bmpsrc).DrawImage(Bitmapsrc, new Rectangle(0, 0, bmpsrc.Width, bmpsrc.Height));
+                        hits = fa.Search(bmpsrc);
+                        bmpsrc.Dispose();
+                    }
+                    else
+                    {
+                        Image src = Image.FromFile(trajectory_search.PicSrc_Path);
+                        hits = fa.Search(src);
+                    }
 
                     if (hits == null)
                     {
@@ -102,7 +112,7 @@ namespace FRSServerHttp.Service
 
                         response.SetContent(JsonConvert.SerializeObject(jo));
                     }
-                    bmpsrc.Dispose();
+                    
                 }
             }
             response.Send();
