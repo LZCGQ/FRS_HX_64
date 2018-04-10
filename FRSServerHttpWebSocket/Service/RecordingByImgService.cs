@@ -10,6 +10,7 @@ using FRSServerHttp.Server;
 using DataAngineSet.BLL;
 using Newtonsoft.Json.Linq;
 using System.Drawing;
+using System.Net;
 
 namespace FRSServerHttp.Service
 {
@@ -73,6 +74,7 @@ namespace FRSServerHttp.Service
 
                     InitFRS();
                     fa.LoadData();
+                    fa.ScoreThresh = (float)0.5;
                     Log.Debug(string.Format("阈值:{0}", fa.ScoreThresh));
                     Log.Debug(string.Format("top值:{0}", fa.TopK));
                     FRS.HitAlert[] hits;
@@ -87,30 +89,43 @@ namespace FRSServerHttp.Service
                     }
                     else
                     {
-                        Image src = Image.FromFile(trajectory_search.PicSrc_Path);
+                        //Image src = Image.FromFile(trajectory_search.PicSrc_Path);
+                        Image src = Get_UrlImage(trajectory_search.PicSrc_Path);
                         hits = fa.Search(src);
                     }
 
                     if (hits == null)
                     {
-                        Log.Debug("没有找到该图像对应的人脸");
-                        response.SetContent("没有找到该图像对应的人脸");
+                        Log.Debug("该图没有人脸");
+                        JObject jo = new JObject(new JProperty("num", 0), new JProperty("pageData", null));
+
+                        response.SetContent(JsonConvert.SerializeObject(jo));
                     }
                     else
                     {
-                        int UserId = (int)hits[0].Details[0].UserId;
-                        Console.WriteLine(UserId);
-                        Log.Debug(string.Format("{0}, {1}, {2}, {3}", trajectory_search.StartTime, trajectory_search.EndTime, trajectory_search.StartIndex, trajectory_search.PageSize));
+                        if (hits[0].Details.Length == 0)
+                        {
+                            Log.Debug("没有找到该图像对应的人脸");
+                            JObject jo = new JObject(new JProperty("num", 0), new JProperty("pageData", null));
 
-                        System.Data.DataSet a = bll.GetListById(UserId, trajectory_search.StartTime, trajectory_search.EndTime, trajectory_search.StartIndex, trajectory_search.PageSize);
+                            response.SetContent(JsonConvert.SerializeObject(jo));
+                        }
+                        else
+                        {
+                            int UserId = (int)hits[0].Details[0].UserId;
+                            Console.WriteLine(UserId);
+                            Log.Debug(string.Format("{0}, {1}, {2}, {3}", trajectory_search.StartTime, trajectory_search.EndTime, trajectory_search.StartIndex, trajectory_search.PageSize));
 
-                        Console.WriteLine(a.Tables);
+                            System.Data.DataSet a = bll.GetListById(UserId, trajectory_search.StartTime, trajectory_search.EndTime, trajectory_search.StartIndex, trajectory_search.PageSize);
 
-                        HitAlertData_Trajectory_Search[] ha = HitAlertData_Trajectory_Search.CreateInstanceFromDataAngineDataSet(bll.GetListById(UserId, trajectory_search.StartTime, trajectory_search.EndTime, trajectory_search.StartIndex, trajectory_search.PageSize));
-                        HitAlertData_Trajectory_Search[] haALL = HitAlertData_Trajectory_Search.CreateInstanceFromDataAngineDataSet(bll.GetListById(UserId, trajectory_search.StartTime, trajectory_search.EndTime));
-                        JObject jo = new JObject(new JProperty("num", haALL.Length), new JProperty("pageData", JsonConvert.DeserializeObject(JsonConvert.SerializeObject(ha))));
+                            Console.WriteLine(a.Tables);
 
-                        response.SetContent(JsonConvert.SerializeObject(jo));
+                            HitAlertData_Trajectory_Search[] ha = HitAlertData_Trajectory_Search.CreateInstanceFromDataAngineDataSet(bll.GetListById(UserId, trajectory_search.StartTime, trajectory_search.EndTime, trajectory_search.StartIndex, trajectory_search.PageSize));
+                            HitAlertData_Trajectory_Search[] haALL = HitAlertData_Trajectory_Search.CreateInstanceFromDataAngineDataSet(bll.GetListById(UserId, trajectory_search.StartTime, trajectory_search.EndTime));
+                            JObject jo = new JObject(new JProperty("num", haALL.Length), new JProperty("pageData", JsonConvert.DeserializeObject(JsonConvert.SerializeObject(ha))));
+
+                            response.SetContent(JsonConvert.SerializeObject(jo));
+                        }
                     }
                     
                 }
@@ -175,6 +190,14 @@ namespace FRSServerHttp.Service
                 decode = result;
             }
             return decode;
+        }
+
+        public static Image Get_UrlImage(string url)
+        {
+            HttpWebRequest request = (HttpWebRequest)WebRequest.Create(url);
+            WebResponse response = request.GetResponse();
+            Image img = Image.FromStream(response.GetResponseStream());
+            return img;
         }
 
         /// <summary>

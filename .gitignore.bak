@@ -1,4 +1,6 @@
 *.sdf
+*.metagen
+*.orig
 *.ilk
 *.pdb
 *.obj

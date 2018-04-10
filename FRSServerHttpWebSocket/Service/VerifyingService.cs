@@ -8,6 +8,7 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
 using System.Linq;
+using System.Net;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -19,7 +20,7 @@ namespace FRSServerHttp.Service
     class VerifyingService : BaseService
     {
         person_dataset bll = new person_dataset();
-        
+
         public static string Domain
         {
             get
@@ -67,23 +68,25 @@ namespace FRSServerHttp.Service
 
                         Bitmapsrc.Save("Bitmapsrc.jpg");
                         Bitmapdst.Save("Bitmapdst.jpg");
-                        
+
                         score = fa.Compare(bmpsrc, bmpdst);
                         bmpsrc.Dispose();
                         bmpdst.Dispose();
                     }
                     else
                     {
-                        Image src = Image.FromFile(verify.PicSrc_Path);
-                        Image dst = Image.FromFile(verify.PicDst_Path);
+                        //Image src = Image.FromFile(verify.PicSrc_Path);
+                        Image src = Get_UrlImage(verify.PicSrc_Path);
+                        //Image dst = Image.FromFile(verify.PicDst_Path);
+                        Image dst = Get_UrlImage(verify.PicDst_Path);
                         score = fa.Compare(src, dst);
                     }
-               
-                   
+
+
                     Log.Debug(string.Format("相似度:{0}", score));
                     response.SetContent(JsonConvert.SerializeObject(score));
                     //response.SetContent("0.8");
-                    
+
                 }
 
             }
@@ -138,17 +141,18 @@ namespace FRSServerHttp.Service
                     }
                     else
                     {
-                         Image src = Image.FromFile(verify.PicSrc_Path);
+                        //Image src = Image.FromFile(verify.PicSrc_Path);
+                        Image src = Get_UrlImage(verify.PicSrc_Path);
                         hits = fa.Search(src);
                     }
                     string msg = JsonConvert.SerializeObject(Model.HitAlert.CreateInstanceFromFRSHitAlert(hits));
-                    if(hits==null)
+                    if (hits == null)
                     {
                         JObject jo = new JObject(new JProperty("num", 0));
                         response.SetContent(JsonConvert.SerializeObject(jo));
                     }
                     response.SetContent(msg);
-                    
+
                 }
             }
 
@@ -248,7 +252,15 @@ namespace FRSServerHttp.Service
             }
             return decode;
         }
-        
+
+        public static Image Get_UrlImage(string url)
+        {
+            HttpWebRequest request = (HttpWebRequest)WebRequest.Create(url);
+            WebResponse response = request.GetResponse();
+            Image img = Image.FromStream(response.GetResponseStream());
+            return img;
+        }
+
 
     }
 }

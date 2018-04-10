@@ -8,6 +8,7 @@
 *.cache
 *.rar
 *.tmp
+*.zip
 feadb.db10
 feadb.db20
 feadb.db30
