@@ -72,24 +72,30 @@ namespace FRSServerHttp.Service
                 usr.personDatasetId = id;
                 usr.name = registersingleinfo.Name;
                 usr.gender = registersingleinfo.Gender;
-                usr.cardId = registersingleinfo.CardId;             
+                usr.cardId = registersingleinfo.CardId;
 
                 
                 //初始化                   
                 InitFRS();
+                //Console.WriteLine("TEST1!");
+                //Bitmap Bitmapsrc = Base64ToImage(registersingleinfo.PicSrc);
+                //Console.WriteLine("TEST2!");
+                //Bitmap bmpsrc = new Bitmap(Bitmapsrc.Width, Bitmapsrc.Height, System.Drawing.Imaging.PixelFormat.Format24bppRgb);
+                //Console.WriteLine("TEST3!");
+                //Graphics.FromImage(bmpsrc).DrawImage(Bitmapsrc, new Rectangle(0, 0, bmpsrc.Width, bmpsrc.Height));
 
-                Bitmap Bitmapsrc = Base64ToImage(registersingleinfo.PicSrc);
-                Bitmap bmpsrc = new Bitmap(Bitmapsrc.Width, Bitmapsrc.Height, System.Drawing.Imaging.PixelFormat.Format24bppRgb);
-                Graphics.FromImage(bmpsrc).DrawImage(Bitmapsrc, new Rectangle(0, 0, bmpsrc.Width, bmpsrc.Height));
+                //Console.WriteLine("TEST4!");
 
-                int statusnum = fa.Register(bmpsrc, usr);
+                int statusnum = fa.Register(registersingleinfo.PicSrc, usr);
+                //int statusnum = fa.Register("E:/phpStudy/PHPTutorial/WWW/hisense/data/upload/portal/20180408/5ac9be9e264b5.jpg", usr);
+                Console.WriteLine(statusnum);
                 if (statusnum == 0)
                 {
                     status = true;
                     Log.Debug(string.Format("注册成功"));
                 }
-                
-                response.SetContent(status.ToString());
+
+                response.SetContent(statusnum.ToString());
             }
             else if (request.Operation == "delete")//删除
             {
